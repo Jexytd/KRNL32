@@ -46,6 +46,13 @@ function data_Kotak:Perbaru()
         return self:Remove();
     end
 
+    local warna;
+    if ESP.Highlighted == self.Objek then
+        warna = ESP.HighlightColor
+    else
+        warna = self.Pemain.Team.TeamColor.Color or self.Color or ESP.Color
+    end
+
     local allow = true
     if self.Pemain and not ESP.Tim and self.Pemain.Team == client.Team then
         allow = false
@@ -64,11 +71,8 @@ function data_Kotak:Perbaru()
         return
     end
 
-    local warna;
-    if ESP.Highlighted == self.Objek then
+    if ESP.Highlighted == self.Object then
         warna = ESP.HighlightColor
-    else
-        warna = self.Color or ESP:GetColor(self.Objek) or ESP.Color
     end
 
     --: WTViewpoint
