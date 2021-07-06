@@ -65,7 +65,7 @@ function data_Kotak:Perbaru()
     end
     local warna;
     if ESP.Tim and ESP.WarnaTim and self.Pemain.Team then
-        warna = self.Pemain.Team.TeamColor.Color
+        warna = self.Pemain.Team.TeamColor.Color or ESP.Warna
     else
         warna = self.Pemain.Team.TeamColor.Color or ESP.Warna
     end
