@@ -183,7 +183,6 @@ do
         });
 
         Kotak.Komponen["Nama"] = Draw("Text", {
-            Thickness = self.Ketebalan,
             Color = Kotak.Warna,
             Center = true,
             Outline = true,
@@ -192,7 +191,6 @@ do
         });
 
         Kotak.Komponen["Jarak"] = Draw("Text", {
-            Thickness = self.Ketebalan,
             Color = Kotak.Warna,
             Center = true,
             Outline = true,
