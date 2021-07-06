@@ -164,7 +164,7 @@ do
             Size = opsi.Size,
 
             Objek = objek, 
-            Pemain = self.pemain or pemain:GetPlayerFromCharacter(objek),
+            Pemain = opsi.Pemain or pemain:GetPlayerFromCharacter(objek),
             MainPart = opsi.MainPart or objek.ClassNama == "Model" and (objek.PrimaryPart or objek:FindFirstChild("HumanoidRootPart") or objek:FindFirstChildWhichIsA("BasePart")) or objek:IsA("BasePart") and objek,
             Komponen = {},
             IsAktif = opsi.IsAktif
