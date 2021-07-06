@@ -234,7 +234,7 @@ end;
 
 --: Skeet!
 local function CharAdded(char)
-    local p = client:GetPlayerFromCharacter(char)
+    local p = pemain:GetPlayerFromCharacter(char)
     if not char:FindFirstChild("HumanoidRootPart") then
         local ev
         ev = char.ChildAdded:Connect(function(c)
