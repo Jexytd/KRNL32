@@ -240,9 +240,9 @@ local function CharAdded(char)
         ev = char.ChildAdded:Connect(function(c)
             if c.Name == "HumanoidRootPart" then
                 ev:Disconnect()
-                ESP:Create(char, {
-                    Name = p.Name,
-                    Player = p,
+                ESP:Add(char, {
+                    Nama = p.Name,
+                    Pemain = p,
                     MainPart = c
                 })
             end
@@ -251,7 +251,7 @@ local function CharAdded(char)
         ESP:Add(char, {
             Nama = p.Name,
             Pemain = p,
-            PrimaryPart = char.HumanoidRootPart
+            MainPart = char.HumanoidRootPart
         })
     end
 end
