@@ -29,10 +29,10 @@ function Draw(objek, opsi) --: mendeklarasikan 'Gambar' dengan parameter: objek 
     return Drawing --: megembalikan objek
 end;
 
-local data_kotak = {};
-data_kotak.__index = data_kotak;
+local data_Kotak = {};
+data_Kotak.__index = data_Kotak;
 
-function data_kotak:Remove()
+function data_Kotak:Remove()
     ESP.Objek[self.Objek] = nil
     for i,v in pairs(self.Komponen) do
         v.Visible = false
@@ -41,7 +41,7 @@ function data_kotak:Remove()
     end
 end
 
-function data_kotak:Perbaru()
+function data_Kotak:Perbaru()
     if not self.MainPart then
         return self:Remove();
     end
@@ -168,7 +168,7 @@ do
             MainPart = opsi.MainPart or objek.ClassNama == "Model" and (objek.PrimaryPart or objek:FindFirstChild("HumanoidRootPart") or objek:FindFirstChildWhichIsA("BasePart")) or objek:IsA("BasePart") and objek,
             Komponen = {},
             IsAktif = opsi.IsAktif
-        }, data_kotak);
+        }, data_Kotak);
 
         if self.Objek[objek] then
             self.Objek[objek]:Remove()
@@ -184,7 +184,7 @@ do
 
         Kotak.Komponen["Nama"] = Draw("Text", {
             Thickness = self.Ketebalan,
-            Color = kotak.Warna,
+            Color = Kotak.Warna,
             Center = true,
             Outline = true,
             Size = 19,
@@ -193,7 +193,7 @@ do
 
         Kotak.Komponen["Jarak"] = Draw("Text", {
             Thickness = self.Ketebalan,
-            Color = kotak.Warna,
+            Color = Kotak.Warna,
             Center = true,
             Outline = true,
             Size = 19,
@@ -202,7 +202,7 @@ do
 
         Kotak.Komponen["Garis"] = Draw("Line", {
             Thickness = self.Ketebalan,
-            Color = kotak.Warna,
+            Color = Kotak.Warna,
             Transparency = 1,
             Visible = self.Aktif and self.Garis
         });
