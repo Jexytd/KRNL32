@@ -63,11 +63,12 @@ function data_Kotak:Perbaru()
         end
         return
     end
+
     local warna;
-    if ESP.Tim and ESP.WarnaTim and self.Pemain.Team then
-        warna = self.Pemain.Team.TeamColor.Color or ESP.Warna
+    if ESP.Highlighted == self.Objek then
+        warna = ESP.HighlightColor
     else
-        warna = self.Pemain.Team.TeamColor.Color or ESP.Warna
+        warna = self.Color or ESP:GetColor(self.Objek) or ESP.Color
     end
 
     --: WTViewpoint
