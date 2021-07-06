@@ -71,7 +71,7 @@ function data_Kotak:Perbaru()
         return
     end
 
-    if ESP.Highlighted == self.Object then
+    if ESP.Highlighted == self.Objek then
         warna = ESP.HighlightColor
     end
 
