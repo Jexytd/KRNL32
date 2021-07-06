@@ -233,6 +233,28 @@ do
 end;
 
 --: Skeet!
+local function CharAdded(char)
+    local p = client:GetPlayerFromCharacter(char)
+    if not char:FindFirstChild("HumanoidRootPart") then
+        local ev
+        ev = char.ChildAdded:Connect(function(c)
+            if c.Name == "HumanoidRootPart" then
+                ev:Disconnect()
+                ESP:Create(char, {
+                    Name = p.Name,
+                    Player = p,
+                    MainPart = c
+                })
+            end
+        end)
+    else
+        ESP:Add(char, {
+            Nama = p.Name,
+            Pemain = p,
+            PrimaryPart = char.HumanoidRootPart
+        })
+    end
+end
 local function PlayerAdded(p)
     p.CharacterAdded:Connect(CharAdded)
     if p.Character then
