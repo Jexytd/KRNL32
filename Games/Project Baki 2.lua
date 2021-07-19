@@ -1,4 +1,4 @@
-local library = loadstring(game:HttpGet("https://naviproject.glitch.me/ui.lua", true))();
+local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/Jexytd/KRNL32/master/ui.lua", true))();
 local window = library:NewWindow("Kye", "HUB");
 
 --// global variable
