@@ -1,0 +1,20 @@
+{
+  "dependencies": {
+    "canvas": "^2.8.0",
+    "discord.js": "^12.5.3",
+    "fs": "^0.0.1-security",
+    "ms": "^2.1.2",
+    "nodemon": "^2.0.12"
+  },
+  "name": "navi-bot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "z": "nodemon ."
+  },
+  "keywords": [],
+  "author": "kyeaintdead",
+  "license": "MIT",
+  "description": "Idle Miner Auto Quiz"
+}
