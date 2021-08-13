@@ -1,0 +1,297 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" href="https://cdn.discordapp.com/attachments/844790586237255701/875670939491246110/nbynavicat.png" type="image/png">
+
+    <script defer>
+        var el = document.createElement('title');
+        el.innerHTML = document.domain || window.origin
+        document.head.append(el)
+        setInterval(()=> {
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_+=[{}]|\\/\'"~`:;?<>';
+            const hahadktau = [];
+            const length = 12;
+            var cakue = '';
+            for (var idx = 0; idx < length; idx++) {
+                cakue += characters.charAt(Math.floor(Math.random() * characters.length))
+            }
+            el.innerHTML = cakue;
+        }, 800)
+
+    </script>
+</head>
+<body>
+    <video preload="none" id='background-video' src="https://cdn.glitch.com/0492b43e-9499-4d3d-879b-e423e715cf2a%2F"></video>
+    <script type='text/javascript' defer>
+        const vid = document.getElementById('background-video');
+        const available = 4;
+        let num = Math.floor((Math.random() * available) + 1);
+        let x = vid.src + 'videoplayback' + num + '.mp4'
+        vid.src = x;
+        vid.addEventListener('ended', () => {
+            num = Math.floor((Math.random() * available) + 1);
+            x = 'https://cdn.glitch.com/0492b43e-9499-4d3d-879b-e423e715cf2a%2Fvideoplayback' + num + '.mp4'
+            vid.src = x;
+            if (vid.paused) {
+                vid.play();
+            }
+        })
+    </script>
+    <div class="center-container">
+        <button class='play-bg-video' onclick="start(this)">Play</button>
+        <div class="hidden">
+            <div class="times-container"><span>Time</span><p id='floatting'></p></div>
+            <div class="left-side-container" id="floatting2">
+                <button class="arrow-up"></button>
+                <div class="items">
+                    <button class='selected'>Home</button>
+                    <button>About</button>
+                    <button>Script</button>
+                    <button>Discord</button>
+                    <button>Contact</button>
+                </div>
+                <button class="arrow-down"></button>
+            </div>
+            <div class="main-container">
+            </div>
+            <div class="footer-container"><span style="font-family: monospace;">Made By</span><p style="font-family: 'Poppins', sans-serif;"><strong>Navicat#0001</strong></p></div>
+        </div>
+    </div>
+    <script>
+        const inaway = document.getElementsByClassName('items')[0].childNodes;
+        const main_div = document.getElementsByClassName('main-container')[0]
+        const div = document.createElement('div')
+        let oldelement = document.getElementsByClassName('selected')[0];
+        div.classList.add('modal');
+        main_div.append(div)
+
+        function create(elementName) {
+            const element = document.createElement(elementName);
+            if (!element) return;
+            
+            for (var i = 1;i<arguments.length;i++){
+                console.log(i, arguments[i])
+            }
+        }
+
+        function createModal(el) {
+            const selector = document.querySelector('.modal')
+            const display = getComputedStyle(selector).display;
+            const background = document.getElementById('background-video')
+            if (el.textContent === 'Home') {
+                if (display === 'block') {
+                    background.style.filter = 'grayscale(50%) blur(2px)';
+                    for (let p=0;p<selector.childNodes.length;p++) {
+                        if (selector.childNodes[p] && getComputedStyle(selector.childNodes[p]).display === 'block') {
+                            selector.childNodes[p].style.display = 'none';
+                        }
+                    }
+                    if (oldelement != (null || undefined)) {
+                        oldelement.classList.remove('selected')
+                    }
+
+                    if (!el.classList.contains('selected')) {
+                        el.classList.add('selected');
+                        oldelement = el
+                    }
+                    selector.style.transition = 'width 250ms ease, height 250ms ease';
+                    selector.style.width = '0px';
+                    selector.style.height = '0px';
+                    setTimeout(() => {selector.style.display = 'none';}, 200)
+                    
+                }
+            } else {
+                if (display !== 'block') {
+                    selector.style.display = 'block';
+                }
+
+                if (getComputedStyle(selector).width === '0px' && getComputedStyle(selector).height === '0px') {
+                    selector.style.transition = 'width 250ms ease, height 250ms ease';
+                    selector.style.width = '150vh';
+                    selector.style.height = '60vh';
+                    setTimeout(() => {
+                        for (let p=0;p<selector.childNodes.length;p++) {
+                            if (selector.childNodes[p] && getComputedStyle(selector.childNodes[p]).display === 'none') {
+                                selector.childNodes[p].style.display = 'block';
+                            }
+                        }
+                    }, 500)
+                } else {
+                    selector.style.width = '0px';
+                    selector.style.height = '0px';
+                    setTimeout(()=> {
+                        selector.style.transition = 'width 250ms ease, height 250ms ease';
+                        selector.style.width = '150vh';
+                        selector.style.height = '60vh';
+                        setTimeout(() => {
+                            for (let p=0;p<selector.childNodes.length;p++) {
+                                if (selector.childNodes[p] && getComputedStyle(selector.childNodes[p]).display === 'none') {
+                                    selector.childNodes[p].style.display = 'block';
+                                }
+                            }
+                        }, 500)
+                    }, 100)
+                }
+
+                for (let g=0;g<selector.childNodes.length;g++) {
+                    if (selector.childNodes[g]) {
+                        selector.childNodes[g].remove();
+                    }
+                }
+
+                if (oldelement != (null || undefined)) {
+                    oldelement.classList.remove('selected')
+                }
+
+                if (!el.classList.contains('selected')) {
+                    el.classList.add('selected');
+                    oldelement = el
+                }
+
+                Object.size = function(obj) {
+                    var size = 0,
+                        key;
+                    for (key in obj) {
+                        if (obj.hasOwnProperty(key)) size++;
+                    }
+                    return size;
+                };
+
+                const MeowArray = {About: 'About script hub', Script: 'Script hub for roblox', Discord: 'Discord server', Contact: 'When having problem with script can contact this'}
+                for (let j=0;j<Object.size(MeowArray);j++) {
+                    if (MeowArray[el.textContent]) {
+                        const style_header = 'display: flex; align-items: center; justify-content: center; flex-direction: column;'
+                        const header_div = document.createElement('div')
+                        const title = document.createElement('p')
+                        const description = document.createElement('p')
+                        const strong = document.createElement('strong');
+                        strong.textContent = el.textContent;
+                        description.textContent = MeowArray[el.textContent]
+                        description.setAttribute('style', 'font-size: 0.8rem;')
+                        title.append(strong)
+                        header_div.append(title)
+                        header_div.append(description)
+                        header_div.setAttribute('style', style_header);
+
+                        selector.append(header_div);
+                        background.style.filter = 'grayscale(50%) blur(15px)'
+                        break;
+                    }
+                }
+            }
+        }
+
+        for (var i=0;i<inaway.length;i++) {
+            if (inaway[i].nodeName !== '#text') {
+                inaway[i].setAttribute('onclick', 'createModal(this)');
+            }
+        }
+    </script>
+    <script>
+        const bgvid = document.getElementById('background-video');
+        bgvid.volume = 1;
+
+        function start(el) {
+            if (getComputedStyle(el).display !== 'block') {
+            } else {
+                el.style.transition = 'padding 500ms ease, border 500ms ease, font-size 200ms';
+                el.style.padding = '0px';
+                el.style.border = 'none';
+                el.style.fontSize = '0rem';
+
+                setTimeout(() => {
+                    el.style.display = 'none';
+                }, 500)
+
+                const hidden = document.querySelectorAll('.hidden');
+                hidden.forEach(e => {
+                    e.className = e.className.replace('hidden', '')
+                })
+            }
+
+            setTimeout(() => {
+                if (bgvid.paused) {
+                    bgvid.play();
+                }
+            }, 700)
+        }
+    </script>
+    <script>
+        setInterval(() => {
+            let container = document.querySelector('.times-container').childNodes;
+            const currentDate = new Date();
+            const seconds = formatTime(currentDate.getSeconds()) + 's';
+            const mins = formatTime(currentDate.getMinutes()) + 'm';
+            const hours = formatTime(currentDate.getHours()) + 'h';
+            function formatTime(x) {
+                return x < 10 ? `0${x}` : x;
+            }
+            const arr = [hours, mins, seconds];
+
+            container.forEach(element => {
+                if (element.nodeName !== '#text') {
+                    const x = (element.nodeName === 'P' && element)
+                    if (!x) return;
+                    x.innerHTML = '<strong>' + arr.join(' ') + '</strong>';
+                }
+            })
+        }, 1000)
+    </script>
+    <script defer>
+        const btnup = document.getElementsByClassName('arrow-up')[0];
+        const btndown = document.getElementsByClassName('arrow-down')[0];
+        const items = document.getElementsByClassName('items')[0].childNodes;
+        const max = 3;
+        let save = [];
+
+        for (let m=0;m<items.length;m++) {
+            if (items[m].nodeName !== '#text') {
+                save.push(items[m]);
+                if (save.length > max) {
+                    items[m].setAttribute('style', 'display: none;');
+                } else {
+                    items[m].setAttribute('style', 'display: block;');
+                }
+            }
+        }
+
+        // TODO: ADD ANIMATION WHEN DISPLAYED AKA POPUP ANIMATION
+
+        function createListener(el) {
+            if (el.className === 'arrow-up') {
+                const lastIndex = save.pop(); // remove & returns last index of array
+                save.unshift(lastIndex);
+
+                const first = save[0] // get value that has get unshifted
+                const three = save[max]; // element
+                if (getComputedStyle(first).display === 'none') {
+                    first.style.display = 'block';
+                }
+                if (getComputedStyle(three).display === 'block') {
+                    three.style.display = 'none';
+                }
+
+            } else {
+                const firstIndex = save.shift(); // remove & returns first index of array
+                save.push(firstIndex);
+
+                const three = save[max - 1]; // element
+                if (getComputedStyle(firstIndex).display === 'block') {
+                    firstIndex.style.display = 'none';
+                }
+                if (getComputedStyle(three).display === 'none') {
+                    three.style.display = 'block';
+                }
+            }
+        }
+
+        btnup.setAttribute('onclick', 'createListener(this)');
+        btndown.setAttribute('onclick', 'createListener(this)');
+    </script>
+</body>
+</html>

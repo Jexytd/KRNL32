@@ -12,6 +12,10 @@
   "dependencies": {
     "discord.js": "^12.5.3",
     "fs": "^0.0.1-security",
+    "luamin": "^1.0.4",
+    "ms": "^2.1.3",
+    "node-fetch": "^2.6.1",
+    "nodemon": "^2.0.12",
     "xmlhttprequest": "^1.8.0"
   }
 }
