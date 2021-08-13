@@ -1,5 +1,6 @@
 const {Client} = require('discord.js');
-const {Token, id} = require('./config.json');
+const {id} = require('./config.json');
+const { Token } = require('../token.json');
 const fs = require('fs');
 const client = new Client();
 

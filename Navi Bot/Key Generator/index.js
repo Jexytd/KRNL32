@@ -1,5 +1,6 @@
 const { Client, MessageEmbed, Collection } = require('discord.js');
-const { Token,Prefix } = require('./config.json');
+const { Prefix } = require('./config.json');
+const { Token } = require('../token.json');
 //const XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 const fetch = require('node-fetch');
 const fs = require('fs');
