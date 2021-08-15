@@ -62,15 +62,7 @@ for idx,val in pairs(Screen.Background:GetChildren()) do
 	local Tween = TweenService:Create(val, TweenInfo.new(2, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {TextTransparency = 0})
 	Tween:Play()
 	Tween.Completed:wait()
-	
-	spawn(function()
-		while (Done == false) do
-			val.TextColor3 = Color3.new(math.random(),math.random(),math.random())
-			wait(.4)
-			val.TextStrokeColor3 = Color3.new(math.random(),math.random(),math.random())
-		end
-	end)
-	
+
 	wait(2)
 	Done = true
 	

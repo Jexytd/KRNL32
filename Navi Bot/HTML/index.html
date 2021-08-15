@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -67,17 +66,9 @@
         const main_div = document.getElementsByClassName('main-container')[0]
         const div = document.createElement('div')
         let oldelement = document.getElementsByClassName('selected')[0];
+        const MeowArray = {About: 'About script hub', Script: 'Loadstring script', Discord: 'Discord server', Contact: 'When having problem with script can contact this'}
         div.classList.add('modal');
         main_div.append(div)
-
-        function create(elementName) {
-            const element = document.createElement(elementName);
-            if (!element) return;
-            
-            for (var i = 1;i<arguments.length;i++){
-                console.log(i, arguments[i])
-            }
-        }
 
         function createModal(el) {
             const selector = document.querySelector('.modal')
@@ -162,7 +153,49 @@
                     return size;
                 };
 
-                const MeowArray = {About: 'About script hub', Script: 'Script hub for roblox', Discord: 'Discord server', Contact: 'When having problem with script can contact this'}
+                Object.keys = (function() {
+                    'use strict';
+                    var hasOwnProperty = Object.prototype.hasOwnProperty,
+                        hasDontEnumBug = !({ toString: null }).propertyIsEnumerable('toString'),
+                        dontEnums = [
+                        'toString',
+                        'toLocaleString',
+                        'valueOf',
+                        'hasOwnProperty',
+                        'isPrototypeOf',
+                        'propertyIsEnumerable',
+                        'constructor'
+                        ],
+                        dontEnumsLength = dontEnums.length;
+
+                    return function(obj) {
+                    if (typeof obj !== 'function' && (typeof obj !== 'object' || obj === null)) {
+                        throw new TypeError('Object.keys called on non-object');
+                    }
+
+                    var result = [], prop, i;
+
+                    for (prop in obj) {
+                        if (hasOwnProperty.call(obj, prop)) {
+                        result.push(prop);
+                        }
+                    }
+
+                    if (hasDontEnumBug) {
+                        for (i = 0; i < dontEnumsLength; i++) {
+                        if (hasOwnProperty.call(obj, dontEnums[i])) {
+                            result.push(dontEnums[i]);
+                        }
+                        }
+                    }
+                    return result;
+                    };
+                }());
+
+                for (var wtf = 0; wtf<selector.childNodes.length; wtf++) {
+                    selector.childNodes[wtf].remove()
+                }
+
                 for (let j=0;j<Object.size(MeowArray);j++) {
                     if (MeowArray[el.textContent]) {
                         const style_header = 'display: flex; align-items: center; justify-content: center; flex-direction: column;'
@@ -177,12 +210,77 @@
                         header_div.append(title)
                         header_div.append(description)
                         header_div.setAttribute('style', style_header);
-
                         selector.append(header_div);
-                        background.style.filter = 'grayscale(50%) blur(15px)'
                         break;
                     }
                 }
+
+                const lol_wat = Object.keys(MeowArray);
+                for (let pok = 0; pok<lol_wat.length;pok++) {
+                    const keys = lol_wat[pok];
+                    if (el.textContent === keys) {
+                        const body_div = document.createElement('div');
+                        const style_body = 'position: absolute; height: 89%; width: 100%; display: flex; align-items: center; justify-content: center; flex-direction: column;'
+                        body_div.setAttribute('style', style_body);
+
+                        if (el.textContent == 'About') {
+                            const p = document.createElement('p')
+                            p.style.textAlign = 'center';
+                            p.textContent = 'This is \'free\' roblox script hub made by Navicat#0001. I\'m still learning about Lua & Roblox Lua , and feel free to learn from what I learn so its open source. I made this project myself, if you have script to add this project please discuss with me on discord '
+                            body_div.append(p)
+                        } else if (el.textContent == 'Script') {
+                            const p = document.createElement('p')
+                            p.style.textAlign = 'center';
+                            p.textContent = 'Here the script, if theres have problem just contact me'
+                            
+                            const script_div = document.createElement('div');
+                            const input = document.createElement('input');
+                            const button = document.createElement('button');
+                            button.style.float = 'right';
+                            button.innerHTML = 'Copy'
+                            button.classList.add('copy-btn')
+                            input.value = 'loadstring(game:HttpGet("https://navicat.glitch.me/run.lua", true))()'
+                            input.readOnly = true;
+
+                            button.addEventListener('click', () => {
+                                const textarea = document.createElement('textarea');
+                                textarea.value = input.value || 'loadstring(game:HttpGet("https://navicat.glitch.me/run.lua", true))()'
+                                document.body.append(textarea);
+                                textarea.select();
+                                document.execCommand('copy');
+                                textarea.remove();
+                                button.innerHTML = 'Copied';
+                                setTimeout(() => {
+                                    button.innerHTML = 'Copy'
+                                }, 1000)
+                            })
+                            script_div.append(input,button)
+                            body_div.append(p,script_div)
+                        } else if (el.textContent == 'Discord') {
+                            const p = document.createElement('p')
+                            p.style.textAlign = 'center';
+                            p.textContent = 'Navi hub discord server, suggestion script can ask there.'
+                            const iframe = document.createElement('iframe');
+                            iframe.setAttribute("width", "350")
+                            iframe.setAttribute("height", "250")
+                            iframe.setAttribute("allowtransparency", "true")
+                            iframe.setAttribute("frameborder", "0")
+                            iframe.setAttribute("sandbox", "allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts")
+                            iframe.src = "https://discord.com/widget?id=622256289623441418&theme=dark"
+                            body_div.append(p,iframe)
+                        } else if (el.textContent == 'Contact') {
+                            const p = document.createElement('p')
+                            p.style.textAlign = 'center';
+                            p.innerHTML = 'Navicat#0001<br>Discord ID: 453561337503809544'
+                            body_div.append(p)
+                        }
+
+                        selector.append(body_div)
+                        break;
+                    }
+                }
+
+                background.style.filter = 'grayscale(50%) blur(15px)'
             }
         }
 

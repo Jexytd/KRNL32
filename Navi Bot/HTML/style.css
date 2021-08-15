@@ -221,6 +221,25 @@ body {
     font-size: 1.2rem;
 }
 
+input {
+    background: none;
+    border: none;
+    color: #fff;
+    padding: 0.5vh 0 1vh;
+    border-bottom: 1px solid #fff;
+}
+
+.copy-btn {
+    font-family: 'Poppins',sans-serif;
+    position: fixed;
+    border: none;
+    background: none;
+    color: #fff;
+    margin-top: 0.6vh;
+    margin-left: 2vh;
+    cursor: pointer;
+}
+
 #floatting {
     text-shadow: 1px 2px 3px rgba(0,0,0, 0.3);
     animation-name: float;
