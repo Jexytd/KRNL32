@@ -306,5 +306,17 @@
  [
   "The Ender Dragon's fireballs can be deflected.",
   "False"
+ ],
+ [
+  "Which item is needed to remove potion effects?",
+  "Milk Bucket"
+ ],
+ [
+  "Which of these mobs drops gunpowder when killed?",
+  "Ghast"
+ ],
+ [
+  "What happens to a player's movement speed on Soul Sand, when it is placed on ice?",
+  "Slows Down"
  ]
 ]

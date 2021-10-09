@@ -5,6 +5,17 @@
     padding: 0;
 }
 
+html {
+    cursor: url('https://cdn.glitch.com/0492b43e-9499-4d3d-879b-e423e715cf2a%2Fcursor.png?v=1631054775595'), default;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    overflow: hidden;
+    user-select: none;  
+}
+
 body {
     font-family: 'Poppins', sans-serif;
     background-color: #000;
@@ -17,17 +28,29 @@ body {
     top: 50%;
     left: 50%;
     min-width: 100%;
-    min-height: 100%;
+    min-height: 125%;
     
     transform: translateX(-50%) translateY(-50%);
     background-size: cover;
-    overflow: hidden;
+}
+
+#nah {
+    z-index: -99;
+    position: fixed;
+    min-width: 100%;
+    min-height: 100%;
 }
 
 .center-container {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.visible {
+  display: block;
+  opacity: 1;
+  transition: opacity 2s linear;
 }
 
 .hidden {
@@ -40,10 +63,11 @@ body {
     align-items: center;
     flex-direction: column;
     justify-content: center;
+    top: 0;
 }
 
 .left-side-container {
-    z-index: -99;
+    z-index: -1;
     position: fixed;
     display: flex;
     align-items: center;

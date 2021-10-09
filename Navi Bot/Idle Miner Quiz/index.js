@@ -1,14 +1,17 @@
 const {Client} = require('discord.js');
-const {id} = require('./config.json');
 const { Token } = require('../token.json');
 const fs = require('fs');
 const client = new Client();
+
+var userId = ''
 
 client.on('ready', () => {
 	console.log(`Log on as ${client.user.tag}`)
 })
 
 client.on('message', (message) => {
+	let getuserid = function() {return message.author.id != '518759221098053634' ? message.author.id : false}()
+	if (getuserid) { userId = getuserid }
 	if (message.author.id == '518759221098053634') {
 		message.embeds.forEach((embed) => {
 			try {
@@ -29,7 +32,7 @@ client.on('message', (message) => {
 							if (value.search(data_answer)) {
 								var foundanswer = value.search(data_answer); // **[A]** answer
 								var get_choice = value.substring(foundanswer - 6, foundanswer - 3);
-								message.channel.send('<@'+ id +'>, The answer of question is **'+ get_choice +'**');
+								message.channel.send('<@'+ userId +'>, The answer of question is **'+ get_choice +'**');
 								console.log(`[${r}]`, 'Question: '+ question);
 								console.log(`[${r}]`, 'Answer:' + get_choice);
 								console.log(`[${r}]`, 'Indexs:' + foundanswer);

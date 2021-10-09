@@ -25,21 +25,19 @@
     </script>
 </head>
 <body>
-    <video preload="none" id='background-video' src="https://cdn.glitch.com/0492b43e-9499-4d3d-879b-e423e715cf2a%2F"></video>
-    <script type='text/javascript' defer>
-        const vid = document.getElementById('background-video');
-        const available = 4;
-        let num = Math.floor((Math.random() * available) + 1);
-        let x = vid.src + 'videoplayback' + num + '.mp4'
-        vid.src = x;
-        vid.addEventListener('ended', () => {
-            num = Math.floor((Math.random() * available) + 1);
-            x = 'https://cdn.glitch.com/0492b43e-9499-4d3d-879b-e423e715cf2a%2Fvideoplayback' + num + '.mp4'
-            vid.src = x;
-            if (vid.paused) {
-                vid.play();
+    <iframe class='hidden' id='background-video' src="" ></iframe>
+    <div id='nah'></div>
+    <script>
+        const bg = document.getElementById('background-video')
+        var interval = setInterval(() => {
+            if (bg.className !== 'hidden') {
+                if (bg.hasAttribute('src')) {
+                    bg.setAttribute('src', 'https://www.youtube.com/embed/5qap5aO4i9A?controls=0&hd=1&autoplay=1&disablekb=1&rel=0&showinfo=0&enablejsapi=1')
+                    clearInterval(interval)
+                }
             }
-        })
+        }, 1000)
+        clearInterval(this)
     </script>
     <div class="center-container">
         <button class='play-bg-video' onclick="start(this)">Play</button>
@@ -76,12 +74,8 @@
             const background = document.getElementById('background-video')
             if (el.textContent === 'Home') {
                 if (display === 'block') {
-                    background.style.filter = 'grayscale(50%) blur(2px)';
-                    for (let p=0;p<selector.childNodes.length;p++) {
-                        if (selector.childNodes[p] && getComputedStyle(selector.childNodes[p]).display === 'block') {
-                            selector.childNodes[p].style.display = 'none';
-                        }
-                    }
+                    background.style.filter = '';
+
                     if (oldelement != (null || undefined)) {
                         oldelement.classList.remove('selected')
                     }
@@ -90,6 +84,11 @@
                         el.classList.add('selected');
                         oldelement = el
                     }
+                    selector.childNodes.forEach((e) => {
+                        if (e.nodeName === 'DIV') {
+                            e.style.display = 'none';
+                        }
+                    })
                     selector.style.transition = 'width 250ms ease, height 250ms ease';
                     selector.style.width = '0px';
                     selector.style.height = '0px';
@@ -215,6 +214,35 @@
                     }
                 }
 
+                function wordWrap(str, maxWidth) {
+                    var newLineStr = "\n"; done = false; res = '';
+                    while (str.length > maxWidth) {                 
+                        found = false;
+                        // Inserts new line at first whitespace of the line
+                        for (i = maxWidth - 1; i >= 0; i--) {
+                            if (testWhite(str.charAt(i))) {
+                                res = res + [str.slice(0, i), newLineStr].join('');
+                                str = str.slice(i + 1);
+                                found = true;
+                                break;
+                            }
+                        }
+                        // Inserts new line at maxWidth position, the word is too long to wrap
+                        if (!found) {
+                            res += [str.slice(0, maxWidth), newLineStr].join('');
+                            str = str.slice(maxWidth);
+                        }
+
+                    }
+
+                    return res + str;
+                }
+
+                function testWhite(x) {
+                    var white = new RegExp(/^\s$/);
+                    return white.test(x.charAt(0));
+                };
+
                 const lol_wat = Object.keys(MeowArray);
                 for (let pok = 0; pok<lol_wat.length;pok++) {
                     const keys = lol_wat[pok];
@@ -226,12 +254,14 @@
                         if (el.textContent == 'About') {
                             const p = document.createElement('p')
                             p.style.textAlign = 'center';
-                            p.textContent = 'This is \'free\' roblox script hub made by Navicat#0001. I\'m still learning about Lua & Roblox Lua , and feel free to learn from what I learn so its open source. I made this project myself, if you have script to add this project please discuss with me on discord '
+                            p.style.wordWrap = 'default';
+                            p.textContent = wordWrap('This is \'free\' roblox script hub made by Navicat#0001. I\'m still learning about Lua & Roblox Lua , and feel free to learn from what I learn so its open source. I made this project myself, if you have script to add this project please discuss with me on discord', 20)
                             body_div.append(p)
                         } else if (el.textContent == 'Script') {
                             const p = document.createElement('p')
                             p.style.textAlign = 'center';
-                            p.textContent = 'Here the script, if theres have problem just contact me'
+                            p.style.wordWrap = 'default';
+                            p.textContent = wordWrap('Here the script, if theres have problem just contact me', 30)
                             
                             const script_div = document.createElement('div');
                             const input = document.createElement('input');
@@ -259,7 +289,8 @@
                         } else if (el.textContent == 'Discord') {
                             const p = document.createElement('p')
                             p.style.textAlign = 'center';
-                            p.textContent = 'Navi hub discord server, suggestion script can ask there.'
+                            p.style.wordWrap = 'default';
+                            p.textContent = wordWrap('Navi hub discord server, suggestion script can ask there.', 40)
                             const iframe = document.createElement('iframe');
                             iframe.setAttribute("width", "350")
                             iframe.setAttribute("height", "250")
@@ -271,7 +302,8 @@
                         } else if (el.textContent == 'Contact') {
                             const p = document.createElement('p')
                             p.style.textAlign = 'center';
-                            p.innerHTML = 'Navicat#0001<br>Discord ID: 453561337503809544'
+                            p.style.wordWrap = 'default';
+                            p.innerHTML = wordWrap('Navicat#0001<br>Discord ID: 453561337503809544', 40)
                             body_div.append(p)
                         }
 
@@ -308,7 +340,19 @@
 
                 const hidden = document.querySelectorAll('.hidden');
                 hidden.forEach(e => {
+                    const oldpad = getComputedStyle(e).padding
+                    const oldborder = getComputedStyle(e).border
+                    const oldfontsize = getComputedStyle(e).fontSize
+                    e.style.padding = '0px';
+                    e.style.border = 'none';
+                    e.style.fontSize = '0rem';
                     e.className = e.className.replace('hidden', '')
+                    setTimeout(() => {
+                        e.style.transition = 'padding 500ms ease, border 500ms ease, font-size 200ms';
+                        e.style.padding = oldpad;
+                        e.style.border = oldborder;
+                        e.style.fontSize = oldfontsize;
+                    }, 1000)
                 })
             }
 
@@ -321,23 +365,27 @@
     </script>
     <script>
         setInterval(() => {
-            let container = document.querySelector('.times-container').childNodes;
-            const currentDate = new Date();
-            const seconds = formatTime(currentDate.getSeconds()) + 's';
-            const mins = formatTime(currentDate.getMinutes()) + 'm';
-            const hours = formatTime(currentDate.getHours()) + 'h';
-            function formatTime(x) {
-                return x < 10 ? `0${x}` : x;
-            }
-            const arr = [hours, mins, seconds];
-
-            container.forEach(element => {
-                if (element.nodeName !== '#text') {
-                    const x = (element.nodeName === 'P' && element)
-                    if (!x) return;
-                    x.innerHTML = '<strong>' + arr.join(' ') + '</strong>';
+            try {
+                const p = document.querySelector('.times-container').getElementsByTagName('p')[0]
+                const date = new Date()
+                const min = date.getMinutes()
+                const hour = date.getHours()
+                const clock = function() {
+                    if (hour > 12) {
+                        return ' PM'
+                    } else {
+                        return ' AM'
+                    }
+                }()
+                function f (x) {
+                    return x < 10 ? '0' + x : x
                 }
-            })
+                const arr = [f((hour > 12 ? hour - 12 : hour)), f(min), clock]
+                p.innerHTML = '<strong>' + arr[0] + ' : ' + arr[1] + arr[2] + '</strong>'
+                console.log(c)
+            } catch (e) {
+
+            }
         }, 1000)
     </script>
     <script defer>
