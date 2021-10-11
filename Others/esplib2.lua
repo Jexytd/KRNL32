@@ -4,9 +4,10 @@ ESP = {
     Box = true,
     Healthbar = true,
 
-    TypeBox = '3D',
+    TypeBox = 'Classic',
     Thickness = 2,
     Color = Color3.fromRGB(255, 255, 255),
+    BoxShift = CFrame.new(0,-1.5,0),
     Objects = {}
 }
 
@@ -69,7 +70,7 @@ function base:Update()
         self.Drawed.Box = {}
         for i=1,8 do
             table.insert(self.Drawed.Box, Draw('Line', {
-                Color = self.Color,
+                Color = ESP.Color,
                 Thickness = ESP.Thickness,
                 Visible = ESP.Enabled and ESP.Box
             }))
@@ -82,12 +83,22 @@ function base:Update()
             Visible = ESP.Enabled and ESP.Box
         })
         return
-    elseif ESP.TypeBox == '3D' and type(self.Drawed.Box) ~= 'userdata' then
-        self.Drawed.Box = Draw('Quad', {
-            Thickness = self.Thickness,
-            Color = ESP.Color,
-            Visible = ESP.Enabled and ESP.Box
-        })
+    elseif ESP.TypeBox == '3D' and type(self.Drawed.Box) ~= 'table' then
+        self.Drawed.Box = {}
+        for i = 1, 2 do
+            table.insert(self.Drawed.Box, Draw('Quad', {
+                Color = ESP.Color,
+                Thickness = ESP.Thickness,
+                Visible = ESP.Enabled and ESP.Box
+            }))
+        end
+        for i=1,4 do
+            table.insert(self.Drawed.Box, Draw('Line', {
+                Color = ESP.Color,
+                Thickness = ESP.Thickness,
+                Visible = ESP.Enabled and ESP.Box
+            }))
+        end
         return
     end
     
@@ -98,7 +109,6 @@ function base:Update()
     if ESP.Enabled then
         local CF,Size = self.PrimaryPart.CFrame, self.PrimaryPart.Size
         if ESP.Box and ESP.TypeBox == 'Corners' then
-            --// 8 Line = 1 CORNER = 2 LINE
             local p,v = wtvp(CF.p)
             if v then
                 local locs = {
@@ -154,7 +164,6 @@ function base:Update()
                     elseif j == 5 or j == 6 then
                         return locs.BL.p
                     elseif j == 7 or j == 8 then
-                        return locs.BR.p
                     end
                   end)()
                   local Pos = wtvp(getLocs)
@@ -189,7 +198,6 @@ function base:Update()
                         vector2 = Vector2.new(Pos.X, Pos.Y - Offset)
                     end
                     if j == 7 or j == 8 then
-                        
                         vector2 = Vector2.new(Pos.X, Pos.Y - Offset)
                     end
                   end
@@ -204,13 +212,13 @@ function base:Update()
                 for I in pairs(a) do
                     a[I].Visible = false
                 end
-            end
+            end 
         elseif ESP.Box and ESP.TypeBox == 'Classic' then
             local locs = {
-                TR = CF + Vector3.new(-Size.X/2, Size.Y, 0),
-                TL = CF + Vector3.new(Size.X/2, Size.Y, 0),
-                BL = CF + Vector3.new(Size.X/2, -Size.Y, 0),
-                BR = CF + Vector3.new(-Size.X/2, -Size.Y, 0),
+                TR = CF * Vector3.new(-Size.X/2, Size.Y, 0),
+                TL = CF * Vector3.new(Size.X/2, Size.Y, 0),
+                BL = CF * Vector3.new(Size.X/2, -Size.Y, 0),
+                BR = CF * Vector3.new(-Size.X/2, -Size.Y, 0),
             }
             local p1,v1 = wtvp(locs.TR.p)
             local p2,v2 = wtvp(locs.TL.p)
@@ -227,31 +235,97 @@ function base:Update()
             else
                 a.Visible = false
             end
-        elseif ESP.Box and ESP.TypeBox == '3D' then
-            --: NEED 4 QUAD
-            local locs = {
-                TR = CF + Vector3.new(-Size.X/2, Size.Y, Size.Z/2), --/ z Size.Z/2 just give little back axis
-                TL = CF + Vector3.new(Size.X/2, Size.Y, -Size.Z/2),
-                BL = CF + Vector3.new(Size.X/2, -Size.Y, -Size.Z/2),
-                BR = CF + Vector3.new(-Size.X/2, -Size.Y, Size.Z/2),
-            }
-            local p1,v1 = wtvp(locs.TR.p)
-            local p2,v2 = wtvp(locs.TL.p)
-            local p3,v3 = wtvp(locs.BL.p)
-            local p4,v4 = wtvp(locs.BR.p)
-            if (v1 or v2 or v3 or v4) then
-                a.Visible = true
-                a.PointA = p1
-                a.PointB = p2
-                a.PointC = p3
-                a.PointD = p4
-                a.Color = ESP.Color
-                a.Thickness = ESP.Thickness
+        elseif ESP.Box and ESP.TypeBox == '3D Classic' then
+            local locs = {}
+            local box2
+            local p,v = wtvp(CF.p)
+            if v then
+                local slocs = {
+                    TR=CF*ESP.BoxShift*CFrame.new(-Size.X/2, Size.Y/2, 0),
+                    TL=CF*ESP.BoxShift*CFrame.new(Size.X/2, Size.Y/2, 0),
+                    BL=CF*ESP.BoxShift*CFrame.new(Size.X/2, -Size.Y/2, 0),
+                    BR=CF*ESP.BoxShift*CFrame.new(-Size.X/2, -Size.Y/2, 0)
+                }
+                for j = 1, 6 do
+                    if j == 1 and tostring(a[j]) == 'Quad' then
+                        locs = {
+                            TR = CF*ESP.BoxShift*CFrame.new(-Size.X/2, Size.Y/2, 0),
+                            TL = CF*ESP.BoxShift*CFrame.new(Size.X/2, Size.Y/2, 0),
+                            BL = CF*ESP.BoxShift*CFrame.new(Size.X/2, -Size.Y/2, 0),
+                            BR = CF*ESP.BoxShift*CFrame.new(-Size.X/2, -Size.Y/2, 0)
+                        }
+                    elseif j == 2 and tostring(a[j]) == 'Quad' then
+                        locs = {
+                            TR = CF*ESP.BoxShift*CFrame.new(-Size.X/2, Size.Y/2, Size.Z/2),
+                            TL = CF*ESP.BoxShift*CFrame.new(Size.X/2, Size.Y/2, Size.Z/2),
+                            BL = CF*ESP.BoxShift*CFrame.new(Size.X/2, -Size.Y/2, Size.Z/2),
+                            BR = CF*ESP.BoxShift*CFrame.new(-Size.X/2, -Size.Y/2, Size.Z/2)
+                        }
+                        box2 = locs
+                    elseif j == 3 and tostring(a[j]) == 'Line' then
+                        locs = {
+                            From = slocs.TR,
+                            To = box2.TR
+                        }
+                    elseif j == 4 and tostring(a[j]) == 'Line' then
+                        locs = {
+                            From = slocs.TL,
+                            To = box2.TL
+                        }
+                    elseif j == 5 and tostring(a[j]) == 'Line' then
+                        locs = {
+                            From = slocs.BL,
+                            To = box2.BL
+                        }
+                    elseif j == 6 and tostring(a[j]) == 'Line' then
+                        locs = {
+                            From = slocs.BR,
+                            To = box2.BR
+                        }
+                    end
+                    a[j].Visible = true
+                    a[j].Color = ESP.Color
+                    if locs then
+                        local index = 1
+                        local idk = {}
+                        for _,V in pairs(locs) do
+                            if typeof(V) == 'CFrame' then
+                                table.insert(idk, V)
+                                if tostring(a[j]) == 'Quad' and index == 4 then
+                                    local p1,v1 = wtvp(idk[1].p)
+                                    local p2,v2 = wtvp(idk[2].p)
+                                    local p3,v3 = wtvp(idk[3].p)
+                                    local p4,v4 = wtvp(idk[4].p)
+                                    if (v1 or v2 or v3 or v4) then
+                                        a[j].PointA = p1
+                                        a[j].PointB = p2
+                                        a[j].PointC = p4
+                                        a[j].PointD = p3
+                                    else
+                                        a[j].Visible = false
+                                    end
+                                elseif tostring(a[j]) == 'Line' and index == 2 then
+                                    local p1,v1 = wtvp(idk[1].p)
+                                    local p2,v2 = wtvp(idk[2].p)
+                                    if (v1 or v2) then
+                                        a[j].From = p1
+                                        a[j].To = p2
+                                    else
+                                        a[j].Visible = false
+                                    end
+                                end
+                            end
+                            index = index+1
+                        end
+                    end
+                end
             else
-                a.Visible = false
+                for j=1,6 do
+                    a[j].Visible = false
+                end
             end
+            
         end
-
         if ESP.Healthbar then
             local Humanoid = self.Object:FindFirstChildOfClass('Humanoid')
             local Health
@@ -302,13 +376,6 @@ function ESP:Add(object, options)
         self.Objects[object]:Remove()
     end
 
-    --[[
-    Box.Drawed['Box'] = Draw('Quad', {
-        Thickness = self.Thickness,
-        Color = self.Color,
-        Visible = self.Enabled and self.Box
-    })
-    ]]--
     Box.Drawed['Healthbar'] = Draw('Quad', {
         Thickness = self.Thickness,
         Color = Box.Color,
@@ -367,9 +434,7 @@ local function PlayerAdded(p)
 end
 Players.PlayerAdded:Connect(PlayerAdded)
 for i,v in pairs(Players:GetPlayers()) do
-    if v ~= Client then
-        PlayerAdded(v)
-    end
+    PlayerAdded(v)
 end
 
 game:GetService("RunService").RenderStepped:Connect(function()
