@@ -329,30 +329,37 @@ xpcall(function()
             end
         elseif Step == 3 then
             Library:setColor(true)
+            
 
             local user = 'Jexytd'
             local repo = 'KRNL32'
             local path = 'Game/' .. script[1]
-            local githubFormat = ('https://raw.githubusercontent.com/%s/%s/master/%s/source.lua'):fromat(user,repo,path)
+            local githubFormat = ('https://raw.githubusercontent.com/%s/%s/master/%s/source.lua'):format(user,repo,path)
 
             local attempt = 1
             local maxattempt = 5
-            repeat
+            local oldclock = os.clock()
+            local newclock
+            repeat wait()
                 Library:setLog('Executing script in attempt ' .. tostring(attempt))
                 local s,msg = pcall(function() return loadstring(game:HttpGet(githubFormat, true))() end)
                 if not s then
                     attempt = attempt + 1
                 else
                     attempt = true
+                    newclock = os.clock()
                     break
                 end
+                
             until attempt == maxattempt
             if attempt ~= true then
                 Library:setLog('Failed to executing script!')
                 no_error = false
                 err_msg = 'Game not supported'
             end
+            Library:setLog('Script executed! ' .. ('takes %0.1fs'):format(newclock - oldclock))
             Library:setColor(true)
+            wait(1)
             pass = true
         end
 
@@ -364,7 +371,6 @@ xpcall(function()
     CloseGui(Background)
 end, function(msg)
     msg = msg:gsub(msg:match(':%d+:'), '')
-    --local line = match:sub(2,#match):sub(0,-2)
     msg = msg:gsub("^%s+", ""):gsub("%s+$", "")
     msg = msg .. ' [stop at step ' .. err_msg[2] .. ']'
     print('[#]:', msg)
