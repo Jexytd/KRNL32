@@ -132,14 +132,16 @@ function Loader()
             return TweenInfo.new(speed, style, direct)
         end
         if not fadeDebounce[2] and (fadeDebounce[1] == o or fadeDebounce == nil) then
-            local a = TweenS:Create(o, TInfo(), {TextTransparency=0})
+            local b = TInfo()
+            local a = TweenS:Create(o, b, {TextTransparency=0})
             a.Completed:Connect(function()
                 fadeDebounce = {o,true}
             end)
             a:Play()
             repeat wait() until fadeDebounce[2] == true and fadeDebounce[1] == o
         elseif fadeDebounce[2] and fadeDebounce[1] == o then
-            local a = TweenS:Create(fadeDebounce[1], TInfo(), {TextTransparency=1})
+            local b = TInfo()
+            local a = TweenS:Create(fadeDebounce[1], b, {TextTransparency=1})
             a.Completed:Connect(function()
                 fadeDebounce = {nil,false}
             end)
@@ -345,6 +347,7 @@ xpcall(function()
                 local s,msg = pcall(function() return loadstring(game:HttpGet(githubFormat, true))() end)
                 if not s then
                     attempt = attempt + 1
+                    err_msg = msg
                 else
                     attempt = true
                     newclock = os.clock()
@@ -355,12 +358,13 @@ xpcall(function()
             if attempt ~= true then
                 Library:setLog('Failed to executing script!')
                 no_error = false
-                err_msg = 'Game not supported'
             end
-            Library:setLog('Script executed! ' .. ('takes %0.1fs'):format(newclock - oldclock))
-            Library:setColor(true)
-            wait(1)
-            pass = true
+            if no_error then
+                Library:setLog('Script executed! ' .. ('takes %0.1fs'):format(newclock - oldclock))
+                Library:setColor(true)
+                wait(1)
+                pass = true
+            end
         end
 
         repeat wait() until (no_error == true and pass == true) or not no_error

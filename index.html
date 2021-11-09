@@ -1,15 +1,41 @@
 <head>
     <title>KRNL32</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Righteous&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+        :root {
+            --second-textcolor: rgb(170, 85, 255);
+            --second-bgcolor: rgb(35,35,35)
+        }
         * {
             margin: 0;
             padding: 0;
         }
         body {
             background-color: rgb(20, 20, 20);
+            color: whitesmoke;
+        }
+
+        .navbar {
+            display: flex;
+            position: fixed;
+            align-items: center;
+
+            font-family: 'Righteous', Arial;
+            font-size: 0.8rem;
+
+            padding: 0 1vh;
+        }
+        .navbar h1 {
+            color: var(--second-textcolor);
+            font-family: 'Press Start 2P', Arial;
         }
     </style>
 </head>
 <body>
-    
+    <div class="navbar">
+        <h1>Title</h1>
+
+    </div>
 </body>
