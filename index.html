@@ -1,12 +1,15 @@
 <head>
     <title>KRNL32</title>
+    <link rel='icon' href="https://cdn.discordapp.com/attachments/844790586237255701/907452905253130330/imageedit_1_7308727527.png" type="image/png">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Righteous&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Public+Sans&display=swap');
 
         :root {
             --second-textcolor: rgb(170, 85, 255);
-            --second-bgcolor: rgb(35,35,35)
+            --second-bgcolor: rgb(35,35,35);
+            --third-bgcolor: rgb(69, 69, 230);
         }
         * {
             margin: 0;
@@ -16,26 +19,109 @@
             background-color: rgb(20, 20, 20);
             color: whitesmoke;
         }
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        /* Track */
+        ::-webkit-scrollbar-track {
+            background: rgba(69, 69, 230, 0.3); 
+        }
+        
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+            background: rgba(99,99,230,0.6); 
+            border-radius: 20px;
+        }
+
+        /* Handle on hover */
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(69,69,230,0.6); 
+        }
 
         .navbar {
             display: flex;
-            position: fixed;
-            align-items: center;
+            position: absolute;
+            justify-content: space-between;
 
             font-family: 'Righteous', Arial;
             font-size: 0.8rem;
 
-            padding: 0 1vh;
+            margin: 1vh;
+            box-shadow: 2px 5px 10px rgb(49,49,230);
+
+            background-color: var(--third-bgcolor);
+            padding: 1vh;
+            width: 98%;
+            max-height: 2vh;
+            z-index: 1;
+            border-radius: 7px;
         }
-        .navbar h1 {
+
+        .navbar * {
+            text-decoration: none;
+            text-size-adjust: none;
+            color: whitesmoke;
+            margin-left: 1vh;
+        }
+
+        .navbar a {
+            transition: color 300ms ease-in-out;
+        }
+
+        .navbar a:hover {
             color: var(--second-textcolor);
-            font-family: 'Press Start 2P', Arial;
         }
+        .navbar a:focus {
+            color: var(--second-textcolor);
+        }
+        .navbar a:active {
+            color: var(--second-textcolor);
+        }
+
+        .content {
+            z-index: 0;
+            position: absolute;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            width: 99%;
+
+            font-family: 'Public Sans', Arial;
+            font-size: 0.7rem;
+
+            height: 100%;
+            max-height: 91vh;
+
+            background-color: var(--second-bgcolor);
+            overflow: auto;
+            margin: 1vh;
+
+            transform: translateY(7%);
+        }
+
+        .content #center {
+            margin: 0.8vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
     </style>
 </head>
 <body>
     <div class="navbar">
-        <h1>Title</h1>
-
+        <a href="index.html">KRNL32</a>
+        <div>
+            <a href="#">About</a>
+            <a href="#">Download</a>
+        </div>
+    </div>
+    <div class="content">
+        <div id="center">
+            <h1>Welcome to <span style="color: var(--second-textcolor);">KRNL32</span></h1>
+            <p>Website now under development</p>
+        </div>
     </div>
 </body>
