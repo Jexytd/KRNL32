@@ -70,8 +70,8 @@ function up()
     local MousePos = Vector2.new(Mouse.X, Mouse.Y + (game:GetService('GuiService'):GetGuiInset().Y))
     if FieldView then
         FieldView.Transparency = 1
-        FieldView.Visible = ShowFov or false
-        FieldView.Color = Color3.fromRGB(69,69,230)
+        FieldView.Visible = AimbotSettings.ShowFov
+        FieldView.Color = AimbotSettings.FOVColor
         FieldView.Thickness = 2
         FieldView.NumSides = 13
         FieldView.Radius = (AimbotSettings.FOV*6)/2
@@ -188,10 +188,15 @@ Players.PlayerRemoving:Connect(function(v)
 end)
 
 game:GetService('RunService').RenderStepped:Connect(function()
-    up()
+    if AimbotSettings.Enabled then
+        up()
+        if getClosestFOV() do
+            aimAt(getClosestFOV()[AimbotSettings.Target], AimbotSettings.WallCheck)
+        end
+    end
 
     if Enabled and getClosestFOV() then
-        aimAt(getClosestFOV()[AimbotSettings.Target], AimbotSettings.WallCheck)
+        
     end
     game:GetService('RunService').RenderStepped:Wait()
 end)
