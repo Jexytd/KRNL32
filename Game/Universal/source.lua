@@ -3,3 +3,5 @@ local function get(http,cache)
 end
 
 local Aimbot = get('https://raw.githubusercontent.com/Jexytd/KRNL32/master/Module/aimbot.lua')
+local ESP = get('https://raw.githubusercontent.com/Jexytd/KRNL32/master/Module/esp.lua')
+local UI = get('https://raw.githubusercontent.com/Jexytd/KRNL32/master/Module/solaris.lua')
