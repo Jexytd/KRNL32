@@ -28,15 +28,15 @@ do
         Settings.Smooth = n
     end
 
-    function Library:FromMouse(bool)
+    function Library:fromMouse(bool)
         Settings.FromMouse = bool
     end
 
-    function Library:TeamCheck(bool)
+    function Library:teamCheck(bool)
         Settings.TeamCheck = bool
     end
 
-    function Library:WallCheck(bool)
+    function Library:wallCheck(bool)
         Settings.WallCheck = bool
     end
 
