@@ -9,19 +9,21 @@ getgenv().AimbotSettings = getgenv().AimbotSettings or {
     WallCheck = false,
     FromMouse = false,
 }
-local Library = {}
+local Library = {
+    Object = {}
+}
 Library.__index = Library
 
 do
-    function Library:Toggle(bool)
+    function Library:toggle(bool)
         AimbotSettings.Enabled = bool
     end
 
-    function Library:SetFov(n)
+    function Library:setFov(n)
         AimbotSettings.FOV = n
     end
 
-    function Library:ShowFov(bool)
+    function Library:showFov(bool)
         AimbotSettings.ShowFov = bool
     end
 
@@ -65,12 +67,13 @@ local Mouse = Client:GetMouse()
 local CurrentCamera = workspace.CurrentCamera
 
 local CenterScreen = (CurrentCamera.ViewportSize)/2
-FieldView = Drawing.new('Circle')
-function up()
+
+function up(show)
     local MousePos = Vector2.new(Mouse.X, Mouse.Y + (game:GetService('GuiService'):GetGuiInset().Y))
+    local FieldView = Drawing.new('Circle')
     if FieldView then
         FieldView.Transparency = 1
-        FieldView.Visible = AimbotSettings.ShowFov
+        FieldView.Visible = show
         FieldView.Color = AimbotSettings.FOVColor
         FieldView.Thickness = 2
         FieldView.NumSides = 13
@@ -78,6 +81,7 @@ function up()
         FieldView.Filled = false
         FieldView.Position = (not AimbotSettings.FromMouse and CenterScreen) or MousePos
     end
+    FieldView:Remove()
 end
 
 local function worldToView(o)
@@ -189,7 +193,7 @@ end)
 
 game:GetService('RunService').RenderStepped:Connect(function()
     if AimbotSettings.Enabled then
-        up()
+        up(AimbotSettings.ShowFov)
         if getClosestFOV() then
             aimAt(getClosestFOV()[AimbotSettings.Target], AimbotSettings.WallCheck)
         end

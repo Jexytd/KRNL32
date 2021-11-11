@@ -72,11 +72,11 @@ local s2 = t2:Section('Aimbot')
 local s2s = t2:Section('Settings')
 
 s2:Toggle("Enabled", false,"AEnabled", function(t)
-    Aimbot:Toggle(t)
+    Aimbot:toggle(t)
 end)
  
 s2:Toggle("Show FOV", false,"AFov", function(t)
-    Aimbot:ShowFov(t)
+    Aimbot:showFov(t)
 end)
 
 s2:Toggle("FromMouse", false,"AFrommouse", function(t)
@@ -91,7 +91,7 @@ s2:Toggle("Team Check", false,"AFromATeamcheckmouse", function(t)
     Aimbot:teamCheck(t)
 end)
 s2s:Slider("Aim FOV", 0,180,0,1,"ASFov", function(t)
-    Aimbot:SetFov(t)
+    Aimbot:setFov(t)
 end)
 
 s2s:Slider("Aim Smooth", 0,10,0,0.5,"ASSmooth", function(t)
