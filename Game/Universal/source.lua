@@ -100,4 +100,4 @@ end)
 
 s2s:Colorpicker("FOV Color", Color3.fromRGB(255,255,255),"FOVPicker", function(t)
     Aimbot:setFovColor(t)
- end)
+end)

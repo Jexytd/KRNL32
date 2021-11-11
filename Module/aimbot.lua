@@ -190,7 +190,7 @@ end)
 game:GetService('RunService').RenderStepped:Connect(function()
     if AimbotSettings.Enabled then
         up()
-        if getClosestFOV() do
+        if getClosestFOV() then
             aimAt(getClosestFOV()[AimbotSettings.Target], AimbotSettings.WallCheck)
         end
     end
