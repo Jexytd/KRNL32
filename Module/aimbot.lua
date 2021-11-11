@@ -1,4 +1,4 @@
-getgenv().Settings = getgenv().Settings or {
+getgenv().AimbotSettings = getgenv().AimbotSettings or {
     Enabled = false,
     ShowFov = false,
     FOV = 60,
@@ -9,44 +9,44 @@ getgenv().Settings = getgenv().Settings or {
     WallCheck = false,
     FromMouse = false,
 }
-local Library = {['Settings'] = getgenv().Settings}
+local Library = {}
 Library.__index = Library
 
 do
     function Library:Toggle(bool)
-        Settings.Enabled = bool
+        AimbotSettings.Enabled = bool
     end
 
     function Library:SetFov(n)
-        Settings.FOV = n
+        AimbotSettings.FOV = n
     end
 
     function Library:ShowFov(bool)
-        Settings.ShowFov = bool
+        AimbotSettings.ShowFov = bool
     end
 
     function Library:setFovColor(c)
-        Settings.FOVColor = c
+        AimbotSettings.FOVColor = c
     end
 
     function Library:setSmooth(n)
-        Settings.Smooth = n
+        AimbotSettings.Smooth = n
     end
 
     function Library:fromMouse(bool)
-        Settings.FromMouse = bool
+        AimbotSettings.FromMouse = bool
     end
 
     function Library:teamCheck(bool)
-        Settings.TeamCheck = bool
+        AimbotSettings.TeamCheck = bool
     end
 
     function Library:wallCheck(bool)
-        Settings.WallCheck = bool
+        AimbotSettings.WallCheck = bool
     end
 
     function Library:setTarget(str)
-        Settings.Target = str
+        AimbotSettings.Target = str
     end
 end
 
@@ -74,9 +74,9 @@ function up()
         FieldView.Color = Color3.fromRGB(69,69,230)
         FieldView.Thickness = 2
         FieldView.NumSides = 13
-        FieldView.Radius = (Settings.FOV*6)/2
+        FieldView.Radius = (AimbotSettings.FOV*6)/2
         FieldView.Filled = false
-        FieldView.Position = (not Settings.FromMouse and CenterScreen) or MousePos
+        FieldView.Position = (not AimbotSettings.FromMouse and CenterScreen) or MousePos
     end
 end
 
@@ -93,8 +93,8 @@ end
 onteams = {}
 function getClosestFOV(char_folder, targetPart, fov)
     local char_folder = char_folder
-    local targetPart = targetPart or Settings.Target -- MUST BE STRING
-    local fov = fov or (Settings.FOV*6)/2
+    local targetPart = targetPart or AimbotSettings.Target -- MUST BE STRING
+    local fov = fov or (AimbotSettings.FOV*6)/2
     local getTeams = (function()
         for _,v in pairs(Players:GetPlayers()) do
             if v ~= Client then
@@ -121,11 +121,11 @@ function getClosestFOV(char_folder, targetPart, fov)
         for _,v in pairs(children) do
             if v:IsA('Model') and Players:GetPlayerFromCharacter(v) and v ~= Client.Character and v:FindFirstChild('Humanoid') and v.Humanoid.Health > 0 then
                 local targetpart = v:FindFirstChild(targetPart) or v.PrimaryPart
-                if Settings.TeamCheck and getTeams[v.Name] ~= true then
+                if AimbotSettings.TeamCheck and getTeams[v.Name] ~= true then
                     local _, OnScreen = worldToView(targetpart)
                     if OnScreen then
                         local targetPos = worldToView(targetpart)
-                        local fovPos = (Settings.FromMouse and worldToView(Mouse.Hit.p)) or FieldView.Position
+                        local fovPos = (AimbotSettings.FromMouse and worldToView(Mouse.Hit.p)) or FieldView.Position
                         local dist = (Vector2.new(fovPos.X, fovPos.Y) - Vector2.new(targetPos.X, targetPos.Y)).magnitude
                         if dist < closestDist then
                             closestDist = dist
@@ -136,7 +136,7 @@ function getClosestFOV(char_folder, targetPart, fov)
                     local _, OnScreen = worldToView(targetpart)
                     if OnScreen then
                         local targetPos = worldToView(targetpart)
-                        local fovPos = (Settings.FromMouse and worldToView(Mouse.Hit.p)) or FieldView.Position
+                        local fovPos = (AimbotSettings.FromMouse and worldToView(Mouse.Hit.p)) or FieldView.Position
                         local dist = (Vector2.new(fovPos.X, fovPos.Y) - Vector2.new(targetPos.X, targetPos.Y)).magnitude
                         if dist < closestDist then
                             closestDist = dist
@@ -172,10 +172,10 @@ function aimAt(o,wallcheck)
                 end
                 local Hit,_ = workspace:FindPartOnRayWithIgnoreList(newRay, ignore)
                 if not Hit then
-                    mousemoverel((targetPos.X - mousePos.X)/Settings.Smooth, (targetPos.Y - mousePos.Y)/Settings.Smooth - 2)
+                    mousemoverel((targetPos.X - mousePos.X)/AimbotSettings.Smooth, (targetPos.Y - mousePos.Y)/AimbotSettings.Smooth - 2)
                 end
             else
-                mousemoverel((targetPos.X - mousePos.X)/Settings.Smooth, (targetPos.Y - mousePos.Y)/Settings.Smooth - 2)
+                mousemoverel((targetPos.X - mousePos.X)/AimbotSettings.Smooth, (targetPos.Y - mousePos.Y)/AimbotSettings.Smooth - 2)
             end
         end
     end
@@ -191,7 +191,7 @@ game:GetService('RunService').RenderStepped:Connect(function()
     up()
 
     if Enabled and getClosestFOV() then
-        aimAt(getClosestFOV()[Settings.Target], Settings.WallCheck)
+        aimAt(getClosestFOV()[AimbotSettings.Target], AimbotSettings.WallCheck)
     end
     game:GetService('RunService').RenderStepped:Wait()
 end)

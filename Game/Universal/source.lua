@@ -66,3 +66,38 @@ game:GetService('RunService').RenderStepped:Connect(function()
     end
     game:GetService('RunService').RenderStepped:Wait()
 end)
+
+local t2 = Windows:Tab('Aimbot')
+local s2 = t2:Section('Aimbot')
+local s2s = t2:Section('Settings')
+
+s2:Toggle("Enabled", false,"AEnabled", function(t)
+    Aimbot:Toggle(t)
+end)
+ 
+s2:Toggle("Show FOV", false,"AFov", function(t)
+    Aimbot:ShowFov(t)
+end)
+
+s2:Toggle("FromMouse", false,"AFrommouse", function(t)
+    Aimbot:fromMouse(t)
+end)
+
+s2:Toggle("Wall Check", false,"AWallcheck", function(t)
+    Aimbot:wallCheck(t)
+end)
+
+s2:Toggle("Team Check", false,"AFromATeamcheckmouse", function(t)
+    Aimbot:teamCheck(t)
+end)
+s2s:Slider("Aim FOV", 0,180,0,1,"ASFov", function(t)
+    Library:SetFov(t)
+end)
+
+s2s:Slider("Aim Smooth", 0,10,0,0.5,"ASSmooth", function(t)
+    Library:setSmooth(t)
+end)
+
+s2s:Colorpicker("FOV Color", Color3.fromRGB(255,255,255),"FOVPicker", function(t)
+    Library:setFovColor(t)
+ end)
