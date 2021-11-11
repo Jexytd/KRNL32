@@ -1,14 +1,15 @@
-Settings = getgenv().Settings or {
+getgenv().Settings = getgenv().Settings or {
     Enabled = false,
     ShowFov = false,
     FOV = 60,
+    FOVColor = Color3.fromRGB(69,69,230),
     Smooth = 0,
     Target = 'Head',
     TeamCheck = false,
     WallCheck = false,
     FromMouse = false,
 }
-local Library = {}
+local Library = {['Settings'] = getgenv().Settings}
 Library.__index = Library
 
 do
@@ -22,6 +23,10 @@ do
 
     function Library:ShowFov(bool)
         Settings.ShowFov = bool
+    end
+
+    function Library:setFovColor(c)
+        Settings.FOVColor = c
     end
 
     function Library:setSmooth(n)
