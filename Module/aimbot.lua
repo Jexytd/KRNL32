@@ -1,54 +1,56 @@
-getgenv().AimbotSettings = getgenv().AimbotSettings or {
+--[[
+    KESALAHAN - LIBRARY satu saja jadi settings no need
+]]
+getgenv().ManusiaIkan = {}
+local Library = {
     Enabled = false,
     ShowFov = false,
+    TeamCheck = false,
+    WallCheck = false,
+    FromMouse = false,
     FOV = 60,
     FOVColor = Color3.fromRGB(69,69,230),
     Smooth = 1.5,
     Target = 'Head',
-    TeamCheck = false,
-    WallCheck = false,
-    FromMouse = false,
-}
-local Library = {
     Object = {}
 }
 Library.__index = Library
 
 do
     function Library:toggle(bool)
-        AimbotSettings.Enabled = bool
+        self.Enabled = bool
     end
 
     function Library:setFov(n)
-        AimbotSettings.FOV = n
+        self.FOV = n
     end
 
     function Library:showFov(bool)
-        AimbotSettings.ShowFov = bool
+        self.ShowFov = bool
     end
 
     function Library:setFovColor(c)
-        AimbotSettings.FOVColor = c
+        self.FOVColor = c
     end
 
     function Library:setSmooth(n)
-        AimbotSettings.Smooth = n
+        self.Smooth = n
     end
 
     function Library:fromMouse(bool)
-        AimbotSettings.FromMouse = bool
+        self.FromMouse = bool
     end
 
     function Library:teamCheck(bool)
-        AimbotSettings.TeamCheck = bool
+        self.TeamCheck = bool
     end
 
     function Library:wallCheck(bool)
-        AimbotSettings.WallCheck = bool
+        self.WallCheck = bool
     end
 
-    function Library:setTarget(str)
-        AimbotSettings.Target = str
+    function Library:setTarget(s)
+        self.Target = s
     end
 end
 
@@ -65,27 +67,30 @@ local Players = Service.Players
 local Client = Players.LocalPlayer
 local Mouse = Client:GetMouse()
 local CurrentCamera = workspace.CurrentCamera
-
 local CenterScreen = (CurrentCamera.ViewportSize)/2
 
-if getgenv().FieldView then
-    FieldView:Remove()
-    FieldView = nil
+if #ManusiaIkan > 0 then
+    for _,v in pairs(ManusiaIkan) do
+        if typeof(v) == 'userdata' then
+            v:Remove()
+        end
+    end
 end
-if not getgenv().FieldView then getgenv().FieldView = Drawing.new('Circle') end
+Library.Object['Circle'] = Drawing.new('Circle')
+table.insert(ManusiaIkan, Library.Object['Circle'])
+
 function up(show)
     local MousePos = Vector2.new(Mouse.X, Mouse.Y + (game:GetService('GuiService'):GetGuiInset().Y))
-    if FieldView then
-        FieldView.Transparency = 1
-        FieldView.Visible = show
-        FieldView.Color = AimbotSettings.FOVColor
-        FieldView.Thickness = 2
-        FieldView.NumSides = 13
-        FieldView.Radius = (AimbotSettings.FOV*6)/2
-        FieldView.Filled = false
-        FieldView.Position = (not AimbotSettings.FromMouse and CenterScreen) or MousePos
+    if Library.Object['Circle'] then
+        Library.Object['Circle'].Transparency = 1
+        Library.Object['Circle'].Visible = show
+        Library.Object['Circle'].Color = Library.FOVColor
+        Library.Object['Circle'].Thickness = 2
+        Library.Object['Circle'].NumSides = 13
+        Library.Object['Circle'].Radius = (Library.FOV*6)/2
+        Library.Object['Circle'].Filled = false
+        Library.Object['Circle'].Position = (not Library.FromMouse and CenterScreen) or MousePos
     end
-    FieldView:Remove()
 end
 
 local function worldToView(o)
@@ -101,8 +106,8 @@ end
 onteams = {}
 function getClosestFOV(char_folder, targetPart, fov)
     local char_folder = char_folder
-    local targetPart = targetPart or AimbotSettings.Target -- MUST BE STRING
-    local fov = fov or (AimbotSettings.FOV*6)/2
+    local targetPart = targetPart or Library.Target -- MUST BE STRING
+    local fov = fov or (Library.FOV*6)/2
     local getTeams = (function()
         for _,v in pairs(Players:GetPlayers()) do
             if v ~= Client then
@@ -129,11 +134,11 @@ function getClosestFOV(char_folder, targetPart, fov)
         for _,v in pairs(children) do
             if v:IsA('Model') and Players:GetPlayerFromCharacter(v) and v ~= Client.Character and v:FindFirstChild('Humanoid') and v.Humanoid.Health > 0 then
                 local targetpart = v:FindFirstChild(targetPart) or v.PrimaryPart
-                if AimbotSettings.TeamCheck and getTeams[v.Name] ~= true then
+                if Library.TeamCheck and getTeams[v.Name] ~= true then
                     local _, OnScreen = worldToView(targetpart)
                     if OnScreen then
                         local targetPos = worldToView(targetpart)
-                        local fovPos = (AimbotSettings.FromMouse and worldToView(Mouse.Hit.p)) or FieldView.Position
+                        local fovPos = (Library.FromMouse and worldToView(Mouse.Hit.p)) or Library.Object['Circle'].Position
                         local dist = (Vector2.new(fovPos.X, fovPos.Y) - Vector2.new(targetPos.X, targetPos.Y)).magnitude
                         if dist < closestDist then
                             closestDist = dist
@@ -144,7 +149,7 @@ function getClosestFOV(char_folder, targetPart, fov)
                     local _, OnScreen = worldToView(targetpart)
                     if OnScreen then
                         local targetPos = worldToView(targetpart)
-                        local fovPos = (AimbotSettings.FromMouse and worldToView(Mouse.Hit.p)) or FieldView.Position
+                        local fovPos = (Library.FromMouse and worldToView(Mouse.Hit.p)) or Library.Object['Circle'].Position
                         local dist = (Vector2.new(fovPos.X, fovPos.Y) - Vector2.new(targetPos.X, targetPos.Y)).magnitude
                         if dist < closestDist then
                             closestDist = dist
@@ -180,10 +185,10 @@ function aimAt(o,wallcheck)
                 end
                 local Hit,_ = workspace:FindPartOnRayWithIgnoreList(newRay, ignore)
                 if not Hit then
-                    mousemoverel((targetPos.X - mousePos.X)/AimbotSettings.Smooth, (targetPos.Y - mousePos.Y)/AimbotSettings.Smooth - 2)
+                    mousemoverel((targetPos.X - mousePos.X)/Library.Smooth, (targetPos.Y - mousePos.Y)/Library.Smooth - 2)
                 end
             else
-                mousemoverel((targetPos.X - mousePos.X)/AimbotSettings.Smooth, (targetPos.Y - mousePos.Y)/AimbotSettings.Smooth - 2)
+                mousemoverel((targetPos.X - mousePos.X)/Library.Smooth, (targetPos.Y - mousePos.Y)/Library.Smooth - 2)
             end
         end
     end
@@ -196,15 +201,11 @@ Players.PlayerRemoving:Connect(function(v)
 end)
 
 game:GetService('RunService').RenderStepped:Connect(function()
-    if AimbotSettings.Enabled then
-        up(AimbotSettings.ShowFov)
+    if Library.Enabled then
+        up(Library.ShowFov)
         if getClosestFOV() then
-            aimAt(getClosestFOV()[AimbotSettings.Target], AimbotSettings.WallCheck)
+            aimAt(getClosestFOV()[Library.Target], Library.WallCheck)
         end
-    end
-
-    if Enabled and getClosestFOV() then
-        
     end
     game:GetService('RunService').RenderStepped:Wait()
 end)
