@@ -1,6 +1,10 @@
 <head>
     <title>KRNL32</title>
     <link rel='icon' href="https://cdn.discordapp.com/attachments/844790586237255701/907452905253130330/imageedit_1_7308727527.png" type="image/png">
+    <meta charset="UTF-8">
+    <meta name="description" content="KRNL32 Script Hub">
+    <meta name="keywords" content="Roblox Script">
+    <meta name="author" content="KERNEL32">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Righteous&display=swap');
@@ -18,6 +22,7 @@
         body {
             background-color: rgb(20, 20, 20);
             color: whitesmoke;
+            overflow: hidden;
         }
         ::-webkit-scrollbar {
             width: 10px;
@@ -113,10 +118,28 @@
 <body>
     <div class="navbar">
         <a href="./">KRNL32</a>
-        <div>
-            <a href="#">About</a>
-            <a href="#">Download</a>
+        <div id='navigation'>
+            <a href="#about">About</a>
+            <a href="#download">Download</a>
         </div>
+        <script>
+            function listener(self) {
+                try {
+                    var Id = self.target.href.match(/#\w+/g)[0]
+                    Id = Id.substring(1,Id.length)
+                    const element = document.getElementById(Id)
+                    element.scrollIntoView({ block: 'end',  behavior: 'smooth' })
+                } catch(err) {
+                    console.log(err)
+                }
+                
+            }
+            document.getElementById('navigation').childNodes.forEach(function(e){
+                if (e.nodeName != 'A') return;
+                e.addEventListener('click', listener)
+            })
+
+        </script>
     </div>
     <div class="content">
         <div id="center">
