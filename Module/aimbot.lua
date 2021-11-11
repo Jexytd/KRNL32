@@ -68,6 +68,10 @@ local CurrentCamera = workspace.CurrentCamera
 
 local CenterScreen = (CurrentCamera.ViewportSize)/2
 
+if getgenv().FieldView then
+    FieldView:Remove()
+    FieldView = nil
+end
 if not getgenv().FieldView then getgenv().FieldView = Drawing.new('Circle') end
 function up(show)
     local MousePos = Vector2.new(Mouse.X, Mouse.Y + (game:GetService('GuiService'):GetGuiInset().Y))
