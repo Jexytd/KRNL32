@@ -10,7 +10,7 @@ local Library = {
     FromMouse = false,
     FOV = 60,
     FOVColor = Color3.fromRGB(69,69,230),
-    Smooth = 1.5,
+    Smooth = 2,
     Target = 'Head',
     Object = {}
 }

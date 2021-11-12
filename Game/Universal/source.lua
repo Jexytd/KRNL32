@@ -94,7 +94,7 @@ s2s:Slider("Aim FOV", Aimbot.FOV,300,1,1,"ASFov", function(t)
     Aimbot:setFov(t)
 end)
 
-s2s:Slider("Aim Smooth", Aimbot.Smooth,10,0.5,0.5,"ASSmooth", function(t)
+s2s:Slider("Aim Smooth", Aimbot.Smooth,5,1,1,"ASSmooth", function(t)
     Aimbot:setSmooth(t)
 end)
 
