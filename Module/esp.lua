@@ -267,9 +267,7 @@ function base:Update()
                 a.Visible = false
             end
         else
-            for I in pairs(a) do
-                a[I].Visible = false
-            end
+            a.Visible = false
         end
         if ESP.Box and ESP.TypeBox == '3D Classic' then
             local locs = {}
@@ -361,8 +359,8 @@ function base:Update()
                 end
             end
         else
-            for I in pairs(a) do
-                a[I].Visible = false
+            for j=1,6 do
+                a[j].Visible = false
             end
         end
         if ESP.Healthbar then
@@ -391,7 +389,15 @@ function base:Update()
             end
         end
     else
-        a.Visible = false
+        if type(a) == 'table' then
+            for I in pairs(a) do
+                if I == 'Visible' then
+                    a[I].Visible = false
+                end
+            end
+        else
+            a.Visible = false
+        end
         b.Visible = false
     end
 end
