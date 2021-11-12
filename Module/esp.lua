@@ -239,7 +239,12 @@ function base:Update()
                     a[I].Visible = false
                 end
             end 
-        elseif ESP.Box and ESP.TypeBox == 'Classic' then
+        else
+            for I in pairs(a) do
+                a[I].Visible = false
+            end
+        end
+        if ESP.Box and ESP.TypeBox == 'Classic' then
             local locs = {
                 TR = CF + Vector3.new(-Size.X/2, Size.Y, 0),
                 TL = CF + Vector3.new(Size.X/2, Size.Y, 0),
@@ -261,7 +266,12 @@ function base:Update()
             else
                 a.Visible = false
             end
-        elseif ESP.Box and ESP.TypeBox == '3D Classic' then
+        else
+            for I in pairs(a) do
+                a[I].Visible = false
+            end
+        end
+        if ESP.Box and ESP.TypeBox == '3D Classic' then
             local locs = {}
             local box2
             local p,v = wtvp(CF.p)
@@ -350,7 +360,10 @@ function base:Update()
                     a[j].Visible = false
                 end
             end
-            
+        else
+            for I in pairs(a) do
+                a[I].Visible = false
+            end
         end
         if ESP.Healthbar then
             local Humanoid = self.Object:FindFirstChildOfClass('Humanoid')
