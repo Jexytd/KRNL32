@@ -200,7 +200,7 @@ Players.PlayerRemoving:Connect(function(v)
     end
 end)
 
-game:GetService('RunService').RenderStepped:Connect(function()
+game:GetService('RunService').Heartbeat:Connect(function()
     if Library.Enabled then
         up(Library.ShowFov)
         if getClosestFOV() then
