@@ -83,7 +83,7 @@ function up(show)
     local MousePos = Vector2.new(Mouse.X, Mouse.Y + (game:GetService('GuiService'):GetGuiInset().Y))
     if Library.Object['Circle'] then
         Library.Object['Circle'].Transparency = 1
-        Library.Object['Circle'].Visible = Library.Enabled and show
+        Library.Object['Circle'].Visible = (Library.Enabled and show) or false
         Library.Object['Circle'].Color = Library.FOVColor
         Library.Object['Circle'].Thickness = 2
         Library.Object['Circle'].NumSides = 13
