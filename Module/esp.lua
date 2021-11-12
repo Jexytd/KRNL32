@@ -29,7 +29,7 @@ function Draw(a, b)
 end
 
 function ESP:Toggle(bool)
-    ESP.Enabled = bool
+    self.Enabled = bool
     if not bool then
         for i,v in pairs(self.Objects) do
             if v.Type == "Box" then --fov circle etc

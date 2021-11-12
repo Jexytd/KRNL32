@@ -116,7 +116,7 @@ s3:Toggle("Boxes", false,"EBox", function(t)
 end)
 
 s3:Dropdown("Box Type", {"Classic","Corners","3D Classic"},"Classic","Dropdown", function(t)
-    print(t)
+    ESP:setTypeBox(t)
  end)
 
 s3:Toggle("Health Bar", false,"EHealthBar", function(t)
