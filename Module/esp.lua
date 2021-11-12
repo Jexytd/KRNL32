@@ -1,4 +1,4 @@
-ESP = getgenv().ESP or {
+ESP = {
     Enabled = false,
 
     Box = false,
@@ -62,7 +62,7 @@ function ESP:setColor(c)
 end
 
 function ESP:setBoxShift(cf)
-    ESP.BoxShift = cf
+    ESP.BoxShift = CFrame.new(0,cf,0)
 end
 
 base = {}

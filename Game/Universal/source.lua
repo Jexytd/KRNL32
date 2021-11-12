@@ -75,7 +75,7 @@ s2:Toggle("Enabled", false,"AEnabled", function(t)
     Aimbot:toggle(t)
 end)
  
-s2:Toggle("Show FOV", false,"AFov", function(t)
+s2:Toggle("FOV", false,"AFov", function(t)
     Aimbot:showFov(t)
 end)
 
@@ -90,14 +90,39 @@ end)
 s2:Toggle("Team Check", false,"AFromATeamcheckmouse", function(t)
     Aimbot:teamCheck(t)
 end)
+
 s2s:Slider("Aim FOV", 0,300,Aimbot.FOV,1,"ASFov", function(t)
     Aimbot:setFov(t)
 end)
 
-s2s:Slider("Aim Smooth", 0,5,Aimbot.Smooth,1,"ASSmooth", function(t)
+s2s:Slider("Aim Smooth", 0,10,Aimbot.Smooth,1,"ASSmooth", function(t)
     Aimbot:setSmooth(t)
 end)
 
 s2s:Colorpicker("FOV Color", Aimbot.FOVColor,"FOVPicker", function(t)
     Aimbot:setFovColor(t)
+end)
+
+local t3 = Windows:Tab('ESP')
+local s3 = t3:Section('ESP')
+local s3s = t3:Section('Settings')
+
+s3:Toggle("Enabled", false,"EEnabled", function(t)
+    ESP:Toggle(t)
+end)
+
+s3:Toggle("Boxes", false,"EBox", function(t)
+    ESP:showBox(t)
+end)
+
+s3:Toggle("Health Bar", false,"EHealthBar", function(t)
+    ESP:showHP(t)
+end)
+
+s3s:Slider("Thickness", 0,300,ESP.Thickness,1,"ASFov", function(t)
+    ESP:setThickness(t)
+end)
+
+s3s:Slider("Box Shift", -5,5,-1.5,0.5,"ASSmooth", function(t)
+    ESP:setBoxShift(t)
 end)
