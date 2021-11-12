@@ -131,6 +131,6 @@ s3s:Slider("Box Shift", -5,5,-1.5,0.5,"ASSmooth", function(t)
     ESP:setBoxShift(t)
 end)
 
-s3s:Colorpicker("ESP Color", Aimbot.FOVColor,"FOVPicker", function(t)
+s3s:Colorpicker("ESP Color", Aimbot.FOVColor,"ESPPicker", function(t)
     ESP:setColor(t)
 end)
