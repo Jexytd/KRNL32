@@ -241,10 +241,10 @@ function base:Update()
             end 
         elseif ESP.Box and ESP.TypeBox == 'Classic' then
             local locs = {
-                TR = CF * Vector3.new(-Size.X/2, Size.Y, 0),
-                TL = CF * Vector3.new(Size.X/2, Size.Y, 0),
-                BL = CF * Vector3.new(Size.X/2, -Size.Y, 0),
-                BR = CF * Vector3.new(-Size.X/2, -Size.Y, 0),
+                TR = CF + Vector3.new(-Size.X/2, Size.Y, 0),
+                TL = CF + Vector3.new(Size.X/2, Size.Y, 0),
+                BL = CF + Vector3.new(Size.X/2, -Size.Y, 0),
+                BR = CF + Vector3.new(-Size.X/2, -Size.Y, 0),
             }
             local p1,v1 = wtvp(locs.TR.p)
             local p2,v2 = wtvp(locs.TL.p)
