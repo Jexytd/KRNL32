@@ -90,11 +90,11 @@ end)
 s2:Toggle("Team Check", false,"AFromATeamcheckmouse", function(t)
     Aimbot:teamCheck(t)
 end)
-s2s:Slider("Aim FOV", 0,180,0,1,"ASFov", function(t)
+s2s:Slider("Aim FOV", Aimbot.FOV,300,1,1,"ASFov", function(t)
     Aimbot:setFov(t)
 end)
 
-s2s:Slider("Aim Smooth", 0,10,0,0.5,"ASSmooth", function(t)
+s2s:Slider("Aim Smooth", Aimbot.Smooth,10,0.5,0.5,"ASSmooth", function(t)
     Aimbot:setSmooth(t)
 end)
 
