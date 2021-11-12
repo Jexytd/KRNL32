@@ -41,28 +41,30 @@ function ESP:Toggle(bool)
     end
 end
 
-function ESP:showBox(bool)
-    ESP.Box = bool
-end
+do
+    function ESP:showBox(bool)
+        self.Box = bool
+    end
 
-function ESP:showHP(bool)
-    ESP.HealthBar = bool
-end
+    function ESP:showHP(bool)
+        self.Healthbar = bool
+    end
 
-function ESP:setTypeBox(s)
-    ESP.TypeBox = s
-end
+    function ESP:setTypeBox(s)
+        self.TypeBox = s
+    end
 
-function ESP:setThickness(n)
-    ESP.Thickness = n
-end
+    function ESP:setThickness(n)
+        self.Thickness = n
+    end
 
-function ESP:setColor(c)
-    ESP.Color = c
-end
+    function ESP:setColor(c)
+        self.Color = c
+    end
 
-function ESP:setBoxShift(cf)
-    ESP.BoxShift = CFrame.new(0,cf,0)
+    function ESP:setBoxShift(cf)
+        self.BoxShift = CFrame.new(0,cf,0)
+    end
 end
 
 base = {}
@@ -107,7 +109,7 @@ function base:Update()
             Visible = ESP.Enabled and ESP.Box
         })
         return
-    elseif ESP.TypeBox == '3D' and type(self.Drawed.Box) ~= 'table' then
+    elseif ESP.TypeBox == '3D Classic' and type(self.Drawed.Box) ~= 'table' then
         self.Drawed.Box = {}
         for i = 1, 2 do
             table.insert(self.Drawed.Box, Draw('Quad', {

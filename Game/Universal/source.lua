@@ -115,6 +115,10 @@ s3:Toggle("Boxes", false,"EBox", function(t)
     ESP:showBox(t)
 end)
 
+s3:Dropdown("Box Type", {"Classic","Corners","3D Classic"},"Classic","Dropdown", function(t)
+    print(t)
+ end)
+
 s3:Toggle("Health Bar", false,"EHealthBar", function(t)
     ESP:showHP(t)
 end)
@@ -125,4 +129,8 @@ end)
 
 s3s:Slider("Box Shift", -5,5,-1.5,0.5,"ASSmooth", function(t)
     ESP:setBoxShift(t)
+end)
+
+s3s:Colorpicker("ESP Color", Aimbot.FOVColor,"FOVPicker", function(t)
+    ESP:setColor(t)
 end)
