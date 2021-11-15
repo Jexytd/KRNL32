@@ -231,7 +231,7 @@ function Base:Update()
             local p,v = worldToView(locs[Library.UsernamePos])
             if v then
                 Username.Visible = true
-                Username.Color = self.Color or Library.Color
+                Username.Color = Library.Color
                 Username.Size = Library.TextSize
                 Username.Position = p 
                 Username.Center = true
@@ -249,7 +249,7 @@ function Base:Update()
             local p,v = worldToView(locs[Library.DistancePos])
             if v then
                 Distance.Visible = true
-                Distance.Color = self.Color or Library.Color
+                Distance.Color = Library.Color
                 Distance.Size = Library.TextSize
                 Distance.Position = p 
                 Distance.Center = true
@@ -277,7 +277,7 @@ function Base:Update()
             if v then
                 Tracer.Visible = true
                 Tracer.Thickness = Library.Thickness
-                Tracer.Color = self.Color or Library.Color
+                Tracer.Color = Library.Color
                 Tracer.From = Vector2.new(p.X, p.Y)
                 Tracer.To = p2 or tracer_locs[Library.TracerType]
             else
@@ -300,7 +300,7 @@ function Base:Update()
                     if (v or v2 or v3 or v4) then
                         Box.Visible = true
                         Box.Thickness = Library.Thickness
-                        Box.Color = self.Color or Library.Color
+                        Box.Color = Library.Color
                         Box.PointA = p
                         Box.PointB = p2
                         Box.PointC = p3
@@ -370,7 +370,7 @@ function Base:Update()
                     local p2,v2 = worldToView(locs2[2])
                     if (v or v2) then
                         HP.Visible = true
-                        HP.Color = self.Color or Library.Color
+                        HP.Color = Library.Color
                         HP.PointA = p
                         HP.PointB = p
                         HP.PointC = p2
@@ -388,7 +388,7 @@ function Base:Update()
                     local p,v = worldToView(locs[Library.HPPos])
                     if v then
                         HP.Visible = true
-                        HP.Color = self.Color or Library.Color
+                        HP.Color = Library.Color
                         HP.Center = true
                         HP.Outline = true
                         HP.Position = p
