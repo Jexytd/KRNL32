@@ -180,16 +180,28 @@ function Base:Update()
     }
     if oldBox and oldHP then
         if oldBox ~= Library.BoxType then
-            for i in pairs(self.Data['Box']) do
-                self.Data['Box'][i]:Remove()
-                self.Data['Box'][i] = nil
+            if type(self.Data['Box']) == 'userdata' then
+                self.Data['Box'].Visible = false
+                self.Data['Box']:Remove()
+                self.Data['Box'] = nil
+            else
+                for i in pairs(self.Data['Box']) do
+                    self.Data['Box'][i]:Remove()
+                    self.Data['Box'][i] = nil
+                end
             end
             self.Data['Box'] = nil
         end
         if oldHP ~= Library.HPType then
-            for i in pairs(self.Data['HP']) do
-                self.Data['HP'][i]:Remove()
+            if type(self.Data['HP']) == 'userdata' then
+                self.Data['HP'].Visible = false
+                self.Data['HP']:Remove()
                 self.Data['HP'] = nil
+            else
+                for i in pairs(self.Data['HP']) do
+                    self.Data['HP'][i]:Remove()
+                    self.Data['HP'] = nil
+                end
             end
             self.Data['HP'] = nil
         end
