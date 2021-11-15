@@ -7,7 +7,7 @@ Library = {
     Tracer = false,
     ESPType = 'Dynamic',
 
-    BoxType = 'Corner',
+    BoxType = 'Default',
     HPType = 'Bar',
     TracerType = 'FromCharacter',
     UsernamePos = 'Top',
@@ -303,8 +303,6 @@ function Base:Update()
                         Box.PointB = p2
                         Box.PointC = p3
                         Box.PointD = p4
-                    else
-                        Box.Visible = false
                     end
                 end
             else
