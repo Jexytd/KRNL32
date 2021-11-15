@@ -1,452 +1,484 @@
-ESP = {
+Library = {
     Enabled = false,
+    Boxes = false,
+    HP = false,
+    Username = false,
+    Distance = false,
+    Tracer = false,
+    ESPType = 'Dynamic',
 
-    Box = false,
-    Healthbar = false,
+    BoxType = 'Corner',
+    HPType = 'Bar',
+    TracerType = 'FromCharacter',
+    UsernamePos = 'Top',
+    DistancePos = 'Bottom',
+    HPPos = 'Top',
 
-    TypeBox = 'Classic',
     Thickness = 2,
-    Color = Color3.fromRGB(255, 255, 255),
-    BoxShift = CFrame.new(0,-1.5,0),
+    TextSize = 16,
+    Color = Color3.fromRGB(255,255,255),
     Objects = {}
 }
+Library.__index = Library
 
-local Players,Client,Camera,IsLoaded,w do
-    Players = game:GetService('Players')
-    Client = Players.LocalPlayer
-    Camera = workspace.CurrentCamera
-    IsLoaded = game:IsLoaded()
-end
-repeat task.wait() until IsLoaded;
-
-function Draw(a, b)
-    local c = Drawing.new(a)
-    local c2 = b or {}
-    for k,v in ipairs(c2) do
-        c[k] = v;
+do
+    function Library:toggle(t)
+        self.Enabled = t
     end
-    return c
-end
+    function Library:showBox(t)
+        self.Boxes = t
+    end
+    function Library:showHP(t)
+        self.HP = t
+    end
+    function Library:showUsername(t)
+        self.Username = t
+    end
+    function Library:showDistance(t)
+        self.Distance = t
+    end
+    function Library:showTracer(t)
+        self.Tracer = t
+    end
 
-function ESP:Toggle(bool)
-    self.Enabled = bool
-    if not bool then
-        for i,v in pairs(self.Objects) do
-            if v.Type == "Box" then --fov circle etc
-                for i,v in pairs(v.Drawed) do
-                    v.Visible = false
-                end
+    function Library:setBoxType(s)
+        if not self.BoxType[s] then return warn('Invalid Type') end
+        for k,v in pairs(self.BoxType) do
+            if v == true and k ~= s then
+                self.BoxType[k] = false
+            end
+            if k == s and v == false then
+                self.BoxType[k] = true
             end
         end
     end
-end
-
-do
-    function ESP:showBox(bool)
-        self.Box = bool
+    function Library:setHPType(s)
+        if not self.HPType[s] then return warn('Invalid Type') end
+        for k,v in pairs(self.HPType) do
+            if v == true and k ~= s then
+                self.HPType[k] = false
+            end
+            if k == s then
+                self.HPType[k] = true
+            end
+        end
     end
-
-    function ESP:showHP(bool)
-        self.Healthbar = bool
+    function Library:setTracerType(s)
+        if not self.BoxType[s] then return warn('Invalid Type') end
+        for k,v in pairs(self.BoxType) do
+            if v == true and k ~= s then
+                self.BoxType[k] = false
+            end
+            if k == s then
+                self.BoxType[k] = true
+            end
+        end
     end
-
-    function ESP:setTypeBox(s)
-        self.TypeBox = s
-    end
-
-    function ESP:setThickness(n)
+    function Library:setThickness(n)
         self.Thickness = n
     end
-
-    function ESP:setColor(c)
+    function Library:setColor(c)
         self.Color = c
-    end
-
-    function ESP:setBoxShift(cf)
-        self.BoxShift = CFrame.new(0,cf,0)
     end
 end
 
-base = {}
-base.__index = base
+local Players = game:GetService('Players')
+local Client = Players.LocalPlayer
+local Mouse = Client:GetMouse()
+local CurrentCamera = workspace.CurrentCamera
 
-function base:Remove()
-    ESP.Objects[self.Object] = nil
-    for i,v in pairs(self.Drawed) do
+local function draw(userdata, properties)
+    local object = Drawing.new(userdata)
+    local properties = properties or {}
+    for k,v in pairs(properties) do
+        object[k] = v
+    end
+    return object
+end
+
+Base = {}
+Base.__index = Base
+
+function Base:Remove()
+    Library.Objects[self.Object] = nil
+    for i in pairs(self.Data) do
         if type(v) == 'table' then
             for k,v2 in pairs(v) do
                 v[k].Visible = false
                 v[k]:Remove()
-                self.Drawed[i] = nil
+                self.Data[i] = nil
             end
         else
-            self.Drawed[i].Visible = false
-            self.Drawed[i]:Remove()
-            self.Drawed[i] = nil
+            self.Data[i].Visible = false
+            self.Data[i]:Remove()
+            self.Data[i] = nil
         end
     end
 end
 
-function base:Update()
-    if not self.PrimaryPart then
-        return self:Remove()
-    end
+function Base:Update()
+    if (not self.PrimaryPart) then return warn(self.Name .. ' not have PrimaryPart') end
 
-    if ESP.TypeBox == 'Corners' and type(self.Drawed.Box) ~= 'table' then
-        self.Drawed.Box = {}
-        for i=1,8 do
-            table.insert(self.Drawed.Box, Draw('Line', {
-                Color = ESP.Color,
-                Thickness = ESP.Thickness,
-                Visible = ESP.Enabled and ESP.Box
-            }))
-        end
-        return
-    elseif ESP.TypeBox == 'Classic' and type(self.Drawed.Box) ~= 'userdata' then
-        self.Drawed.Box = Draw('Quad', {
-            Thickness = self.Thickness,
-            Color = ESP.Color,
-            Visible = ESP.Enabled and ESP.Box
-        })
-        return
-    elseif ESP.TypeBox == '3D Classic' and type(self.Drawed.Box) ~= 'table' then
-        self.Drawed.Box = {}
-        for i = 1, 2 do
-            table.insert(self.Drawed.Box, Draw('Quad', {
-                Color = ESP.Color,
-                Thickness = ESP.Thickness,
-                Visible = ESP.Enabled and ESP.Box
-            }))
-        end
-        for i=1,4 do
-            table.insert(self.Drawed.Box, Draw('Line', {
-                Color = ESP.Color,
-                Thickness = ESP.Thickness,
-                Visible = ESP.Enabled and ESP.Box
-            }))
-        end
-        return
-    end
+    local cf = self.PrimaryPart.CFrame
+    local size = self.Size or self.PrimaryPart.Size
+    local CenterScreen = (CurrentCamera.ViewportSize)/2
     
-    local a,b = self.Drawed.Box, self.Drawed.Healthbar
-    local wtvp = function(x)
-        return Camera:WorldToViewportPoint(x)
-    end
-    if ESP.Enabled then
-        local CF,Size = self.PrimaryPart.CFrame, self.PrimaryPart.Size
-        if ESP.Box and ESP.TypeBox == 'Corners' then
-            local p,v = wtvp(CF.p)
-            if v then
-                local locs = {
-                    TR = CF + Vector3.new(-Size.X/2, Size.Y, 0),
-                    TL = CF + Vector3.new(Size.X/2, Size.Y, 0),
-                    BL = CF + Vector3.new(Size.X/2, -Size.Y, 0),
-                    BR = CF + Vector3.new(-Size.X/2, -Size.Y, 0),
-                }
-                local t = {false, false}
-                local i = 1
-                local is1 = false
-                local is2 = false
-                local isMinus = false
-                local c = coroutine.create(function()
-                  for x=1,4 do
-                    if not is1 and t[i] == false then
-                      t[i] = true
-                      is1 = true
-                    end
-                    coroutine.yield()
-                    if is1 and t[i] == true then
-                      t[i] = false
-                    end
-                    coroutine.yield()
-                    if is1 then is1 = false end
-                  end
-                end)
-
-                local c2 = coroutine.create(function()
-                  for x=1,4 do
-                    if not is2 and t[i] == false then
-                      is2 = true
-                    end
-                    coroutine.yield()
-                    if is2 and t[i] == false then
-                      t[i] = true
-                      is2 = false
-                    end
-                    coroutine.yield()
-                    if not is2 and t[i] == true then
-                      t[i] = false
-                    end
-                  end
-                end)
-
-                local vector;
-                for j=1, 8 do
-                  local getLocs = (function()
-                    if j == 1 or j == 2 then
-                        return locs.TR.p
-                    elseif j == 3 or j == 4 then
-                        return locs.TL.p
-                    elseif j == 5 or j == 6 then
-                        return locs.BL.p
-                    elseif j == 7 or j == 8 then
-                    end
-                  end)()
-                  local Pos = wtvp(getLocs)
-                  local Ratio = (Camera.CFrame.p - self.PrimaryPart.Position).magnitude
-                  local Offset = math.clamp(1/Ratio*375, 2, 300)
-                  if i == 1 then
-                    coroutine.resume(c)
-                  elseif i == 2 then
-                    coroutine.resume(c2)
-                  end
-                  if a[1] == a[i] then
-                    if j == 1 or j == 2 then
-                        vector2 = Vector2.new(Pos.X + Offset, Pos.Y)
-                    end
-                    if j == 3 or j == 4 then
-                        vector2 = Vector2.new(Pos.X - Offset, Pos.Y)
-                    end
-                    if j == 5 or j == 6 then
-                        vector2 = Vector2.new(Pos.X - Offset, Pos.Y)
-                    end
-                    if j == 7 or j == 8 then
-                        vector2 = Vector2.new(Pos.X + Offset, Pos.Y) 
-                    end
-                  elseif a[2] == a[i] then
-                    if j == 1 or j == 2 then
-                        vector2 = Vector2.new(Pos.X, Pos.Y + Offset)
-                    end
-                    if j == 3 or j == 4 then
-                        vector2 = Vector2.new(Pos.X, Pos.Y + Offset)
-                    end
-                    if j == 5 or j == 6 then
-                        vector2 = Vector2.new(Pos.X, Pos.Y - Offset)
-                    end
-                    if j == 7 or j == 8 then
-                        vector2 = Vector2.new(Pos.X, Pos.Y - Offset)
-                    end
-                  end
-                  a[j].Visible = true
-                  a[j].Color = ESP.Color
-                  a[j].From = Vector2.new(Pos.X, Pos.Y)
-                  a[j].To = vector2
-                  i = i+1
-                  if i > 2 then i = 1 end
-                end
-            else
-                for I in pairs(a) do
-                    a[I].Visible = false
-                end
-            end 
-        else
-            for I in pairs(a) do
-                a[I].Visible = false
-            end
-        end
-        if ESP.Box and ESP.TypeBox == 'Classic' then
-            local locs = {
-                TR = CF + Vector3.new(-Size.X/2, Size.Y, 0),
-                TL = CF + Vector3.new(Size.X/2, Size.Y, 0),
-                BL = CF + Vector3.new(Size.X/2, -Size.Y, 0),
-                BR = CF + Vector3.new(-Size.X/2, -Size.Y, 0),
+    if not self.Data['HP'] and not self.Data['Box'] then
+        local BoxType = {
+            ['Default']= draw('Quad', {
+                Thickness=Library.Thickness,
+                Color=self.Color,
+                Visible=Library.Enabled and Library.Boxes
+            }), 
+            ['Corner']= {
+                ['TR1'] = draw('Line', {
+                    Thickness=Library.Thickness,
+                    Color=self.Color,
+                    Visible=Library.Enabled and Library.Boxes
+                }),
+                ['TR2'] = draw('Line', {
+                    Thickness=Library.Thickness,
+                    Color=self.Color,
+                    Visible=Library.Enabled and Library.Boxes
+                }),
+                ['TL1'] = draw('Line', {
+                    Thickness=Library.Thickness,
+                    Color=self.Color,
+                    Visible=Library.Enabled and Library.Boxes
+                }),
+                ['TL2'] = draw('Line', {
+                    Thickness=Library.Thickness,
+                    Color=self.Color,
+                    Visible=Library.Enabled and Library.Boxes
+                }),
+                ['BL1'] = draw('Line', {
+                    Thickness=Library.Thickness,
+                    Color=self.Color,
+                    Visible=Library.Enabled and Library.Boxes
+                }),
+                ['BL2'] = draw('Line', {
+                    Thickness=Library.Thickness,
+                    Color=self.Color,
+                    Visible=Library.Enabled and Library.Boxes
+                }),
+                ['BR1'] = draw('Line', {
+                    Thickness=Library.Thickness,
+                    Color=self.Color,
+                    Visible=Library.Enabled and Library.Boxes
+                }),
+                ['BR2'] = draw('Line', {
+                    Thickness=Library.Thickness,
+                    Color=self.Color,
+                    Visible=Library.Enabled and Library.Boxes
+                }),
             }
-            local p1,v1 = wtvp(locs.TR.p)
-            local p2,v2 = wtvp(locs.TL.p)
-            local p3,v3 = wtvp(locs.BL.p)
-            local p4,v4 = wtvp(locs.BR.p)
-            if (v1 or v2 or v3 or v4) then
-                a.Visible = true
-                a.PointA = p1
-                a.PointB = p2
-                a.PointC = p3
-                a.PointD = p4
-                a.Color = ESP.Color
-                a.Thickness = ESP.Thickness
+        }
+        local HPType = {
+            ['Default']= draw('Text', {
+                Color=self.Color,
+                Visible=Library.Enabled and Library.HP
+            }), 
+            ['Bar']= draw('Quad', {
+                Thickness=Library.Thickness,
+                Color=self.Color,
+                Visible=Library.Enabled and Library.HP
+            })
+        }
+        self.Data['HP'] = HPType[Library.HPType]
+        self.Data['Box'] = BoxType[Library.BoxType]
+    end
+
+    local Box,HP,Username,Distance,Tracer do
+        Box = self.Data['Box']
+        HP = self.Data['HP']
+        Username = self.Data['Username']
+        Distance = self.Data['Distance']
+        Tracer = self.Data['Tracer']
+    end
+    local worldToView = function(o)
+        local o = o
+        if typeof(o) == 'CFrame' then
+            o = o.p
+        elseif typeof(o) == 'Instance' then
+            o = o.Position
+        end
+        if typeof(o) ~= 'Vector3' then return warn('Something went wrong when converting') end
+        return CurrentCamera:WorldToViewportPoint(o)
+    end
+
+    local locs
+    if Library.ESPType == 'Static' then
+        locs = {
+            ['Top'] = cf + Vector3.new(0, size.Y, 0),
+            ['Bottom'] = cf + Vector3.new(0, -size.Y, 0),
+            ['Left'] = cf + Vector3.new(size.X/2, 0, 0),
+            ['Right'] = cf + Vector3.new(-size.X/2, 0, 0),
+            ['TopLeft'] = cf + Vector3.new(size.X/2,size.Y, 0),
+            ['TopRight'] = cf + Vector3.new(-size.X/2,size.Y, 0),
+            ['BottomLeft'] = cf + Vector3.new(size.X/2,-size.Y, 0),
+            ['BottomRight'] = cf + Vector3.new(-size.X/2,-size.Y, 0),
+        }
+    elseif Library.ESPType == 'Dynamic' then
+        locs = {
+            ['Top'] = cf * CFrame.new(0, size.Y, 0),
+            ['Bottom'] = cf * CFrame.new(0, -size.Y, 0),
+            ['Left'] = cf * CFrame.new(size.X/2, 0, 0),
+            ['Right'] = cf * CFrame.new(-size.X/2, 0, 0),
+            ['TopLeft'] = cf * CFrame.new(size.X/2,size.Y, 0),
+            ['TopRight'] = cf * CFrame.new(-size.X/2,size.Y, 0),
+            ['BottomLeft'] = cf * CFrame.new(size.X/2,-size.Y, 0),
+            ['BottomRight'] = cf * CFrame.new(-size.X/2,-size.Y, 0),
+        }
+    end
+    local Humanoid = self.Object:FindFirstChildOfClass('Humanoid')
+    if Humanoid then
+        Humanoid.Died:Connect(function()
+            for k,v in pairs(self.Data) do
+                if type(v) == 'table' then
+                    for i,v in pairs(v) do
+                        v[i].Visible = false
+                    end
+                else
+                    self.Data[k].Visible = false
+                end
+            end
+        end)
+    end
+
+    if (Box and HP and Username and Distance and Tracer) then
+        if Library.Username then
+            local p,v = worldToView(locs[Library.UsernamePos])
+            if v then
+                Username.Visible = true
+                Username.Color = self.Color or Library.Color
+                Username.Size = Library.TextSize
+                Username.Position = p 
+                Username.Center = true
+                Username.Outline = true
+                Username.Text = self.Name or 'Loading...'
             else
-                a.Visible = false
+                Username.Visible = false
             end
         else
-            a.Visible = false
+            Username.Visible = false
         end
-        if ESP.Box and ESP.TypeBox == '3D Classic' then
-            local locs = {}
-            local box2
-            local p,v = wtvp(CF.p)
+
+        if Library.Distance then
+            local client_part = Client.Character and (Client.Character.PrimaryPart or Client.Character:FindFirstChild('HumanoidRootPart') or Client.Character:FindFirstChildWhichIsA('BasePart'))
+            local p,v = worldToView(locs[Library.DistancePos])
             if v then
-                local slocs = {
-                    TR=CF*ESP.BoxShift*CFrame.new(-Size.X/2, Size.Y/2, 0),
-                    TL=CF*ESP.BoxShift*CFrame.new(Size.X/2, Size.Y/2, 0),
-                    BL=CF*ESP.BoxShift*CFrame.new(Size.X/2, -Size.Y/2, 0),
-                    BR=CF*ESP.BoxShift*CFrame.new(-Size.X/2, -Size.Y/2, 0)
-                }
-                for j = 1, 6 do
-                    if j == 1 and tostring(a[j]) == 'Quad' then
-                        locs = {
-                            TR = CF*ESP.BoxShift*CFrame.new(-Size.X/2, Size.Y/2, 0),
-                            TL = CF*ESP.BoxShift*CFrame.new(Size.X/2, Size.Y/2, 0),
-                            BL = CF*ESP.BoxShift*CFrame.new(Size.X/2, -Size.Y/2, 0),
-                            BR = CF*ESP.BoxShift*CFrame.new(-Size.X/2, -Size.Y/2, 0)
-                        }
-                    elseif j == 2 and tostring(a[j]) == 'Quad' then
-                        locs = {
-                            TR = CF*ESP.BoxShift*CFrame.new(-Size.X/2, Size.Y/2, Size.Z/2),
-                            TL = CF*ESP.BoxShift*CFrame.new(Size.X/2, Size.Y/2, Size.Z/2),
-                            BL = CF*ESP.BoxShift*CFrame.new(Size.X/2, -Size.Y/2, Size.Z/2),
-                            BR = CF*ESP.BoxShift*CFrame.new(-Size.X/2, -Size.Y/2, Size.Z/2)
-                        }
-                        box2 = locs
-                    elseif j == 3 and tostring(a[j]) == 'Line' then
-                        locs = {
-                            From = slocs.TR,
-                            To = box2.TR
-                        }
-                    elseif j == 4 and tostring(a[j]) == 'Line' then
-                        locs = {
-                            From = slocs.TL,
-                            To = box2.TL
-                        }
-                    elseif j == 5 and tostring(a[j]) == 'Line' then
-                        locs = {
-                            From = slocs.BL,
-                            To = box2.BL
-                        }
-                    elseif j == 6 and tostring(a[j]) == 'Line' then
-                        locs = {
-                            From = slocs.BR,
-                            To = box2.BR
-                        }
+                Distance.Visible = true
+                Distance.Color = self.Color or Library.Color
+                Distance.Size = Library.TextSize
+                Distance.Position = p 
+                Distance.Center = true
+                Distance.Outline = true
+                Distance.Text = tostring(math.floor((client_part.CFrame.p - cf.p).magnitude)) .. 'm away' or 'Loading...'
+            else
+                Distance.Visible = false
+            end
+        else
+            Distance.Visible = false
+        end
+
+        if Library.Tracer then
+            local client_part = Client.Character and (Client.Character.PrimaryPart or Client.Character:FindFirstChild('HumanoidRootPart') or Client.Character:FindFirstChildWhichIsA('BasePart'))
+            local tracer_locs = {
+                ['FromScreen'] = Vector2.new(CurrentCamera.ViewportSize.X/2,CurrentCamera.ViewportSize.X/1.5),
+                ['FromMouse'] = Vector2.new(Mouse.X, Mouse.Y + (game:GetService('GuiService'):GetGuiInset().Y)),
+                ['FromCharacter'] = client_part.CFrame
+            }
+            local p,v = worldToView(cf)
+            local p2
+            if Library.TracerType == 'FromCharacter' then
+                p2 = worldToView(tracer_locs[Library.TracerType])
+            end
+            if v then
+                Tracer.Visible = true
+                Tracer.Thickness = Library.Thickness
+                Tracer.Color = self.Color or Library.Color
+                Tracer.From = Vector2.new(p.X, p.Y)
+                Tracer.To = p2 or tracer_locs[Library.TracerType]
+            else
+                Tracer.Visible = false
+            end
+        else
+            Tracer.Visible = false
+        end
+
+        if Library.Boxes then
+            local _,onScreen = worldToView(cf)
+            if onScreen then   
+                if Library.BoxType == 'Corner' then
+                    print('Work in Progress')
+                elseif Library.BoxType == 'Default' then
+                    local p,v = worldToView(locs['TopRight'])
+                    local p2,v2 = worldToView(locs['TopLeft'])
+                    local p3,v3 = worldToView(locs['BottomLeft'])
+                    local p4,v4 = worldToView(locs['BottomRight'])
+                    if (v or v2 or v3 or v4) then
+                        Box.Visible = true
+                        Box.Thickness = Library.Thickness
+                        Box.Color = self.Color or Library.Color
+                        Box.PointA = p
+                        Box.PointB = p2
+                        Box.PointC = p3
+                        Box.PointD = p4
+                    else
+                        Box.Visible = false
                     end
-                    a[j].Visible = true
-                    a[j].Color = ESP.Color
-                    if locs then
-                        local index = 1
-                        local idk = {}
-                        for _,V in pairs(locs) do
-                            if typeof(V) == 'CFrame' then
-                                table.insert(idk, V)
-                                if tostring(a[j]) == 'Quad' and index == 4 then
-                                    local p1,v1 = wtvp(idk[1].p)
-                                    local p2,v2 = wtvp(idk[2].p)
-                                    local p3,v3 = wtvp(idk[3].p)
-                                    local p4,v4 = wtvp(idk[4].p)
-                                    if (v1 or v2 or v3 or v4) then
-                                        a[j].PointA = p1
-                                        a[j].PointB = p2
-                                        a[j].PointC = p4
-                                        a[j].PointD = p3
-                                    else
-                                        a[j].Visible = false
-                                    end
-                                elseif tostring(a[j]) == 'Line' and index == 2 then
-                                    local p1,v1 = wtvp(idk[1].p)
-                                    local p2,v2 = wtvp(idk[2].p)
-                                    if (v1 or v2) then
-                                        a[j].From = p1
-                                        a[j].To = p2
-                                    else
-                                        a[j].Visible = false
-                                    end
-                                end
-                            end
-                            index = index+1
+                end
+            else
+                if type(Box) == 'table' then
+                    for i in pairs(Box) do
+                        if type(Box[i]) == 'userdata' then
+                            Box[i].Visible = false
                         end
                     end
-                end
-            else
-                for j=1,6 do
-                    a[j].Visible = false
+                else
+                    Box.Visible = false
                 end
             end
         else
-            for j=1,6 do
-                a[j].Visible = false
-            end
-        end
-        if ESP.Healthbar then
-            local Humanoid = self.Object:FindFirstChildOfClass('Humanoid')
-            local Health
-            if Humanoid then
-                Health = Humanoid.Health / Humanoid.MaxHealth
-            end
-            local locs = {
-                Top = CF + Vector3.new(-Size.X/1.5, Size.Y*Health, 0), 
-                Bottom = CF + Vector3.new(-Size.X/1.5, -Size.Y*Health, 0)
-            }
-            local p1,v1 = wtvp(locs.Top.p)
-            local p2,v2 = wtvp(locs.Bottom.p)
-            if (v1 or v2) then
-                b.Visible = true
-                b.PointA = p1
-                b.PointB = p1
-                b.PointC = p2
-                b.PointD = p2
-                --local Color = game:GetService("CoreGui").ThemeProvider.TopBarFrame.RightFrame.HealthBar.HealthBar.Fill.ImageColor3
-                b.Color = ESP.Color
-                b.Thickness = ESP.Thickness
-            else
-                b.Visible = false
-            end
-        end
-    else
-        if type(a) == 'table' then
-            for I in pairs(a) do
-                if I == 'Visible' then
-                    a[I].Visible = false
+            if type(Box) == 'table' then
+                for i in pairs(Box) do
+                    if type(Box[i]) == 'userdata' then
+                        Box[i].Visible = false
+                    end
                 end
+            else
+                Box.Visible = false
+            end
+        end
+
+        if Library.HP then
+            local _,onScreen = worldToView(cf)
+            if onScreen then
+                if Library.HPType == 'Bar' then
+                    local Humanoid = self.Object:FindFirstChildOfClass('Humanoid')
+                    local Health
+                    if Humanoid then
+                        Health = Humanoid.Health / Humanoid.MaxHealth
+                    end
+                    local locs2
+                    if Library.HPPos == 'Top' or Library.HPPos == 'Bottom' then
+                        if Library.ESPType == 'Static' then
+                            locs2 = {
+                                locs[Library.HPPos] + Vector3.new(size.X*Health, (Library.HPPos == 'Top' and (size.Y/4) or Library.HPPos == 'Bottom' and (-size.Y/4)),0),
+                                locs[Library.HPPos] + Vector3.new(-size.X*Health, (Library.HPPos == 'Top' and (size.Y/4) or Library.HPPos == 'Bottom' and (-size.Y/4)),0)
+                            }
+                        elseif Library.ESPType == 'Dynamic' then
+                            locs2 = {
+                                locs[Library.HPPos] * CFrame.new(size.X*Health, (Library.HPPos == 'Top' and (size.Y/4) or Library.HPPos == 'Bottom' and (-size.Y/4)),0),
+                                locs[Library.HPPos] * CFrame.new(-size.X*Health, (Library.HPPos == 'Top' and (size.Y/4) or Library.HPPos == 'Bottom' and (-size.Y/4)),0)
+                            }
+                        end
+                    else
+                        if Library.ESPType == 'Static' then
+                            locs2 = {
+                                cf + Vector3.new((Library.HPPos == 'Left' and (size.X/1.5) or Library.HPPos == 'Right' and (-size.X/1.5)), size.Y*Health, 0),
+                                cf + Vector3.new((Library.HPPos == 'Left' and (size.X/1.5) or Library.HPPos == 'Right' and (-size.X/1.5)), -size.Y*Health, 0)
+                            }
+                        elseif Library.ESPType == 'Dynamic' then
+                            locs2 = {
+                                cf * CFrame.new((Library.HPPos == 'Left' and (size.X/1.5) or Library.HPPos == 'Right' and (-size.X/1.5)), size.Y*Health, 0),
+                                cf * CFrame.new((Library.HPPos == 'Left' and (size.X/1.5) or Library.HPPos == 'Right' and (-size.X/1.5)), -size.Y*Health, 0)
+                            }
+                        end
+                        
+                    end
+                    local p,v = worldToView(locs2[1])
+                    local p2,v2 = worldToView(locs2[2])
+                    if (v or v2) then
+                        HP.Visible = true
+                        HP.Color = self.Color or Library.Color
+                        HP.PointA = p
+                        HP.PointB = p
+                        HP.PointC = p2
+                        HP.PointD = p2
+                    else
+                        HP.Visible = false
+                    end
+                elseif Library.HPType == 'Default' then
+                    local Humanoid = self.Object:FindFirstChildOfClass('Humanoid')
+                    local Health,MaxHealth
+                    if Humanoid then
+                        Health = Humanoid.Health
+                        MaxHealth = Humanoid.MaxHealth
+                    end
+                    local p,v = worldToView(locs[Library.HPPos])
+                    if v then
+                        HP.Visible = true
+                        HP.Color = self.Color or Library.Color
+                        HP.Center = true
+                        HP.Outline = true
+                        HP.Position = p
+                        HP.Text = tostring(Health) .. '//' .. tostring(MaxHealth) or '???/???'
+                    else
+                        HP.Visible = false
+                    end
+                end
+            else
+                HP.Visible = false
             end
         else
-            a.Visible = false
+            HP.Visible = false
         end
-        b.Visible = false
     end
 end
 
-function ESP:Add(object, options)
-    if not object.Parent then return warn(object, ' has no parent') end
-
-    local Box = setmetatable({
-        Name = options.Name or object.Name,
-        Type = 'Box',
-        Color = self.Color or options.Color,
-        Size = options.Size or self.Size,
-        Object = object,
+function Library:Add(o,options)
+    if not o.Parent then return warn(o,'has no parent') end
+    
+    local data = setmetatable({
+        Name = options.Name or o.Name,
+        Type = 'Classic',
+        Color = options.Color or self.Color,
+        Size = options.Size,
+        Object = o,
         IsTeam = options.IsTeam,
-        Player = options.Player or Players:GetPlayerFromCharacter(object),
-        PrimaryPart = options.PrimaryPart or object.ClassName == 'Model' and (object.PrimaryPart or object:FindFirstChild('HumanoidRootPart') or object:FindFirstChildWhichIsA('BasePart')) or object:IsA('BasePart') and object,
-        Drawed = {}
-    }, base)
-
-    if self.Objects[object] then
-        self.Objects[object]:Remove()
-    end
-
-    Box.Drawed['Healthbar'] = Draw('Quad', {
-        Thickness = self.Thickness,
-        Color = Box.Color,
-        Visible = self.Enabled and self.Healthbar
+        Player = options.Player or Players:GetPlayerFromCharacter(o),
+        PrimaryPart = options.PrimaryPart or (o:IsA('Model') and ( o.PrimaryPart or o:FindFirstChild('HumanoidRootPart') or o:FindFirstChildWhichIsA('BasePart') )) or (o:IsA('BasePart') and o),
+        Data = {}
+    },Base)
+    if self.Objects[o] then self.Objects[o]:Remove() end
+    data['Data']['Username'] = draw('Text', {
+        Color = data.Color or self.Color,
+        Visible = self.Enabled and self.Username
     })
-    self.Objects[object] = Box
+    data['Data']['Distance'] = draw('Text', {
+        Color = data.Color or self.Color,
+        Visible = self.Enabled and self.Distance
+    })
+    data['Data']['Tracer'] = draw('Line', {
+        Thickness = self.Thickness,
+        Color = data.Color or self.Color,
+        Visible = self.Enabled and self.Tracer
+    })
+    self.Objects[o] = data
 
-    object.AncestryChanged:Connect(function(_, parent)
-        if parent == nil then
-            Box:Remove()
-        end
+    o.AncestryChanged:Connect(function(_,parent)
+        if not parent then data:Remove() end
     end)
-    object:GetPropertyChangedSignal("Parent"):Connect(function()
-        if object.Parent == nil then
-            Box:Remove()
-        end
+    o:GetPropertyChangedSignal('Parent'):Connect(function()
+        if not o.Parent then data:Remove() end
     end)
-
-    local hum = object:FindFirstChildOfClass("Humanoid")
-	if hum then
+    local hum = o:FindFirstChildOfClass('Humanoid')
+    if hum then
         hum.Died:Connect(function()
-            Box:Remove()
-		end)
+            data:Remove()
+        end)
     end
-
-    return Box
+    local plr = Players:GetPlayerFromCharacter(o)
+    if plr then
+        Players.PlayerRemoving:Connect(function(v)
+            if v == plr then
+                data:Remove()
+                if self.Objects[o] then self.Objects[o]:Remove() end
+            end
+        end)
+    end
+    return data
 end
 
 local function CharAdded(char)
@@ -456,7 +488,7 @@ local function CharAdded(char)
         ev = char.ChildAdded:Connect(function(c)
             if c.Name == "HumanoidRootPart" then
                 ev:Disconnect()
-                ESP:Add(char, {
+                Library:Add(char, {
                     Name = p.Name,
                     Player = p,
                     PrimaryPart = c,
@@ -464,7 +496,7 @@ local function CharAdded(char)
             end
         end)
     else
-        ESP:Add(char, {
+        Library:Add(char, {
             Name = p.Name,
             Player = p,
             PrimaryPart = char.HumanoidRootPart,
@@ -479,15 +511,16 @@ local function PlayerAdded(p)
 end
 Players.PlayerAdded:Connect(PlayerAdded)
 for i,v in pairs(Players:GetPlayers()) do
-    PlayerAdded(v)
+    if v ~= Client then
+        PlayerAdded(v)
+    end
 end
 
 game:GetService("RunService").RenderStepped:Connect(function()
-    for i,v in (ESP.Enabled and pairs or ipairs)(ESP.Objects) do
+    for i,v in (Library.Enabled and pairs or ipairs)(Library.Objects) do
         if v.Update then
             local s,e = pcall(v.Update, v)
+            if not s then warn('[]:',e,v.Object:GetFullName()) end
         end
     end
 end)
-
-return ESP
