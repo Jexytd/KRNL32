@@ -112,60 +112,60 @@ end
 BoxType = {
     ['Default']= draw('Quad', {
         Thickness=Library.Thickness,
-        Color=self.Color,
+        Color=Library.Color,
         Visible=Library.Enabled and Library.Boxes
     }), 
     ['Corner']= {
         ['TR1'] = draw('Line', {
             Thickness=Library.Thickness,
-            Color=self.Color,
+            Color=Library.Color,
             Visible=Library.Enabled and Library.Boxes
         }),
         ['TR2'] = draw('Line', {
             Thickness=Library.Thickness,
-            Color=self.Color,
+            Color=Library.Color,
             Visible=Library.Enabled and Library.Boxes
         }),
         ['TL1'] = draw('Line', {
             Thickness=Library.Thickness,
-            Color=self.Color,
+            Color=Library.Color,
             Visible=Library.Enabled and Library.Boxes
         }),
         ['TL2'] = draw('Line', {
             Thickness=Library.Thickness,
-            Color=self.Color,
+            Color=Library.Color,
             Visible=Library.Enabled and Library.Boxes
         }),
         ['BL1'] = draw('Line', {
             Thickness=Library.Thickness,
-            Color=self.Color,
+            Color=Library.Color,
             Visible=Library.Enabled and Library.Boxes
         }),
         ['BL2'] = draw('Line', {
             Thickness=Library.Thickness,
-            Color=self.Color,
+            Color=Library.Color,
             Visible=Library.Enabled and Library.Boxes
         }),
         ['BR1'] = draw('Line', {
             Thickness=Library.Thickness,
-            Color=self.Color,
+            Color=Library.Color,
             Visible=Library.Enabled and Library.Boxes
         }),
         ['BR2'] = draw('Line', {
             Thickness=Library.Thickness,
-            Color=self.Color,
+            Color=Library.Color,
             Visible=Library.Enabled and Library.Boxes
         }),
     }
 }
 HPType = {
     ['Default']= draw('Text', {
-        Color=self.Color,
+        Color=Library.Color,
         Visible=Library.Enabled and Library.HP
     }), 
     ['Bar']= draw('Quad', {
         Thickness=Library.Thickness,
-        Color=self.Color,
+        Color=Library.Color,
         Visible=Library.Enabled and Library.HP
     })
 }
