@@ -116,68 +116,70 @@ function Base:Update()
     local size = self.Size or self.PrimaryPart.Size
     local CenterScreen = (CurrentCamera.ViewportSize)/2
     
-    if not self.Data['HP'] and not self.Data['Box'] then
-        local BoxType = {
-            ['Default']= draw('Quad', {
+    local BoxType = {
+        ['Default']= draw('Quad', {
+            Thickness=Library.Thickness,
+            Color=self.Color,
+            Visible=Library.Enabled and Library.Boxes
+        }), 
+        ['Corner']= {
+            ['TR1'] = draw('Line', {
                 Thickness=Library.Thickness,
                 Color=self.Color,
                 Visible=Library.Enabled and Library.Boxes
-            }), 
-            ['Corner']= {
-                ['TR1'] = draw('Line', {
-                    Thickness=Library.Thickness,
-                    Color=self.Color,
-                    Visible=Library.Enabled and Library.Boxes
-                }),
-                ['TR2'] = draw('Line', {
-                    Thickness=Library.Thickness,
-                    Color=self.Color,
-                    Visible=Library.Enabled and Library.Boxes
-                }),
-                ['TL1'] = draw('Line', {
-                    Thickness=Library.Thickness,
-                    Color=self.Color,
-                    Visible=Library.Enabled and Library.Boxes
-                }),
-                ['TL2'] = draw('Line', {
-                    Thickness=Library.Thickness,
-                    Color=self.Color,
-                    Visible=Library.Enabled and Library.Boxes
-                }),
-                ['BL1'] = draw('Line', {
-                    Thickness=Library.Thickness,
-                    Color=self.Color,
-                    Visible=Library.Enabled and Library.Boxes
-                }),
-                ['BL2'] = draw('Line', {
-                    Thickness=Library.Thickness,
-                    Color=self.Color,
-                    Visible=Library.Enabled and Library.Boxes
-                }),
-                ['BR1'] = draw('Line', {
-                    Thickness=Library.Thickness,
-                    Color=self.Color,
-                    Visible=Library.Enabled and Library.Boxes
-                }),
-                ['BR2'] = draw('Line', {
-                    Thickness=Library.Thickness,
-                    Color=self.Color,
-                    Visible=Library.Enabled and Library.Boxes
-                }),
-            }
-        }
-        local HPType = {
-            ['Default']= draw('Text', {
-                Color=self.Color,
-                Visible=Library.Enabled and Library.HP
-            }), 
-            ['Bar']= draw('Quad', {
+            }),
+            ['TR2'] = draw('Line', {
                 Thickness=Library.Thickness,
                 Color=self.Color,
-                Visible=Library.Enabled and Library.HP
-            })
+                Visible=Library.Enabled and Library.Boxes
+            }),
+            ['TL1'] = draw('Line', {
+                Thickness=Library.Thickness,
+                Color=self.Color,
+                Visible=Library.Enabled and Library.Boxes
+            }),
+            ['TL2'] = draw('Line', {
+                Thickness=Library.Thickness,
+                Color=self.Color,
+                Visible=Library.Enabled and Library.Boxes
+            }),
+            ['BL1'] = draw('Line', {
+                Thickness=Library.Thickness,
+                Color=self.Color,
+                Visible=Library.Enabled and Library.Boxes
+            }),
+            ['BL2'] = draw('Line', {
+                Thickness=Library.Thickness,
+                Color=self.Color,
+                Visible=Library.Enabled and Library.Boxes
+            }),
+            ['BR1'] = draw('Line', {
+                Thickness=Library.Thickness,
+                Color=self.Color,
+                Visible=Library.Enabled and Library.Boxes
+            }),
+            ['BR2'] = draw('Line', {
+                Thickness=Library.Thickness,
+                Color=self.Color,
+                Visible=Library.Enabled and Library.Boxes
+            }),
         }
+    }
+    local HPType = {
+        ['Default']= draw('Text', {
+            Color=self.Color,
+            Visible=Library.Enabled and Library.HP
+        }), 
+        ['Bar']= draw('Quad', {
+            Thickness=Library.Thickness,
+            Color=self.Color,
+            Visible=Library.Enabled and Library.HP
+        })
+    }
+    if self.Data['HP'] ~= HPType[Library.HPType] then
         self.Data['HP'] = HPType[Library.HPType]
+    end
+    if self.Data['Box'] ~= BoxType[Library.BoxType] then
         self.Data['Box'] = BoxType[Library.BoxType]
     end
 
