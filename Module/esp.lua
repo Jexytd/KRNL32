@@ -41,38 +41,31 @@ do
         self.Tracer = t
     end
 
-    function Library:setBoxType(s)
-        if not self.BoxType[s] then return warn('Invalid Type') end
-        for k,v in pairs(self.BoxType) do
-            if v == true and k ~= s then
-                self.BoxType[k] = false
-            end
-            if k == s and v == false then
-                self.BoxType[k] = true
-            end
-        end
+    function Library:setESPType(t)
+        self.ESPType = t
     end
-    function Library:setHPType(s)
-        if not self.HPType[s] then return warn('Invalid Type') end
-        for k,v in pairs(self.HPType) do
-            if v == true and k ~= s then
-                self.HPType[k] = false
-            end
-            if k == s then
-                self.HPType[k] = true
-            end
-        end
+    function Library:setBoxType(t)
+        self.BoxType = t
     end
-    function Library:setTracerType(s)
-        if not self.BoxType[s] then return warn('Invalid Type') end
-        for k,v in pairs(self.BoxType) do
-            if v == true and k ~= s then
-                self.BoxType[k] = false
-            end
-            if k == s then
-                self.BoxType[k] = true
-            end
-        end
+    function Library:setHPType(t)
+        self.HPType = t
+    end
+    function Library:setTracerType(t)
+        self.TracerType = t
+    end
+
+    function Library:setUsernamePos(t)
+        self.UsernamePos = t
+    end
+    function Library:setDistancePos(t)
+        self.DistancePos = t
+    end
+    function Library:setHPPos(t)
+        self.HPPos = t
+    end
+
+    function Library:setTextSize(n)
+        self.TextSize = n
     end
     function Library:setThickness(n)
         self.Thickness = n
