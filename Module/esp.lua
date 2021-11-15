@@ -223,20 +223,6 @@ function Base:Update()
             ['BottomRight'] = cf * CFrame.new(-size.X/2,-size.Y, 0),
         }
     end
-    local Humanoid = self.Object:FindFirstChildOfClass('Humanoid')
-    if Humanoid then
-        Humanoid.Died:Connect(function()
-            for k,v in pairs(self.Data) do
-                if type(v) == 'table' then
-                    for i,v in pairs(v) do
-                        v[i].Visible = false
-                    end
-                else
-                    self.Data[k].Visible = false
-                end
-            end
-        end)
-    end
 
     if (Box and HP and Username and Distance and Tracer) then
         if Library.Username then
