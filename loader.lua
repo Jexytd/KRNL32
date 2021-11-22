@@ -217,11 +217,6 @@ function Loader()
     return Library
 end
 
-local Library = Loader()
-local SG,Background = Library[1],Library[2]
-
-local Show = false
-
 function CloseGui(Holder)
     local done = false
     if Holder then
@@ -244,6 +239,12 @@ function CloseGui(Holder)
         SG:Destroy()
     end
 end
+if getgenv().Jambi ~= nil then CloseGui(getgenv().Jambi) end
+local Library = Loader()
+local SG,Background = Library[1],Library[2]
+getgenv().Jambi = Background
+
+local Show = false
 
 function sendErr(step,...)
     local dt = DateTime.now():FormatLocalTime('LLLL', 'en-us')
