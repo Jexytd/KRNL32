@@ -342,7 +342,7 @@ xpcall(function()
             if not found then
                 Library:setLog('Game not supported!')
                 err_msg = 'Game not supported'
-                sendErr(Step, err_msg .. '\nPlaceId: ' .. (tostring(game.PlaceId) or 'Unable to get placeid'))
+                sendErr(Step, err_msg .. '\nPlaceId: ' .. (tostring(game.PlaceId) or 'Unable to get placeid') .. '\nPlace Name: ' .. (game:GetService('MarketplaceService'):GetProductInfo(game.PlaceId).Name or 'Unable to get placename'))
                 no_error = false
             end
             if no_error and found then
