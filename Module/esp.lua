@@ -73,10 +73,8 @@ function WTVP(o)
 end
 
 function Library:IsTeam(pl)
-    if Client.Team == nil then return true end
     local a = pl or Players:GetPlayerFromCharacter(pl)
-    local b = Client.Team
-    return a.Team == b
+    return a.Team == Client.Team
 end
 
 function Library:IsVisible(p)
@@ -117,7 +115,7 @@ function boxBase:up()
     if not self.PrimaryPart then return self:Remove() end
 
     local n = true
-    if self.Player and not Library.Teams and self.Teams then
+    if self.Player and self.Teams and not Library.Teams then
         n = false
     end
     if self.Player and Library.Visible and Library:IsVisible(self.Player) then
@@ -279,9 +277,8 @@ game:GetService("RunService").RenderStepped:Connect(function()
     for i,v in (Library.Enabled and pairs or ipairs)(Library.Objects) do
         if v.up then
             local s,e = pcall(v.up, v)
-            if not s then warn("[EU]", e, v.Object:GetFullName()) end
+            if not s then print(e) end
         end
     end
 end)
-
 return Library
