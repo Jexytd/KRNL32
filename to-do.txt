@@ -1,5 +1,7 @@
 [Universal]:
     [ESP]:
-    - Remaking ESP
+    - Names
+    - Tracers
+    - Distance
 
-[File updated at 11/21/2021]
+[File updated at 11/22/2021]
