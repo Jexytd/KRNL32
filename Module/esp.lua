@@ -113,6 +113,7 @@ end
 
 function boxBase:up()
     if not self.PrimaryPart then return self:Remove() end
+    self.Teams = Library:IsTeam(self.Player)
 
     local n = true
     if self.Player and self.Teams and not Library.Teams then
