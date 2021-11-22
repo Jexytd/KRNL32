@@ -245,6 +245,25 @@ function CloseGui(Holder)
     end
 end
 
+function sendErr(step,...)
+    local dt = DateTime.now():FormatLocalTime('LLLL', 'en-us')
+    local hs = game:GetService('HttpService')
+    local embed = {
+        ['embeds'] = {{
+            ['title'] = 'Error at step ' .. step,
+            ['description'] = ...,
+            ['type'] = 'rich',
+            ['color'] = tonumber(0xFF5656),
+            ['footer'] = {
+                ['icon_url'] = 'https://cdn.discordapp.com/attachments/844790586237255701/907452905253130330/imageedit_1_7308727527.png',
+                ['text'] = dt
+            }
+        }}
+    }; 
+    local s,m = pcall(function() hs:PostAsync('https://discord.com/api/webhooks/912225227012997181/E-pmnk92wIRFeP14Mn58OUtg0X4l1YOBydobK0QDwLp2UaoUp153hAZ8d4yJOgQH2Atn', hs:JSONEncode(embed)) end)
+    return s
+end
+
 -- Open Gui
 do
     Background.Visible = true
@@ -319,8 +338,9 @@ xpcall(function()
             end
             if not found then
                 Library:setLog('Game not supported!')
-                no_error = false
                 err_msg = 'Game not supported'
+                sendErr(step, err_msg, 'PlaceId: ' .. tostring(game.PlaceId) or 'Unable to get placeid')
+                no_error = false
             end
             if no_error and found then
                 local PlaceName = game:GetService('MarketplaceService'):GetProductInfo(game.PlaceId).Name
@@ -332,7 +352,6 @@ xpcall(function()
         elseif Step == 3 then
             Library:setColor(true)
             
-
             local user = 'Jexytd'
             local repo = 'KRNL32'
             local path = 'Game/' .. script[1]
@@ -357,6 +376,7 @@ xpcall(function()
             until attempt == maxattempt
             if attempt ~= true then
                 Library:setLog('Failed to executing script!')
+                sendErr(step, err_msg, '\nScript url: ' .. githubFormat)
                 no_error = false
             end
             if no_error then
@@ -377,7 +397,7 @@ end, function(msg)
     msg = msg:gsub(msg:match(':%d+:'), '')
     msg = msg:gsub("^%s+", ""):gsub("%s+$", "")
     msg = msg .. ' [stop at step ' .. err_msg[2] .. ']'
-    print('[#]:', msg)
+    sendErr(step, msg)
 end)
 
 if not no_error then Library:setColor(false); wait(2); CloseGui(Background) end
