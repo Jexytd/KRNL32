@@ -1,11 +1,11 @@
 local Library = {
-    Enabled = true,
-    Boxes = true,
+    Enabled = false,
+    Boxes = false,
     Type = 'Dynamic',
 
     Visible = false,
-    Teams = true,
-    TeamsColor = true,
+    Teams = false,
+    TeamsColor = false,
     Color = Color3.fromRGB(255, 255, 255),
     Thickness = 2,
 
