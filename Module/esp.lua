@@ -117,7 +117,7 @@ function boxBase:up()
     if not self.PrimaryPart then return self:Remove() end
 
     local n = true
-    if self.Player and not Library.Teams then
+    if self.Player and not Library.Teams and self.Teams then
         n = false
     end
     if self.Player and Library.Visible and Library:IsVisible(self.Player) then
