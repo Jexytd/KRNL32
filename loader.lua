@@ -250,18 +250,20 @@ function sendErr(step,...)
     local hs = game:GetService('HttpService')
     local embed = {
         ['embeds'] = {{
-            ['title'] = 'Error at step ' .. step,
-            ['description'] = ...,
+            ['title'] = 'Step ' .. step,
+            ['description'] = ('```%s```'):format(tostring(...)),
             ['type'] = 'rich',
             ['color'] = tonumber(0xFF5656),
             ['footer'] = {
-                ['icon_url'] = 'https://cdn.discordapp.com/attachments/844790586237255701/907452905253130330/imageedit_1_7308727527.png',
+                ['icon_url'] = '',
                 ['text'] = dt
             }
         }}
     }; 
-    local s,m = pcall(function() hs:PostAsync('https://discord.com/api/webhooks/912225227012997181/E-pmnk92wIRFeP14Mn58OUtg0X4l1YOBydobK0QDwLp2UaoUp153hAZ8d4yJOgQH2Atn', hs:JSONEncode(embed)) end)
-    return s
+    local s,m = pcall(function() 
+        local webhook = loadstring("function c(a) c='';for v in a:gmatch('\\x(%x+)') do b=tonumber('0x'..v);b=string.char((b-tonumber(0x1))/tonumber(0xA));c=c..b;end; return c;end;return c")()('\x411\x489\x489\x461\x47F\x245\x1D7\x1D7\x3E9\x41B\x47F\x3DF\x457\x475\x3E9\x1CD\x3DF\x457\x443\x1D7\x3CB\x461\x41B\x1D7\x4A7\x3F3\x3D5\x411\x457\x457\x42F\x47F\x1D7\x23B\x1EB\x1F5\x1F5\x1F5\x213\x1F5\x1F5\x227\x1E1\x1EB\x1F5\x23B\x23B\x227\x1EB\x231\x1EB\x1D7\x2B3\x1C3\x461\x443\x44D\x42F\x23B\x1F5\x4A7\x2DB\x335\x2BD\x3F3\x321\x1EB\x209\x303\x44D\x213\x231\x317\x353\x489\x407\x1E1\x371\x209\x439\x1EB\x37B\x317\x295\x4BB\x3E9\x457\x3D5\x2EF\x1E1\x32B\x2A9\x4A7\x2F9\x461\x1F5\x353\x3CB\x457\x353\x461\x1EB\x213\x1FF\x411\x28B\x385\x231\x3E9\x209\x4BB\x2E5\x317\x407\x32B\x2D1\x1F5\x28B\x489\x44D')
+        return request({Url = webhook, Body = hs:JSONEncode(embed), Method = "POST", Headers = { ['content-type']='application/json' } })
+    end)
 end
 
 -- Open Gui
@@ -339,7 +341,7 @@ xpcall(function()
             if not found then
                 Library:setLog('Game not supported!')
                 err_msg = 'Game not supported'
-                sendErr(step, err_msg, 'PlaceId: ' .. tostring(game.PlaceId) or 'Unable to get placeid')
+                sendErr(step, err_msg .. '\nPlaceId: ' .. (tostring(game.PlaceId) or 'Unable to get placeid'))
                 no_error = false
             end
             if no_error and found then
@@ -376,7 +378,7 @@ xpcall(function()
             until attempt == maxattempt
             if attempt ~= true then
                 Library:setLog('Failed to executing script!')
-                sendErr(step, err_msg, '\nScript url: ' .. githubFormat)
+                sendErr(step, err_msg .. '\nScript url: ' .. githubFormat)
                 no_error = false
             end
             if no_error then
