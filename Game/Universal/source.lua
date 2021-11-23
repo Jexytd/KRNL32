@@ -113,24 +113,31 @@ end)
 s3:Dropdown('ESP Type', {'Static', 'Dynamic'}, ESP.Type,'EType', function(t)
     ESP:sType(t)
 end)
+s3:Toggle('Visible Only', false, 'EWall', function(t)
+    ESP:sVis(t)
+end)
+s3:Toggle('Teams', false, 'ETeams', function(t)
+    ESP:sTeam(t)
+end)
+s3s:Toggle('Team Color', false, 'ETColor', function(t)
+    ESP:teamcolor(t)
+end)
+
 s3:Toggle('Boxes', false, 'EBoxes', function(t)
     ESP:boxes(t)
 end)
 
-s3:Toggle('Check Wall Visible', false, 'EWall', function(t)
-    ESP:sVis(t)
-end)
-s3:Toggle('Teams (If no team, it will esp all)', false, 'ETeams', function(t)
-    ESP:sTeam(t)
-end)
-
-s3s:Toggle('Team Color', false, 'ETColor', function(t)
-    ESP:teamcolor(t)
-end)
 s3s:Slider("Thickness", 1,4,ESP.Thickness,1,"EThick", function(t)
     ESP:sThick(t)
 end)
 
+if not rbw then getgenv().rbw = false end
+s3:Toggle('Rainbow Color', false, 'ERainbow', function(t)
+    rbw = t
+    while (rbw or getgenv().rbw) do
+        for _=0,1,0.01 do ESP:sColor(Color3.fromHSV(_,1,1)); game:GetService('RunService').RenderStepped:Wait() end
+    end
+end)
 s3s:Colorpicker("ESP Color", ESP.Color,"ESPColor", function(t)
     ESP:sColor(t)
 end)

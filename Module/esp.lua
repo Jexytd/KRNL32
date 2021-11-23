@@ -38,7 +38,7 @@ do
     end
     
     function Library:sTeam(a)
-        self.Visible = a
+        self.Teams = a
     end
 
     function Library:teamcolor(a)
@@ -113,10 +113,9 @@ end
 
 function boxBase:up()
     if not self.PrimaryPart then return self:Remove() end
-    self.Teams = Library:IsTeam(self.Player)
 
     local n = true
-    if self.Player and self.Teams and not Library.Teams then
+    if self.Player and not Library.Teams and Library:IsTeam(self.Player) then
         n = false
     end
     if self.Player and Library.Visible and Library:IsVisible(self.Player) then
@@ -204,7 +203,6 @@ function Library:add(o,p)
         Color = p.Color or self.Color,
         Size = p.Size or self.Size,
         Object = o,
-        Teams = p.Teams,
         Player = p.Player or Players:GetPlayerFromCharacter(o),
         PrimaryPart = p.PrimaryPart or o.ClassName == 'Model' and (o.PrimaryPart or o:FindFirstChild('HumanoidRootPart') or o:FindFirstChildWhichIsA('BasePart')) or o:IsA('BasePart') and o,
         ESP = {}
@@ -248,7 +246,6 @@ local function CharAdded(char)
                     Name = p.Name,
                     Player = p,
                     PrimaryPart = c,
-                    Teams = Library:IsTeam(p)
                 })
             end
         end)
@@ -257,7 +254,6 @@ local function CharAdded(char)
             Name = p.Name,
             Player = p,
             PrimaryPart = char.HumanoidRootPart,
-            Teams = Library:IsTeam(p)
         })
     end
 end
