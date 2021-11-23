@@ -421,6 +421,7 @@ xpcall(function()
             until attempt == maxattempt
             if attempt ~= true then 
                 no_error = false 
+                Library:setLog('Failed executing script!')
                 sendErr(Step, err_msg)
             end
             if no_error then
