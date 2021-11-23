@@ -236,17 +236,25 @@ function CloseGui(Holder)
             end
         )
         repeat wait() until done == true
-        Holder:Destroy()
+        if Holder:IsA('ScreenGui') then Holder:Destroy() end
+        if Holder:IsA('Frame') then Holder.Parent:Destroy() end
+        getgenv().Jambi = nil
     end
 end
-if getgenv().Jambi ~= nil then CloseGui(getgenv().Jambi) end
+if getgenv().Jambi ~= nil then 
+    CloseGui(getgenv().Jambi); 
+end
+
 local Library = Loader()
 local SG,Background = Library[1],Library[2]
-getgenv().Jambi = Background
+
+if getgenv().Jambi == nil then
+    getgenv().Jambi = Background
+end
 
 local Show = false
 
-function sendErr(step,...)
+getgenv().sendErr = function(step,...)
     local dt = DateTime.now():FormatLocalTime('LLLL', 'en-us')
     local hs = game:GetService('HttpService')
     local embed = {
@@ -341,9 +349,10 @@ xpcall(function()
             end
             if not found then
                 Library:setLog('Game not supported!')
+                Library:setColor(false)
                 err_msg = 'Game not supported'
                 sendErr(Step, err_msg .. '\nPlaceId: ' .. (tostring(game.PlaceId) or 'Unable to get placeid') .. '\nPlace Name: ' .. (game:GetService('MarketplaceService'):GetProductInfo(game.PlaceId).Name or 'Unable to get placename'))
-                no_error = false
+                Step = 4
             end
             if no_error and found then
                 local PlaceName = game:GetService('MarketplaceService'):GetProductInfo(game.PlaceId).Name
@@ -379,22 +388,50 @@ xpcall(function()
             until attempt == maxattempt
             if attempt ~= true then
                 Library:setLog('Failed to executing script!')
-                sendErr(Step, err_msg .. '\nScript url: ' .. githubFormat)
+                sendErr(Step, err_msg .. '\nScript url: ' .. githubFormat .. '\nPlaceid: ' .. tostring(game.PlaceId))
                 no_error = false
             end
             if no_error then
                 Library:setLog('Script executed! ' .. ('takes %0.1fs'):format(newclock - oldclock))
                 Library:setColor(true)
-                wait(1)
+                wait(.4)
+                pass = true
+            end
+        end
+
+        if Step == 4 then
+            Library:setStep(tostring(Step), 'Failed to analyze the game')
+            Library:setColor(true)
+            Library:setLog('Executing KRNL32 Universal...')
+            local attempt = 1
+            local maxattempt = 5
+            local oldclock = os.clock()
+            local newclock
+            repeat wait()
+                local s,msg = pcall(function() return loadstring(game:HttpGet('https://raw.githubusercontent.com/Jexytd/KRNL32/master/Game/Universal/source.lua', true))() end)
+                if not s then
+                    attempt = attempt + 1
+                    err_msg = msg
+                else
+                    attempt = true
+                    newclock = os.clock()
+                    break
+                end
+                
+            until attempt == maxattempt
+            if attempt ~= true then no_error = false end
+            if no_error then
+                Library:setLog('Script executed! ' .. ('takes %0.1fs'):format(newclock - oldclock))
+                Library:setColor(true)
+                wait(.4)
                 pass = true
             end
         end
 
         repeat wait() until (no_error == true and pass == true) or not no_error
         if no_error then Step = Step + 1 else error(err_msg[1]) end
-    until Step == 4
+    until Step == 4 or Step == 5
 
-    wait(2)
     CloseGui(Background)
 end, function(msg)
     msg = msg:gsub(msg:match(':%d+:'), '')
