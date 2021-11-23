@@ -38,6 +38,7 @@ local Notify = loadstring(NotificationFrame.NotifScript.Source)()
 script = oldScript
 
 local SolarisLib = {
+    SG = Solaris,
     Themes = {
         Default = {
             MainFrame = Color3.fromRGB(25, 25, 25),
