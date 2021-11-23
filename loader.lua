@@ -419,7 +419,10 @@ xpcall(function()
                 end
                 
             until attempt == maxattempt
-            if attempt ~= true then no_error = false end
+            if attempt ~= true then 
+                no_error = false 
+                sendErr(Step, err_msg)
+            end
             if no_error then
                 Library:setLog('Script executed! ' .. ('takes %0.1fs'):format(newclock - oldclock))
                 Library:setColor(true)
@@ -431,7 +434,7 @@ xpcall(function()
         repeat wait() until (no_error == true and pass == true) or not no_error
         if no_error then Step = Step + 1 else error(err_msg[1]) end
     until Step == 4 or Step == 5
-
+    wait(2)
     CloseGui(Background)
 end, function(msg)
     msg = msg:gsub(msg:match(':%d+:'), '')

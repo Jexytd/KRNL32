@@ -7,7 +7,7 @@ local function CloseGui(Holder)
     local done = false
     if Holder then
         for _,v in pairs(Holder:GetDescendants()) do
-            if v.ClassName ~= 'UICorner' and v.Visible == true then
+            if v.ClassName ~= 'UICorner' and v.ClassName ~= 'UIListLayout' and v.Visible == true then
                 v.Visible = false
             end
         end
