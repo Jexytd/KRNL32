@@ -8,7 +8,7 @@ local Library = {
     TeamCheck = false,
     WallCheck = false,
     FromMouse = false,
-    FOV = 60,
+    FOV = 20,
     FOVColor = Color3.fromRGB(69,69,230),
     Smooth = 2,
     Target = 'Head',
@@ -86,7 +86,7 @@ function up(show)
         Library.Object['Circle'].Color = Library.FOVColor
         Library.Object['Circle'].Visible = (Library.Enabled and show) or false
         Library.Object['Circle'].Thickness = 2
-        Library.Object['Circle'].NumSides = 13
+        Library.Object['Circle'].NumSides = 60
         Library.Object['Circle'].Radius = (Library.FOV*6)/2
         Library.Object['Circle'].Filled = false
         Library.Object['Circle'].Position = (not Library.FromMouse and CenterScreen) or MousePos
