@@ -250,7 +250,7 @@ function boxBase:up()
             local _,v = WTVP(CF)
             if v then
                 local Top = WTVP(Koordinat.T)
-                Top = Top + Vector3.new(0, SZ.Y/2, 0)
+                Top = Top + Vector3.new(0, 10, 0)
                 local Left = Top + Vector3.new(SZ.X/2, 0, 0)
                 Left = WTVP(Left)
 
@@ -261,7 +261,7 @@ function boxBase:up()
                 Name.Outline = true
                 Name.Color = Color
                 local tType,tSize = Enum.ThumbnailType.HeadShot,Enum.ThumbnailSize.Size48x48
-                local headShot,isReady = Players:GetUserThumbnailAsync(a.Player.UserId, tType, tSize)
+                local headShot,isReady = Players:GetUserThumbnailAsync(self.Player.UserId, tType, tSize)
                 if isReady then
                     print(headShot)
                     Img.Data = game:HttpGet(headShot)
@@ -283,7 +283,7 @@ function boxBase:up()
             local _,v = WTVP(CF)
             if v then
                 local Top = WTVP(Koordinat.T)
-                Top = Top + Vector3.new(0, SZ.Y/2, 0)
+                Top = Top + Vector3.new(0, 10, 0)
                 local Right = Top + Vector3.new(-SZ.X/2, 0, 0)
                 Right = WTVP(Right)
 
