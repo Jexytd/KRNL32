@@ -418,15 +418,18 @@ function Library:add(o,p)
         Color = self.Color,
         Visible = self.Enabled and self.Names
     })
-    pcall(function() -- may get error when get http
-        local url = ('https://www.roblox.com/headshot-thumbnail/image?userId=%s&width=60&height=60&format=jpg'):format(tostring(a.Player.UserId))
-        a.ESP['Img'] = Draw('Image', {
-            Rounding = 60,
-            Data = game:HttpGet(url),
-            Size = Vector2.new(48,48),
-            Visible = self.Enabled and self.Names
-        })
-    end)
+    repeat
+        pcall(function() -- may get error when get http
+            local url = ('https://www.roblox.com/headshot-thumbnail/image?userId=%s&width=60&height=60&format=jpg'):format(tostring(a.Player.UserId))
+            a.ESP['Img'] = Draw('Image', {
+                Rounding = 60,
+                Data = game:HttpGet(url),
+                Size = Vector2.new(48,48),
+                Visible = self.Enabled and self.Names
+            })
+        end)
+        wait()
+    until a.ESP['Img']
     a.ESP['Distance'] = Draw('Text', {
         Size = self.Thickness*6,
         Center = true,
