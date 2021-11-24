@@ -15,7 +15,7 @@ local Library = {
     TeamsColor = false,
     Color = Color3.fromRGB(255, 255, 255),
     WallColor = Color3.fromRGB(69,69,130),
-    Thickness = 2,
+    Thickness = 3,
 
     Objects = setmetatable({}, {_mode='kv'}),
 }
@@ -103,16 +103,17 @@ function Library:IsTeam(pl)
 end
 
 function Library:IsVisible(p)
-    local s = false
-    local a = p.Character or (p.ClassName == 'Model' and p)
-    local b = a.PrimaryPart or a:FindFirstChild('HumanoidRootPart') or a:FindFirstChildWhichIsA('BasePart')
-    local newRay = Ray.new(Camera.CFrame.p, b.Position - Camera.CFrame.p)
-    local Hit = workspace:FindPartOnRayWithIgnoreList(newRay, {Client.Character, CurrentCamera})
-    if Hit and Hit:IsDescendantOf(a) then
-        return false
-    else
-        return true
-    end
+    pcall(function()
+        local a = p.Character or (p.ClassName == 'Model' and p)
+        local b = a.ClassName == 'Model' and (a.PrimaryPart or a:FindFirstChild('HumanoidRootPart') or a:FindFirstChildWhichIsA('BasePart'))
+        local newRay = Ray.new(Camera.CFrame.p, b.Position - Camera.CFrame.p)
+        local Hit = workspace:FindPartOnRayWithIgnoreList(newRay, {Client.Character, CurrentCamera})
+        if Hit and Hit:IsDescendantOf(a) then
+            return false
+        else
+            return true
+        end
+    end)
 end
 
 boxBase = {}
@@ -140,6 +141,9 @@ function boxBase:up()
     if not self.PrimaryPart then return self:Remove() end
 
     local n = true
+    if not Library.Enabled then
+        n = false
+    end
     if self.Player and not Library.Teams and Library:IsTeam(self.Player) then
         n = false
     end
@@ -178,158 +182,164 @@ function boxBase:up()
     local Tracer = self.ESP.Tracer
     local Dot = self.ESP.Dot
     local Img = self.ESP.Img
-    if Library.Enabled then
-        local CF,SZ = self.PrimaryPart.CFrame, (self.Size or self.PrimaryPart.Size)
-        local Koordinat = (function()
-            local t = {}
-            if Library.Type == 'Static' then
-                t = {
-                    TR = CF + Vector3.new(-SZ.X/2, SZ.Y, 0),
-                    TL = CF + Vector3.new(SZ.X/2, SZ.Y, 0),
-                    BL = CF + Vector3.new(SZ.X/2, -SZ.Y, 0),
-                    BR = CF + Vector3.new(-SZ.X/2, -SZ.Y, 0),
-                    T = CF + Vector3.new(0, SZ.Y, 0),
-                    B = CF + Vector3.new(0, -SZ.Y, 0)
-                }
-            elseif Library.Type == 'Dynamic' then
-                t = {
-                    TR = CF * CFrame.new(-SZ.X/2, SZ.Y, 0),
-                    TL = CF * CFrame.new(SZ.X/2, SZ.Y, 0),
-                    BL = CF * CFrame.new(SZ.X/2, -SZ.Y, 0),
-                    BR = CF * CFrame.new(-SZ.X/2, -SZ.Y, 0),
-                    T = CF * CFrame.new(0, SZ.Y, 0),
-                    B = CF * CFrame.new(0, -SZ.Y, 0)
-                }
-            end
-            return t
-        end)()
+    
+    local CF,SZ = self.PrimaryPart.CFrame, (self.Size or self.PrimaryPart.Size)
+    local Koordinat = (function()
+        local t = {}
+        if Library.Type == 'Static' then
+            t = {
+                TR = CF + Vector3.new(-SZ.X/2, SZ.Y, 0),
+                TL = CF + Vector3.new(SZ.X/2, SZ.Y, 0),
+                BL = CF + Vector3.new(SZ.X/2, -SZ.Y, 0),
+                BR = CF + Vector3.new(-SZ.X/2, -SZ.Y, 0),
+                T = CF + Vector3.new(0, SZ.Y, 0),
+                B = CF + Vector3.new(0, -SZ.Y, 0)
+            }
+        elseif Library.Type == 'Dynamic' then
+            t = {
+                TR = CF * CFrame.new(-SZ.X/2, SZ.Y, 0),
+                TL = CF * CFrame.new(SZ.X/2, SZ.Y, 0),
+                BL = CF * CFrame.new(SZ.X/2, -SZ.Y, 0),
+                BR = CF * CFrame.new(-SZ.X/2, -SZ.Y, 0),
+                T = CF * CFrame.new(0, SZ.Y, 0),
+                B = CF * CFrame.new(0, -SZ.Y, 0)
+            }
+        end
+        return t
+    end)()
 
-        if Library.Boxes then
-            local TR,v1 = WTVP(Koordinat.TR)
-            local TL,v2 = WTVP(Koordinat.TL)
-            local BL,v3 = WTVP(Koordinat.BL)
-            local BR,v4 = WTVP(Koordinat.BR)
-            if (v1 or v2 or v3 or v4) then
-                Box.Visible = true
-                Box.PointA = TR
-                Box.PointB = TL
-                Box.PointC = BL
-                Box.PointD = BR
-                Box.Thickness = Library.Thickness
-                Box.Color = Color
-            else
-                Box.Visible = false
-            end
+    if Library.Boxes then
+        local TR,v1 = WTVP(Koordinat.TR)
+        local TL,v2 = WTVP(Koordinat.TL)
+        local BL,v3 = WTVP(Koordinat.BL)
+        local BR,v4 = WTVP(Koordinat.BR)
+        if (v1 or v2 or v3 or v4) then
+            Box.Visible = true
+            Box.PointA = TR
+            Box.PointB = TL
+            Box.PointC = BL
+            Box.PointD = BR
+            Box.Thickness = Library.Thickness
+            Box.Color = Color
         else
             Box.Visible = false
         end
+    else
+        Box.Visible = false
+    end
 
-        if Library.Tracers then
-            local Bottom,v = WTVP(Koordinat.B)
+    if Library.Tracers then
+        local Bottom,v = WTVP(Koordinat.B)
+        pcall(function()
             local cPart = Client.Character and (Client.Character.PrimaryPart or Client.Character:FindFirstChild('HumanoidRootPart') or Client.Character:FindFirstChildWhichIsA('BasePart'))
             local fPos = WTVP(cPart.CFrame)
-            local TPos = {
+            TPos = {
                 ['Mouse']=Vector2.new(Mouse.X, Mouse.Y + (game:GetService('GuiService'):GetGuiInset().Y)),
                 ['Screen']=Vector2.new(Camera.ViewportSize.X/2,Camera.ViewportSize.X/1.5),
                 ['Player']=fPos
             }
-            if v then
-                Tracer.Visible = true
-                Tracer.From = Bottom
-                Tracer.To = TPos[Library.TracerType]
-                Tracer.Thickness = Library.Thickness
-                Tracer.Color = Color
-            else
-                Tracer.Visible = false
-            end
+        end)
+        if v then
+            Tracer.Visible = true
+            Tracer.From = Bottom
+            Tracer.To = TPos[Library.TracerType]
+            Tracer.Thickness = Library.Thickness
+            Tracer.Color = Color
         else
             Tracer.Visible = false
         end
+    else
+        Tracer.Visible = false
+    end
 
-        if Library.Names then
-            local _,v = WTVP(CF)
-            if v then
-                local Top = WTVP(Koordinat.T)
-                Top = Top + Vector3.new(0, 10, 0)
-                local Left = Top + Vector3.new(SZ.X/2, 0, 0)
-                Left = WTVP(Left)
-
-                Name.Visible = true
-                Img.Visible = true
-                Name.Size = Library.Thickness * 6
-                Name.Center = true
-                Name.Outline = true
-                Name.Color = Color
-                local tType,tSize = Enum.ThumbnailType.HeadShot,Enum.ThumbnailSize.Size48x48
-                local headShot,isReady = Players:GetUserThumbnailAsync(self.Player.UserId, tType, tSize)
-                if isReady then
-                    print(headShot)
-                    Img.Data = game:HttpGet(headShot)
+    if Library.Names then
+        local _,v = WTVP(CF)
+        if v then
+            local Pos1 = WTVP((function()
+                if Library.Type == 'Static' then
+                    return CF + Vector3.new(0, SZ.Y*2.5, 0)
+                elseif Library.Type == 'Dynamic' then
+                    return CF * CFrame.new(0, SZ.Y*2.5, 0)
                 end
-                Img.Position = Vector2.new(Right.X, Right.Y)
-                Name.Position = Vector2.new(Top.X, Top.Y)
-                Name.Text = self.Name or 'Loading...'
-                
-            else
-                Img.Visible = false
-                Name.Visible = false
-            end
+            end)())
+            local Pos2 = WTVP((function()
+                if Library.Type == 'Static' then
+                    return CF + Vector3.new(0, SZ.Y*1.5, 0)
+                elseif Library.Type == 'Dynamic' then
+                    return CF * CFrame.new(0, SZ.Y*1.5, 0)
+                end
+            end)())
+
+            Name.Visible = true
+            Img.Visible = true
+            Name.Size = Library.Thickness * 6
+            Name.Center = true
+            Name.Outline = true
+            Name.Color = Color
+            -- spawn(function()
+            --     --local url = ('http://www.roblox.com/Thumbs/Avatar.ashx?id=%s&width=60&height=60&format=jpg'):format(tostring(self.Player.UserId))
+            --     local url = ('https://www.roblox.com/headshot-thumbnail/image?userId=%s&width=60&height=60&format=jpg'):format(tostring(self.Player.UserId))
+            --     Img.Data = game:HttpGet(url)
+            -- end)
+            local Ratio = (Camera.CFrame.p - CF.p).magnitude
+            local offset = math.clamp(1/Ratio*750, 1, 60)
+            Img.Size = Vector2.new(offset,offset)
+            offset = math.clamp(1/Ratio*750, 1, 300)
+            Img.Position = Vector2.new(Pos1.X, Pos1.Y - offset)
+            Name.Position = Vector2.new(Pos2.X, Pos2.Y - offset)
+            Name.Text = self.Name or 'Loading...'
+            
         else
             Img.Visible = false
             Name.Visible = false
         end
+    else
+        Img.Visible = false
+        Name.Visible = false
+    end
 
-        if Library.Distances then
-            local _,v = WTVP(CF)
-            if v then
-                local Top = WTVP(Koordinat.T)
-                Top = Top + Vector3.new(0, 10, 0)
-                local Right = Top + Vector3.new(-SZ.X/2, 0, 0)
-                Right = WTVP(Right)
+    if Library.Distances then
+        local _,v = WTVP(CF)
+        if v then
+            local Pos = WTVP((function()
+                if Library.Type == 'Static' then
+                    return CF + Vector3.new(0, -SZ.Y*2, 0)
+                elseif Library.Type == 'Dynamic' then
+                    return CF * CFrame.new(0, -SZ.Y*2, 0)
+                end
+            end)())
 
-                Distance.Visible = true
-                Distance.Size = Library.Thickness * 6
-                Distance.Center = true
-                Distance.Outline = true
-                Distance.Color = Color
-                Distance.Position = Vector2.new(Right.X, Right.Y)
-            else
-                Distance.Visible = false
-            end
+            Distance.Visible = true
+            Distance.Size = Library.Thickness * 6
+            Distance.Center = true
+            Distance.Outline = true
+            Distance.Color = Color
+            Distance.Text = tostring( math.floor(Client:DistanceFromCharacter(CF.p)) ) .. 'M'
+            Distance.Position = Pos
         else
             Distance.Visible = false
         end
+    else
+        Distance.Visible = false
+    end
 
-        if Library.HeadDot then
-            local _,v = WTVP(CF.p)
-            if v then
-                local PHead = self.Object:FindFirstChild('Head') or self.Object:WaitForChild('Head')
-                local Pos = WTVP(PHead.Position)
-                Dot.Visible = true
-                local Ratio = (Camera.CFrame.p - CF.p).magnitude
-                local offset = math.clamp(1/Ratio*750, 2, 30)
-                Dot.Radius = offset
-                Dot.Color = Color
-                Dot.Thickness = Library.Thickness
-                Dot.Position = Pos
-            else
-                Dot.Visible = false
-            end
+    if Library.HeadDot then
+        local _,v = WTVP(CF.p)
+        if v then
+            local PHead = self.Object:FindFirstChild('Head') or self.Object:WaitForChild('Head')
+            local Pos = WTVP(PHead.Position)
+            Dot.Visible = true
+            local Ratio = (Camera.CFrame.p - CF.p).magnitude
+            local offset = math.clamp(1/Ratio*750, 1, 5)
+            Dot.Radius = offset
+            Dot.Color = Color
+            Dot.Thickness = Library.Thickness
+            Dot.Position = Pos
         else
             Dot.Visible = false
         end
     else
-        for i,v in pairs(self.ESP) do
-            if type(v) == 'userdata' then
-                v.Visible = false
-            elseif type(v) == 'table' then
-                for i2,v2 in pairs(v) do
-                    v2.Visible = false
-                end
-            else
-                print(i,v)
-            end
-        end
+        Dot.Visible = false
     end
 end
 
@@ -358,10 +368,15 @@ function Library:add(o,p)
         Color = self.Color,
         Visible = self.Enabled and self.Names
     })
-    a.ESP['Img'] = Draw('Image', {
-        Rounding = 60,
-        Visible = self.Enabled and self.Names
-    })
+    pcall(function() -- may get error when get http
+        local url = ('https://www.roblox.com/headshot-thumbnail/image?userId=%s&width=60&height=60&format=jpg'):format(tostring(a.Player.UserId))
+        a.ESP['Img'] = Draw('Image', {
+            Rounding = 60,
+            Data = game:HttpGet(url),
+            Size = Vector2.new(48,48),
+            Visible = self.Enabled and self.Names
+        })
+    end)
     a.ESP['Distance'] = Draw('Text', {
         Size = self.Thickness*6,
         Center = true,
@@ -439,11 +454,12 @@ for i,v in pairs(Players:GetPlayers()) do
 end
 
 game:GetService("RunService").RenderStepped:Connect(function()
-    for i,v in (Library.Enabled and pairs or ipairs)(Library.Objects) do
+    for i,v in (pairs or ipairs)(Library.Objects) do
         if v.up then
             local s,e = pcall(v.up, v)
             if not s then print(e) end
         end
     end
 end)
+
 return Library

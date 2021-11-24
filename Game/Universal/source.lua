@@ -3,48 +3,13 @@ local function get(http,cache)
     local s,result = pcall(function() return loadstring(game:HttpGet(http, (cache or true)))() end)
     return (s and result) or not s
 end
-local function CloseGui(Holder)
-    local done = false
-    if Holder then
-        for _,v in pairs(Holder:GetDescendants()) do
-            if v.ClassName ~= 'UICorner' and v.ClassName ~= 'UIListLayout' and v.ClassName ~= 'UIPadding' and v.Visible == true then
-                v.Visible = false
-            end
-        end
-        Holder:TweenSize(
-            UDim2.new(0,0,0,0),
-            Enum.EasingDirection.InOut,
-            Enum.EasingStyle.Quad,
-            1,
-            false,
-            function()
-                done = true
-            end
-        )
-        repeat wait() until done == true
-        if Holder:IsA('ScreenGui') then Holder:Destroy() end
-        if not Holder:IsA('ScreenGui') then 
-            local Parent = Holder.Parent
-            repeat
-                Parent = Parent
-            until Parent == game:GetService('CoreGui')
-            Parent:Destroy()
-        end
-        getgenv().Medan = nil
-    end
-end
 
 local Aimbot,I_ = get('https://raw.githubusercontent.com/Jexytd/KRNL32/master/Module/aimbot.lua')
 local ESP,_l = get('https://raw.githubusercontent.com/Jexytd/KRNL32/master/Module/esp.lua')
+local ENGINE_l, l_ = get('https://raw.githubusercontent.com/Jexytd/KRNL32/master/Module/solaris.lua')
 if not Aimbot or not ESP or not ENGINE_l then 
-    sendErr((not Aimbot and 'Universal Aimbot') or (not ESP and 'Universal ESP') or (not ENGINE_l and 'Universal Library'), tostring((I_ or _l))) 
-end
-
-if getgenv().Medan ~= nil then
-    CloseGui(getgenv().Medan:GetChildren()[1])
-end
-if getgenv().Medan == nil then
-    getgenv().Medan = ENGINE_l.SG
+    ENGINE_l:Notification('Oops something went wrong!', 'Script failed to continue! theres a problem on main function, dm KERNEL32#7398')
+    return sendErr((not Aimbot and 'Universal Aimbot') or (not ESP and 'Universal ESP') or (not ENGINE_l and 'Universal Library'), tostring((I_ or _l or l_))) 
 end
 
 local Players = game:GetService('Players')
@@ -154,16 +119,16 @@ end)
 s3:Toggle('Box', false, 'EBoxes', function(t)
     ESP:boxes(t)
 end)
-s3:Toggle('Name (W.I.P)', false, 'ENames', function(t)
+s3:Toggle('Name', false, 'ENames', function(t)
     ESP:names(t)
 end)
-s3:Toggle('Tracer (W.I.P)', false, 'ENames', function(t)
+s3:Toggle('Tracer', false, 'ENames', function(t)
     ESP:tracers(t)
 end)
-s3:Toggle('Distance (W.I.P)', false, 'ENames', function(t)
+s3:Toggle('Distance', false, 'ENames', function(t)
     ESP:distances(t)
 end)
-s3:Toggle('Head Dot (W.I.P)', false, 'ENames', function(t)
+s3:Toggle('Head Dot', false, 'ENames', function(t)
     ESP:headdot(t)
 end)
 
@@ -176,13 +141,13 @@ end)
 s3o:Toggle('Visible Only', false, 'EVisOnly', function(t)
     ESP:sVis(t)
 end)
-s3o:Toggle('Wall Check (W.I.P)', false, 'EWall', function(t)
+s3o:Toggle('Wall Check', false, 'EWall', function(t)
     ESP:sWallC(t)
 end)
 s3o:Colorpicker("Wall Color", ESP.WallColor,"EWallColor", function(t)
     ESP:sWColor(t)
 end)
-s3o:Toggle('Teammate', false, 'ETeams', function(t)
+s3o:Toggle('Teammate', ESP.Teams, 'ETeams', function(t)
     ESP:sTeam(t)
 end)
 s3o:Toggle('Team Color', false, 'ETColor', function(t)
