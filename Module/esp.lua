@@ -256,7 +256,7 @@ function boxBase:up()
 
                 Name.Visible = true
                 Img.Visible = true
-                Name.Size = (self.Thickness*6)
+                Name.Size = self.Thickness * 6
                 Name.Center = true
                 Name.Outline = true
                 Name.Color = Color
@@ -288,7 +288,7 @@ function boxBase:up()
                 Right = WTVP(Right)
 
                 Distance.Visible = true
-                Distance.Size = (self.Thickness*6)
+                Distance.Size = self.Thickness * 6
                 Distance.Center = true
                 Distance.Outline = true
                 Distance.Color = Color
