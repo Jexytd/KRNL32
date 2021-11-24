@@ -167,7 +167,7 @@ function boxBase:up()
     end
 
     if self.Player and Library.WallCheck then
-        if not Library:IsVisible(self.Player) then
+        if Library:IsVisible(self.Player) then
             Color = Library.WallColor
         end
     end
