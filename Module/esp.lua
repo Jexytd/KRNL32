@@ -91,12 +91,8 @@ end
 
 function WTVP(o)
     local p = o
-    if typeof(o) == 'Instance' then
-        p = o.Position
-    elseif typeof(o) == 'CFrame' then
+    if typeof(o) == 'CFrame' then
         p = o.p or o.Position or Vector3.new(o.X, o.Y, o.Z)
-    elseif o:IsA('Model') then
-        p = (o.PrimaryPart and o.PrimaryPart.Position) or (o:FindFirstChild('HumanoidRootPart') and o.HumanoidRootPart.Position) or (o:FindFirstChildWhichIsA('BasePart') and o:FindFirstChildWhichIsA('BasePart').Position)
     end
     return Camera:WorldToViewportPoint(p)
 end
@@ -231,10 +227,10 @@ function boxBase:up()
         if Library.Tracers then
             local Bottom,v = WTVP(Koordinat.B)
             local cPart = Client.Character and (Client.Character.PrimaryPart or Client.Character:FindFirstChild('HumanoidRootPart') or Client.Character:FindFirstChildWhichIsA('BasePart'))
-            local fPos = WTVP(cPart.Position)
+            local fPos = WTVP(cPart.CFrame)
             local TPos = {
                 ['Mouse']=Vector2.new(Mouse.X, Mouse.Y + (game:GetService('GuiService'):GetGuiInset().Y)),
-                ['Screen']=Vector2.new(CurrentCamera.ViewportSize.X/2,CurrentCamera.ViewportSize.X/1.5),
+                ['Screen']=Vector2.new(Camera.ViewportSize.X/2,Camera.ViewportSize.X/1.5),
                 ['Player']=fPos
             }
             if v then
@@ -251,7 +247,7 @@ function boxBase:up()
         end
 
         if Library.Names then
-            local _,v = WTVP(CF.p)
+            local _,v = WTVP(CF)
             if v then
                 local Top = WTVP(Koordinat.T)
                 Top = Top + Vector3.new(0, SZ.Y/2, 0)
@@ -284,7 +280,7 @@ function boxBase:up()
         end
 
         if Library.Distances then
-            local _,v = WTVP(CF.p)
+            local _,v = WTVP(CF)
             if v then
                 local Top = WTVP(Koordinat.T)
                 Top = Top + Vector3.new(0, SZ.Y/2, 0)
