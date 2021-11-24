@@ -375,7 +375,7 @@ xpcall(function()
             local githubFormat = ('https://raw.githubusercontent.com/%s/%s/master/%s/source.lua'):format(user,repo,path)
 
             local attempt = 1
-            local maxattempt = 5
+            local maxattempt = 2
             local oldclock = os.clock()
             local newclock
             repeat wait()
@@ -390,7 +390,7 @@ xpcall(function()
                     break
                 end
                 
-            until attempt == maxattempt
+            until (attempt == true) or (attempt == maxattempt)
             if attempt ~= true then
                 Library:setLog('Failed to executing script!')
                 sendErr(Step, err_msg .. '\nScript url: ' .. githubFormat .. '\nPlaceid: ' .. tostring(game.PlaceId))
@@ -417,6 +417,7 @@ xpcall(function()
                 if not s then
                     attempt = attempt + 1
                     err_msg = msg
+                    warn('[#]:', err_msg)
                 else
                     attempt = true
                     newclock = os.clock()
@@ -446,7 +447,7 @@ end, function(msg)
     msg = msg:gsub(msg:match(':%d+:'), '')
     msg = msg:gsub("^%s+", ""):gsub("%s+$", "")
     msg = msg .. ' [stop at step ' .. err_msg[2] .. ']'
-    sendErr(Step, msg)
+    sendErr('Oh no!', msg)
 end)
 
 if not no_error then Library:setColor(false); wait(2); CloseGui(Background) end

@@ -237,8 +237,15 @@ function boxBase:up()
                 Name.Center = true
                 Name.Outline = true
                 Name.Color = Color
-                Img.Position = Right
-                Name.Position = Top
+                local tType,tSize = Enum.ThumbnailType.HeadShot,Enum.ThumbnailSize.Size48x48
+                local headShot,isReady = Players:GetUserThumbnailAsync(a.Player.UserId, tType, tSize)
+                if isReady then
+                    print(headShot)
+                    Img.Data = game:HttpGet(headShot)
+                end
+                Img.Position = Vector2.new(Right.X, Right.Y)
+                Name.Position = Vector2.new(Top.X, Top.Y)
+                Name.Text = self.Name or 'Loading...'
                 
             else
                 Img.Visible = false
@@ -262,7 +269,7 @@ function boxBase:up()
                 Distance.Center = true
                 Distance.Outline = true
                 Distance.Color = Color
-                Distance.Position = Right
+                Distance.Position = Vector2.new(Right.X, Right.Y)
             else
                 Distance.Visible = false
             end
@@ -305,13 +312,13 @@ function Library:add(o,p)
 
     local a = setmetatable({
         Name = p.Name or o.Name or tostring(o),
-        Color = p.Color or self.Color,
         Size = p.Size or self.Size,
         Object = o,
         Player = p.Player or Players:GetPlayerFromCharacter(o),
         PrimaryPart = p.PrimaryPart or o.ClassName == 'Model' and (o.PrimaryPart or o:FindFirstChild('HumanoidRootPart') or o:FindFirstChildWhichIsA('BasePart')) or o:IsA('BasePart') and o,
         ESP = {}
     }, boxBase)
+    if self.Objects[o] then self.Objects[o]:Remove() end
 
     a.ESP['Box'] = Draw('Quad', {
         Thickness = self.Thickness,
@@ -319,22 +326,18 @@ function Library:add(o,p)
         Visible = self.Enabled and self.Boxes
     })
     a.ESP['Name'] = Draw('Text', {
-        Size = (self.Thickness*6),
+        Size = self.Thickness*6,
         Center = true,
         Outline = true,
         Color = self.Color,
         Visible = self.Enabled and self.Names
     })
-    local tType,tSize = Enum.ThumbnailType.HeadShot,Enum.ThumbnailSize.Size48x48
-    local headShot = Players:GetUserThumbnailAsync(a.Player.UserId, tType, tSize)
     a.ESP['Img'] = Draw('Image', {
-        Data = game:HttpGet(headShot),
         Rounding = 60,
-        Size = 48,
         Visible = self.Enabled and self.Names
     })
     a.ESP['Distance'] = Draw('Text', {
-        Size = (self.Thickness*6),
+        Size = self.Thickness*6,
         Center = true,
         Outline = true,
         Color = self.Color,
