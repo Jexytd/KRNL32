@@ -7,6 +7,8 @@ local Library = {
     HeadDot = false,
     Type = 'Dynamic',
 
+    TracerType = 'Screen',
+
     Visible = false,
     WallCheck = false,
     Teams = false,
@@ -55,6 +57,9 @@ do
 
     function Library:sType(a)
         self.Type = a
+    end
+    function Library:sTracer(a)
+        self.TracerType = a
     end
 
     function Library:sVis(a)
@@ -225,9 +230,17 @@ function boxBase:up()
 
         if Library.Tracers then
             local Bottom,v = WTVP(Koordinat.B)
+            local cPart = Client.Character and (Client.Character.PrimaryPart or Client.Character:FindFirstChild('HumanoidRootPart') or Client.Character:FindFirstChildWhichIsA('BasePart'))
+            local fPos = WTVP(cPart.Position)
+            local TPos = {
+                ['Mouse']=Vector2.new(Mouse.X, Mouse.Y + (game:GetService('GuiService'):GetGuiInset().Y)),
+                ['Screen']=Vector2.new(CurrentCamera.ViewportSize.X/2,CurrentCamera.ViewportSize.X/1.5),
+                ['Player']=fPos
+            }
             if v then
                 Tracer.Visible = true
-                Tracer.Position = Bottom
+                Tracer.From = Bottom
+                Tracer.To = TPos[Library.TracerType]
                 Tracer.Thickness = Library.Thickness
                 Tracer.Color = Color
             else
