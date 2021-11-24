@@ -16,6 +16,7 @@ local Library = {
     TeamsColor = false,
     Color = Color3.fromRGB(255, 255, 255),
     WallColor = Color3.fromRGB(69,69,130),
+    HPColor = Color3.fromRGB(255,255,255),
     Thickness = 3,
 
     Objects = setmetatable({}, {_mode='kv'}),
@@ -72,6 +73,9 @@ do
     
     function Library:sTeam(a)
         self.Teams = a
+    end
+    function Library:sHColor(a)
+        self.HPColor = a
     end
 
     function Library:teamcolor(a)
@@ -376,7 +380,7 @@ function boxBase:up()
             local Bottom = WTVP(Pos[2])
             HP.Visible = true
             HP.Thickness = Library.Thickness
-            HP.Color = Color
+            HP.Color = Library.HPColor
             HP.PointA = Top
             HP.PointB = Top
             HP.PointC = Bottom
