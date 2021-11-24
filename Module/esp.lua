@@ -11,6 +11,7 @@ local Library = {
     Teams = false,
     TeamsColor = false,
     Color = Color3.fromRGB(255, 255, 255),
+    WallColor = Color3.fromRGB(69,69,130),
     Thickness = 2,
 
     Objects = setmetatable({}, {_mode='kv'}),
@@ -39,6 +40,9 @@ do
 
     function Library:sColor(a)
         self.Color = a
+    end
+    function Library:sWColor(a)
+        self.WallColor = a
     end
 
     function Library:sThick(a)
