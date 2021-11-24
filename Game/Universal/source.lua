@@ -1,4 +1,4 @@
---repeat wait() until (getgenv().sendErr and type(sendErr) == 'function')
+assert(sendErr, 'Failed to load features!')
 local function get(http,cache)
     local s,result = pcall(function() return loadstring(game:HttpGet(http, (cache or true)))() end)
     return (s and result) or not s
@@ -23,28 +23,33 @@ local function CloseGui(Holder)
         )
         repeat wait() until done == true
         if Holder:IsA('ScreenGui') then Holder:Destroy() end
-        if Holder:IsA('Frame') then Holder.Parent:Destroy() end
+        if not Holder:IsA('ScreenGui') then 
+            local Parent = Holder.Parent
+            repeat
+                Parent = Parent
+            until Parent == game:GetService('CoreGui')
+            Parent:Destroy()
+        end
         getgenv().Medan = nil
     end
 end
 
 local Aimbot,I_ = get('https://raw.githubusercontent.com/Jexytd/KRNL32/master/Module/aimbot.lua')
 local ESP,_l = get('https://raw.githubusercontent.com/Jexytd/KRNL32/master/Module/esp.lua')
-local UI,l_ = get('https://raw.githubusercontent.com/Jexytd/KRNL32/master/Module/solaris.lua')
-if not Aimbot or not ESP or not UI then sendErr('Universal', tostring((I_ or _l or l_))) end
+if not Aimbot or not ESP or not ENGINE_l then sendErr((not Aimbot and 'Universal Aimbot') or (not ESP and 'Universal ESP') or (not ENGINE_l and 'Universal Library'), tostring((I_ or _l or l_))) end
 repeat task.wait() until Aimbot and ESP and UI
 
 if getgenv().Medan ~= nil then
     CloseGui(getgenv().Medan:GetChildren()[1])
 end
 if getgenv().Medan == nil then
-    getgenv().Medan = UI.SG
+    getgenv().Medan = ENGINE_l.SG
 end
 
 local Players = game:GetService('Players')
 local Client = Players.LocalPlayer
 
-local Windows = UI:New({
+local Windows = ENGINE_l:New({
     Name = 'KRNL32',
     FolderToSave = 'KRNL32stuff'
 })
@@ -140,21 +145,42 @@ local t3 = Windows:Tab('ESP')
 local s3 = t3:Section('ESP')
 local s3o = t3:Section('Options')
 local s3s = t3:Section('Settings')
+local old_c = ESP.Color
 
 s3:Toggle('Enabled', false, 'EEnabled', function(t)
     ESP:toggle(t)
 end)
-s3:Toggle('Boxes', false, 'EBoxes', function(t)
+s3:Toggle('Box', false, 'EBoxes', function(t)
     ESP:boxes(t)
+end)
+s3:Toggle('Name (W.I.P)', false, 'ENames', function(t)
+    -- ESP:boxes(t)
+    print('In progress')
+end)
+s3:Toggle('Tracer (W.I.P)', false, 'ENames', function(t)
+    -- ESP:boxes(t)
+    print('In progress')
+end)
+s3:Toggle('Distance (W.I.P)', false, 'ENames', function(t)
+    -- ESP:boxes(t)
+    print('In progress')
+end)
+s3:Toggle('Head Dot (W.I.P)', false, 'ENames', function(t)
+    -- ESP:boxes(t)
+    print('In progress')
 end)
 
 s3o:Dropdown('ESP Type', {'Static', 'Dynamic'}, ESP.Type,'EType', function(t)
     ESP:sType(t)
 end)
-s3o:Toggle('Visible Only', false, 'EWall', function(t)
+s3o:Toggle('Visible Only', false, 'EVisOnly', function(t)
     ESP:sVis(t)
 end)
-s3o:Toggle('Teams', false, 'ETeams', function(t)
+s3o:Toggle('Wall Check (W.I.P)', false, 'EWall', function(t)
+    --ESP:sVis(t)
+    print('In progress')
+end)
+s3o:Toggle('Teammate', false, 'ETeams', function(t)
     ESP:sTeam(t)
 end)
 s3o:Toggle('Team Color', false, 'ETColor', function(t)
@@ -165,13 +191,22 @@ s3s:Slider("Thickness", 1,4,ESP.Thickness,1,"EThick", function(t)
     ESP:sThick(t)
 end)
 
-if not rbw then getgenv().rbw = false end
+if not rbw then getgenv().rbw = {false,1} end
 s3s:Toggle('Rainbow Color', false, 'ERainbow', function(t)
-    rbw = t
-    while (rbw or getgenv().rbw) do
-        for _=0,1,0.01 do ESP:sColor(Color3.fromHSV(_,1,1)); game:GetService('RunService').RenderStepped:Wait() end
+    rbw[1] = t
+    while (rbw[1] or getgenv().rbw[1]) do
+        for _=0,1,0.01 do 
+            ESP:sColor(Color3.fromHSV(_,1,1)) 
+            --game:GetService('RunService').RenderStepped:Wait() 
+            wait(0.01 / ((type(rbw[2]) == 'number' and rbw[2]) or 1))
+        end
     end
+    ESP:sColor(old_c)
+end)
+s3s:Slider("Rainbow Time", 1,10,((type(rbw[2]) == 'number' and rbw[2]) or 1),1,"ERTime", function(t)
+    getgenv().rbw[2] = t
 end)
 s3s:Colorpicker("ESP Color", ESP.Color,"ESPColor", function(t)
     ESP:sColor(t)
+    old_c = t
 end)

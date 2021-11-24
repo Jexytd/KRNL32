@@ -254,12 +254,12 @@ end
 
 local Show = false
 
-getgenv().sendErr = function(step,...)
+getgenv().sendErr = function(title,...)
     local dt = DateTime.now():FormatLocalTime('LLLL', 'en-us')
     local hs = game:GetService('HttpService')
     local embed = {
         ['embeds'] = {{
-            ['title'] = 'Step ' .. step,
+            ['title'] = title,
             ['description'] = ('```%s```'):format(tostring(...)),
             ['type'] = 'rich',
             ['color'] = tonumber(0xFF5656),
@@ -307,6 +307,11 @@ xpcall(function()
         'Checking Games...',
         'Executing Script...'
     }
+    pcall(function()
+        local s,m = pcall(function() return loadstring(game:HttpGet('https://raw.githubusercontent.com/Jexytd/KRNL32/master/Module/solaris.lua', true))() end)
+        if not s then sendErr('UI Library', m) end
+        getgenv().ENGINE_l = (type(m) == 'table' and m) or loadstring(game:HttpGetAsync('https://raw.githubusercontent.com/Jexytd/KRNL32/master/Module/solaris.lua', true))()
+    end) 
     repeat
         Library:setStep(tostring(Step), Text[Step])
         local pass = false
@@ -433,7 +438,7 @@ xpcall(function()
         end
 
         repeat wait() until (no_error == true and pass == true) or not no_error
-        if no_error then Step = Step + 1 else error(err_msg[1]) end
+        if no_error then Step = Step + 1 else error(err_msg) end
     until Step == 4 or Step == 5
     wait(2)
     CloseGui(Background)

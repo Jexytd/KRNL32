@@ -1,6 +1,10 @@
 local Library = {
     Enabled = false,
     Boxes = false,
+    Names = false,
+    Distances = false,
+    Tracers = false,
+    HeadDot = false,
     Type = 'Dynamic',
 
     Visible = false,
@@ -19,6 +23,18 @@ do
 
     function Library:boxes(a)
         self.Boxes = a
+    end
+    function Library:names(a)
+        self.Names = a
+    end
+    function Library:distances(a)
+        self.Distances = a
+    end
+    function Library:tracers(a)
+        self.Tracers = a
+    end
+    function Library:headdot(a)
+        self.HeadDot = a
     end
 
     function Library:sColor(a)
@@ -142,6 +158,11 @@ function boxBase:up()
     end
 
     local Box = self.ESP.Box
+    local Name = self.ESP.Name
+    local Distance = self.ESP.Distance
+    local Tracer = self.ESP.Tracer
+    local Dot = self.ESP.Dot
+    local Img = self.ESP.Img
     if Library.Enabled then
         local CF,SZ = self.PrimaryPart.CFrame, (self.Size or self.PrimaryPart.Size)
         local Koordinat = (function()
@@ -152,6 +173,8 @@ function boxBase:up()
                     TL = CF + Vector3.new(SZ.X/2, SZ.Y, 0),
                     BL = CF + Vector3.new(SZ.X/2, -SZ.Y, 0),
                     BR = CF + Vector3.new(-SZ.X/2, -SZ.Y, 0),
+                    T = CF + Vector3.new(0, SZ.Y, 0),
+                    B = CF + Vector3.new(0, -SZ.Y, 0)
                 }
             elseif Library.Type == 'Dynamic' then
                 t = {
@@ -159,10 +182,13 @@ function boxBase:up()
                     TL = CF * CFrame.new(SZ.X/2, SZ.Y, 0),
                     BL = CF * CFrame.new(SZ.X/2, -SZ.Y, 0),
                     BR = CF * CFrame.new(-SZ.X/2, -SZ.Y, 0),
+                    T = CF * CFrame.new(0, SZ.Y, 0),
+                    B = CF * CFrame.new(0, -SZ.Y, 0)
                 }
             end
             return t
         end)()
+
         if Library.Boxes then
             local TR,v1 = WTVP(Koordinat.TR)
             local TL,v2 = WTVP(Koordinat.TL)
@@ -182,14 +208,93 @@ function boxBase:up()
         else
             Box.Visible = false
         end
+
+        if Library.Tracers then
+            local Bottom,v = WTVP(Koordinat.B)
+            if v then
+                Tracer.Visible = true
+                Tracer.Position = Bottom
+                Tracer.Thickness = Library.Thickness
+                Tracer.Color = Color
+            else
+                Tracer.Visible = false
+            end
+        else
+            Tracer.Visible = false
+        end
+
+        if Library.Names then
+            local _,v = WTVP(CF.p)
+            if v then
+                local Top = WTVP(Koordinat.T)
+                Top = Top + Vector3.new(0, SZ.Y/2, 0)
+                local Left = Top + Vector3.new(SZ.X/2, 0, 0)
+                Left = WTVP(Left)
+
+                Name.Visible = true
+                Img.Visible = true
+                Name.Size = (self.Thickness*6)
+                Name.Center = true
+                Name.Outline = true
+                Name.Color = Color
+                Img.Position = Right
+                Name.Position = Top
+                
+            else
+                Img.Visible = false
+                Name.Visible = false
+            end
+        else
+            Img.Visible = false
+            Name.Visible = false
+        end
+
+        if Library.Distances then
+            local _,v = WTVP(CF.p)
+            if v then
+                local Top = WTVP(Koordinat.T)
+                Top = Top + Vector3.new(0, SZ.Y/2, 0)
+                local Right = Top + Vector3.new(-SZ.X/2, 0, 0)
+                Right = WTVP(Right)
+
+                Distance.Visible = true
+                Distance.Size = (self.Thickness*6)
+                Distance.Center = true
+                Distance.Outline = true
+                Distance.Color = Color
+                Distance.Position = Right
+            else
+                Distance.Visible = false
+            end
+        else
+            Distance.Visible = false
+        end
+
+        if Library.HeadDot then
+            local _,v = WTVP(CF.p)
+            if v then
+                local PHead = self.Object:FindFirstChild('Head') or self.Object:WaitForChild('Head')
+                local Pos = WTVP(PHead.Position)
+                Dot.Visible = true
+                Dot.Color = Color
+                Dot.Thickness = self.Thickness
+                Dot.Position = Pos
+            else
+                Dot.Visible = false
+            end
+        else
+            Dot.Visible = false
+        end
     else
         for i,v in pairs(self.ESP) do
-            if type(v) == 'table' then
-                for i2 in pairs(v) do
-                    v[i2].Visible = false
+            if type(v) == 'userdata' then
+                v.Visible = false
+            elseif type(v) == 'table' then
+                for i2,v2 in pairs(v) do
+                    v2.Visible = false
                 end
             else
-                v.Visible = false
+                print(i,v)
             end
         end
     end
@@ -212,6 +317,40 @@ function Library:add(o,p)
         Thickness = self.Thickness,
         Color = self.Color,
         Visible = self.Enabled and self.Boxes
+    })
+    a.ESP['Name'] = Draw('Text', {
+        Size = (self.Thickness*6),
+        Center = true,
+        Outline = true,
+        Color = self.Color,
+        Visible = self.Enabled and self.Names
+    })
+    local tType,tSize = Enum.ThumbnailType.HeadShot,Enum.ThumbnailSize.Size48x48
+    local headShot = Players:GetUserThumbnailAsync(a.Player.UserId, tType, tSize)
+    a.ESP['Img'] = Draw('Image', {
+        Data = game:HttpGet(headShot),
+        Rounding = 60,
+        Size = 48,
+        Visible = self.Enabled and self.Names
+    })
+    a.ESP['Distance'] = Draw('Text', {
+        Size = (self.Thickness*6),
+        Center = true,
+        Outline = true,
+        Color = self.Color,
+        Visible = self.Enabled and self.Distances
+    })
+    a.ESP['Tracer'] = Draw('Line', {
+        Thickness = self.Thickness,
+        Color = self.Color,
+        Visible = self.Enabled and self.Tracers
+    })
+    a.ESP['Dot'] = Draw('Circle', {
+        Thickness = self.Thickness,
+        NumSides = 60,
+        Filled = true,
+        Color = self.Color,
+        Visible = self.Enabled and HeadDot
     })
 
     self.Objects[o] = a
