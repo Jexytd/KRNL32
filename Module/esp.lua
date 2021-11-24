@@ -8,6 +8,7 @@ local Library = {
     Type = 'Dynamic',
 
     Visible = false,
+    WallCheck = false,
     Teams = false,
     TeamsColor = false,
     Color = Color3.fromRGB(255, 255, 255),
@@ -43,6 +44,9 @@ do
     end
     function Library:sWColor(a)
         self.WallColor = a
+    end
+    function Library:sWallC(a)
+        self.WallCheck = a
     end
 
     function Library:sThick(a)
@@ -159,6 +163,12 @@ function boxBase:up()
         Color = self.Player.TeamColor.Color
     else
         Color = Library.Color
+    end
+
+    if self.Player and Library.WallCheck then
+        if not Library:IsVisible(self.Player) then
+            Color = Library.WallColor
+        end
     end
 
     local Box = self.ESP.Box
