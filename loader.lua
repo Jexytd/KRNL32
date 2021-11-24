@@ -330,7 +330,7 @@ xpcall(function()
             pass = true
         elseif Step == 2 then
             Library:setColor(true)
-            local s,msg = pcall(function() return game:HttpGet('https://navicat.glitch.me/gamelist.json',true) end) -- JSON
+            local s,msg = pcall(function() return game:HttpGet('https://raw.githubusercontent.com/Jexytd/KRNL32/master/games.json',true) end) -- JSON
             if not s then Library:setLog(msg); no_error = false; err_msg={msg,step}; end
             local JSON = game:GetService('HttpService'):JSONDecode(msg)
             local found = false
