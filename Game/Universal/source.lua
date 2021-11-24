@@ -160,7 +160,7 @@ end)
 s3o:Colorpicker("Wall Color", ESP.WallColor,"EWallColor", function(t)
     ESP:sWColor(t)
 end)
-s3o:Colorpicker("HP Color", ESP.WallColor,"EWallColor", function(t)
+s3o:Colorpicker("HP Color", ESP.HPColor,"EWallColor", function(t)
     ESP:sHColor(t)
 end)
 
