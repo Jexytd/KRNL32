@@ -15,8 +15,8 @@ local Library = {
     Teams = false,
     TeamsColor = false,
     Color = Color3.fromRGB(255, 255, 255),
-    WallColor = Color3.fromRGB(69,69,130),
-    HPColor = Color3.fromRGB(255,255,255),
+    WallColor = Color3.fromRGB(255,75,75),
+    HPColor = Color3.fromRGB(75,255,75),
     Thickness = 3,
 
     Objects = setmetatable({}, {_mode='kv'}),
@@ -291,7 +291,7 @@ function boxBase:up()
             --     Img.Data = game:HttpGet(url)
             -- end)
             local Ratio = (Camera.CFrame.p - CF.p).magnitude
-            local offset = math.clamp(1/Ratio*750, 1, 60)
+            local offset = math.clamp(1/Ratio*750, 1, 100)
             Img.Size = Vector2.new(offset,offset)
             offset = math.clamp(1/Ratio*750, 1, 300)
             Img.Position = Vector2.new(Pos1.X, Pos1.Y - offset)
@@ -364,13 +364,13 @@ function boxBase:up()
                 local t = {}
                 if Library.Type == 'Static' then
                     t = {
-                        CF + Vector3.new(SZ.X/1.5,SZ.Y*Health,0),
-                        CF + Vector3.new(SZ.X/1.5,-SZ.Y*Health,0)
+                        CF + Vector3.new(SZ.X/1.3,SZ.Y*Health,0),
+                        CF + Vector3.new(SZ.X/1.3,-SZ.Y*Health,0)
                     }
                 elseif Library.Type == 'Dynamic' then
                     t = {
-                        CF * CFrame.new(SZ.X/1.5,SZ.Y*Health,0),
-                        CF * CFrame.new(SZ.X/1.5,-SZ.Y*Health,0)
+                        CF * CFrame.new(SZ.X/1.3,SZ.Y*Health,0),
+                        CF * CFrame.new(SZ.X/1.3,-SZ.Y*Health,0)
                     }
                 end
                 return t
@@ -380,13 +380,11 @@ function boxBase:up()
             local Bottom = WTVP(Pos[2])
             HP.Visible = true
             HP.Thickness = Library.Thickness
-            HP.Color = Library.HPColor
-            local Ratio = (Camera.CFrame.p - CF.p).magnitude
-            local offset = math.clamp(1/Ratio*750, 1, 30)
-            HP.PointA = Vector2.new(Top.X - offset, Top.Y)
-            HP.PointB = Vector2.new(Top.X - offset, Top.Y)
-            HP.PointC = Vector2.new(Bottom.X - offset, Bottom.Y)
-            HP.PointD = Vector2.new(Bottom.X - offset, Bottom.Y)
+            HP.Color = Library.HPColor or Color
+            HP.PointA = Top
+            HP.PointB = Top
+            HP.PointC = Bottom
+            HP.PointD = Bottom
         else
             HP.Visible = false
         end
