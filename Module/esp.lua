@@ -306,6 +306,9 @@ function boxBase:up()
                 local PHead = self.Object:FindFirstChild('Head') or self.Object:WaitForChild('Head')
                 local Pos = WTVP(PHead.Position)
                 Dot.Visible = true
+                local Ratio = (Camera.CFrame.p - CF.p).magnitude
+                local offset = math.clamp(1/ratio*750, 2, 30)
+                Dot.Radius = offset
                 Dot.Color = Color
                 Dot.Thickness = self.Thickness
                 Dot.Position = Pos
