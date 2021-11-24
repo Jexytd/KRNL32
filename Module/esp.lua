@@ -4,6 +4,7 @@ local Library = {
     Names = false,
     Distances = false,
     Tracers = false,
+    HPs = false,
     HeadDot = false,
     Type = 'Dynamic',
 
@@ -39,6 +40,9 @@ do
     end
     function Library:headdot(a)
         self.HeadDot = a
+    end
+    function Library:hps(a)
+        self.HPs = a
     end
 
     function Library:sColor(a)
@@ -182,6 +186,7 @@ function boxBase:up()
     local Tracer = self.ESP.Tracer
     local Dot = self.ESP.Dot
     local Img = self.ESP.Img
+    local HP = self.ESP.HP
     
     local CF,SZ = self.PrimaryPart.CFrame, (self.Size or self.PrimaryPart.Size)
     local Koordinat = (function()
@@ -341,6 +346,47 @@ function boxBase:up()
     else
         Dot.Visible = false
     end
+
+    if Library.HPs then
+        local _,v = WTVP(CF.p)
+        if v then
+            pcall(function()
+                local Humanoid = self.Object:FindFirstChildOfClass('Humanoid')
+                if Humanoid then
+                    Health = Humanoid.Health / Humanoid.MaxHealth
+                end
+            end)
+            local Pos = (function()
+                local t = {}
+                if Library.Type == 'Static' then
+                    t = {
+                        CF + Vector3.new(0,SZ.Y*Health,0),
+                        CF + Vector3.new(0,-SZ.Y*Health,0)
+                    }
+                elseif Library.Type == 'Dynamic' then
+                    t = {
+                        CF * CFrame.new(0,SZ.Y*Health,0),
+                        CF * CFrame.new(0,-SZ.Y*Health,0)
+                    }
+                end
+                return t
+            end)()
+
+            local Top = WTVP(Pos[1])
+            local Bottom = WTVP(Pos[2])
+            HP.Visible = true
+            HP.Thickness = Library.Thickness
+            HP.Color = Color
+            HP.PointA = Top
+            HP.PointB = Top
+            HP.PointC = Bottom
+            HP.PointD = Bottom
+        else
+            HP.Visible = false
+        end
+    else
+        HP.Visible = false
+    end
 end
 
 function Library:add(o,p)
@@ -395,6 +441,11 @@ function Library:add(o,p)
         Filled = true,
         Color = self.Color,
         Visible = self.Enabled and HeadDot
+    })
+    a.ESP['HP'] = Draw('Quad', {
+        Thickness = self.Thickness,
+        Color = self.Color,
+        Visible = self.Enabled and self.HPs
     })
 
     self.Objects[o] = a
