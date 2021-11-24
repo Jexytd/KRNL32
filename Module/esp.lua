@@ -381,10 +381,12 @@ function boxBase:up()
             HP.Visible = true
             HP.Thickness = Library.Thickness
             HP.Color = Library.HPColor
-            HP.PointA = Top
-            HP.PointB = Top
-            HP.PointC = Bottom
-            HP.PointD = Bottom
+            local Ratio = (Camera.CFrame.p - CF.p).magnitude
+            local offset = math.clamp(1/Ratio*750, 1, 100)
+            HP.PointA = Vector2.new(Top.X + offset, Top.Y)
+            HP.PointB = Vector2.new(Top.X + offset, Top.Y)
+            HP.PointC = Vector2.new(Bottom.X + offset, Bottom.Y)
+            HP.PointD = Vector2.new(Bottom.X + offset, Bottom.Y)
         else
             HP.Visible = false
         end
