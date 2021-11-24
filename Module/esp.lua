@@ -360,13 +360,13 @@ function boxBase:up()
                 local t = {}
                 if Library.Type == 'Static' then
                     t = {
-                        CF + Vector3.new(0,SZ.Y*Health,0),
-                        CF + Vector3.new(0,-SZ.Y*Health,0)
+                        CF + Vector3.new(SZ.X/1.5,SZ.Y*Health,0),
+                        CF + Vector3.new(SZ.X/1.5,-SZ.Y*Health,0)
                     }
                 elseif Library.Type == 'Dynamic' then
                     t = {
-                        CF * CFrame.new(0,SZ.Y*Health,0),
-                        CF * CFrame.new(0,-SZ.Y*Health,0)
+                        CF * CFrame.new(SZ.X/1.5,SZ.Y*Health,0),
+                        CF * CFrame.new(SZ.X/1.5,-SZ.Y*Health,0)
                     }
                 end
                 return t
