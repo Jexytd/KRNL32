@@ -413,11 +413,11 @@ xpcall(function()
             local oldclock = os.clock()
             local newclock
             repeat wait()
+                Library:setLog('Executing script in attempt ' .. tostring(attempt))
                 local s,msg = pcall(function() return loadstring(game:HttpGet('https://raw.githubusercontent.com/Jexytd/KRNL32/master/Game/Universal/source.lua', true))() end)
                 if not s then
                     attempt = attempt + 1
                     err_msg = msg
-                    warn('[#]:', err_msg)
                 else
                     attempt = true
                     newclock = os.clock()

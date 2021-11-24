@@ -36,8 +36,9 @@ end
 
 local Aimbot,I_ = get('https://raw.githubusercontent.com/Jexytd/KRNL32/master/Module/aimbot.lua')
 local ESP,_l = get('https://raw.githubusercontent.com/Jexytd/KRNL32/master/Module/esp.lua')
-if not Aimbot or not ESP or not ENGINE_l then sendErr((not Aimbot and 'Universal Aimbot') or (not ESP and 'Universal ESP') or (not ENGINE_l and 'Universal Library'), tostring((I_ or _l or l_))) end
-repeat task.wait() until Aimbot and ESP and UI
+if not Aimbot or not ESP or not ENGINE_l then 
+    sendErr((not Aimbot and 'Universal Aimbot') or (not ESP and 'Universal ESP') or (not ENGINE_l and 'Universal Library'), tostring((I_ or _l))) 
+end
 
 if getgenv().Medan ~= nil then
     CloseGui(getgenv().Medan:GetChildren()[1])
