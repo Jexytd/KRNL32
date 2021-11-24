@@ -307,7 +307,7 @@ function boxBase:up()
                 local Pos = WTVP(PHead.Position)
                 Dot.Visible = true
                 local Ratio = (Camera.CFrame.p - CF.p).magnitude
-                local offset = math.clamp(1/ratio*750, 2, 30)
+                local offset = math.clamp(1/Ratio*750, 2, 30)
                 Dot.Radius = offset
                 Dot.Color = Color
                 Dot.Thickness = self.Thickness
