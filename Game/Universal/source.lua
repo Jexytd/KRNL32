@@ -198,6 +198,7 @@ s3s:Toggle('Rainbow Color', false, 'ERainbow', function(t)
     rbw[1] = t
     while rbw[1] do
         for _=0,1,0.01 do 
+            if not rbw[1] then break end
             ESP:sColor(Color3.fromHSV(_,1,1)) 
             wait(0.01 / (rbw[2] or 1))
         end
