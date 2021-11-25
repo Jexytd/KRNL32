@@ -312,16 +312,13 @@ xpcall(function()
         Library:setStep(tostring(Step), Text[Step])
         local pass = false
 
-        pcall(function()
-            if not ENGINE_l then
-                local s,m = pcall(function() return loadstring(game:HttpGet('https://raw.githubusercontent.com/Jexytd/KRNL32/master/Module/kavo.lua', true))() end)
-                getgenv().ENGINE_l = m
-                if s then
-                    getgenv().ENGINE_l = ENGINE_l:CreateLib('KRNL32', 'GrapeTheme')
-                    ENGINE_l:ToggleUI()
-                end
+        if not ENGINE_l then
+            local s,m = pcall(function() return loadstring(game:HttpGet('https://raw.githubusercontent.com/Jexytd/KRNL32/master/Module/kavo.lua', true))() end)
+            getgenv().ENGINE_l = m
+            if s then
+                getgenv().ENGINE_l = ENGINE_l:CreateLib('KRNL32', 'GrapeTheme')
             end
-        end)
+        end
 
         if Step == 1 then
             Library:setColor(true)
@@ -391,8 +388,6 @@ xpcall(function()
                 if not s then
                     attempt = attempt + 1
                     err_msg = msg
-                    ENGINE_l:Remove()
-                    getgenv().ENGINE_l = nil
                 else
                     attempt = true
                     newclock = os.clock()
@@ -403,6 +398,8 @@ xpcall(function()
             if attempt ~= true then
                 Library:setLog('Failed to executing script!')
                 sendErr(Step, err_msg .. '\nScript url: ' .. githubFormat .. '\nPlaceid: ' .. tostring(game.PlaceId))
+                getgenv().ENGINE_l:Remove()
+                getgenv().ENGINE_l = nil
                 no_error = false
             end
             if no_error then
@@ -427,8 +424,6 @@ xpcall(function()
                 if not s then
                     attempt = attempt + 1
                     err_msg = msg
-                    ENGINE_l:Remove()
-                    getgenv().ENGINE_l = nil
                 else
                     attempt = true
                     newclock = os.clock()
@@ -440,6 +435,9 @@ xpcall(function()
                 no_error = false 
                 Library:setLog('Failed executing script!')
                 sendErr(Step, err_msg)
+                getgenv().ENGINE_l:Remove()
+                getgenv().ENGINE_l = nil
+                no_error = false
             end
             if no_error then
                 Library:setLog('Script executed! ' .. ('takes %0.1fs'):format(newclock - oldclock))
