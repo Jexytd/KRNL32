@@ -154,6 +154,11 @@ function Kavo:Remove()
     end
 end
 
+function Kavo:GetThemes()
+    local a = {themeStyles, themeList}
+    return a
+end
+
 function Kavo:CreateLib(kavName, themeList)
     if not themeList then
         themeList = themes
