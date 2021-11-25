@@ -147,6 +147,12 @@ function Kavo:ToggleUI()
     end
 end
 
+function Kavo:Remove()
+    if game.CoreGui:FindFirstChild(LibName) then
+        game.CoreGui[LibName]:Destroy()
+    end
+end
+
 function Kavo.CreateLib(kavName, themeList)
     if not themeList then
         themeList = themes
@@ -351,6 +357,14 @@ function Kavo.CreateLib(kavName, themeList)
             coverup.BackgroundColor3 = themeList.Header
         end
     end)()
+
+    function Kavo:ChangeTheme(theme)
+        for k,v in pairs(themeStyles) do
+            if k == theme then
+                themeList = v
+            end
+        end
+    end
 
     function Kavo:ChangeColor(prope,color)
         if prope == "Background" then
