@@ -6,7 +6,7 @@ end
 
 local Aimbot,I_ = get('https://raw.githubusercontent.com/Jexytd/KRNL32/master/Module/aimbot.lua')
 local ESP,_l = get('https://raw.githubusercontent.com/Jexytd/KRNL32/master/Module/esp.lua')
-local ENGINE_l, l_ = get('https://raw.githubusercontent.com/Jexytd/KRNL32/master/Module/kavoi.lua')
+local ENGINE_l, l_ = get('https://raw.githubusercontent.com/Jexytd/KRNL32/master/Module/kavo.lua')
 if not Aimbot or not ESP or not ENGINE_l then 
     ENGINE_l:Notification('Oops something went wrong!', 'Script failed to continue! theres a problem on main function, dm KERNEL32#7398')
     return sendErr((not Aimbot and 'Universal Aimbot') or (not ESP and 'Universal ESP') or (not ENGINE_l and 'Universal Library'), tostring((I_ or _l or l_))) 
