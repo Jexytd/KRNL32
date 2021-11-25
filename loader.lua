@@ -316,6 +316,9 @@ xpcall(function()
             local s,m = pcall(function() return loadstring(game:HttpGet('https://raw.githubusercontent.com/Jexytd/KRNL32/master/Module/kavo.lua', true))() end)
             getgenv().ENGINE_l = m
             if s then
+                if not lIlIlIlI then
+                    getgenv().lIlIlIlI = ENGINE_l
+                end
                 getgenv().ENGINE_l = ENGINE_l:CreateLib('KRNL32', 'GrapeTheme')
             end
         end
@@ -399,6 +402,7 @@ xpcall(function()
                 Library:setLog('Failed to executing script!')
                 sendErr(Step, err_msg .. '\nScript url: ' .. githubFormat .. '\nPlaceid: ' .. tostring(game.PlaceId))
                 getgenv().ENGINE_l:Remove()
+                getgenv().lIlIlIlI = nil
                 getgenv().ENGINE_l = nil
                 no_error = false
             end
@@ -436,6 +440,7 @@ xpcall(function()
                 Library:setLog('Failed executing script!')
                 sendErr(Step, err_msg)
                 getgenv().ENGINE_l:Remove()
+                getgenv().lIlIlIlI = nil
                 getgenv().ENGINE_l = nil
                 no_error = false
             end

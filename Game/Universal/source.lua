@@ -187,7 +187,7 @@ local tinf = Windows:NewTab('Settings')
 local so = tinf:NewSection('Main')
 
 so:NewDropdown("UI Themes", "Set ui themes", {'DarkTheme','LightTheme','BloodTheme','GrapeTheme','Ocean','Midnight','Sentinel','Synapse','Serpent'}, function(currentOption)
-    ENGINE_l:ChangeTheme(currentOption)
+    lIlIlIlI:ChangeTheme(currentOption)
 end)
 
 local themes = {
@@ -199,6 +199,6 @@ local themes = {
 }
 for theme, color in pairs(themes) do
     so:NewColorPicker(theme, "Change your "..theme, color, function(color3)
-        ENGINE_l:ChangeColor(theme, color3)
+        lIlIlIlI:ChangeColor(theme, color3)
     end)
 end
