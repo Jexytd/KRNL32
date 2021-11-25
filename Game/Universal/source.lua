@@ -190,13 +190,7 @@ so:NewDropdown("UI Themes", "Set ui themes", {'DarkTheme','LightTheme','BloodThe
     lIlIlIlI:ChangeTheme(currentOption)
 end)
 
-local themes = {
-    SchemeColor = Color3.fromRGB(64, 64, 64),
-    Background = Color3.fromRGB(0, 0, 0),
-    Header = Color3.fromRGB(0, 0, 0),
-    TextColor = Color3.fromRGB(255,255,255),
-    ElementColor = Color3.fromRGB(20, 20, 20)
-}
+local themes = lIlIlIlI:GetThemes()[1][theme]
 for theme, color in pairs(themes) do
     so:NewColorPicker(theme, "Change your "..theme, color, function(color3)
         lIlIlIlI:ChangeColor(theme, color3)
