@@ -111,12 +111,7 @@ function Library:IsTeam(pl)
 end
 
 function Library:IsVisible(p)
-    local a
-    repeat wait()
-        pcall(function()
-            a = p.Character or (p.ClassName == 'Model' and p)
-        end)
-    until a
+    local a = p.Character or (p.ClassName == 'Model' and p)
     local b = a.ClassName == 'Model' and (a.PrimaryPart or a:FindFirstChild('HumanoidRootPart') or a:FindFirstChildWhichIsA('BasePart'))
     local newRay = Ray.new(Camera.CFrame.p, b.Position - Camera.CFrame.p)
     local Hit = workspace:FindPartOnRayWithIgnoreList(newRay, {Client.Character, CurrentCamera})
@@ -151,6 +146,15 @@ end
 function boxBase:up()
     if not self.PrimaryPart then return self:Remove() end
 
+    local Color;
+    if Library.TeamsColor then
+        Color = self.Player.TeamColor.Color
+    elseif Library.WallCheck and Library:IsVisible(self.Player) then
+        Color = Library.WallColor
+    else
+        Color = Library.Color
+    end
+
     local n = true
     if self.Player and not Library.Teams and Library:IsTeam(self.Player) then
         n = false
@@ -172,20 +176,7 @@ function boxBase:up()
             end
         end
         return
-    end
-
-    local Color;
-    if self.Player and Library.TeamsColor then
-        Color = self.Player.TeamColor.Color
-    else
-        Color = Library.Color
-    end
-
-    if self.Player and Library.WallCheck then
-        if Library:IsVisible(self.Player) then
-            Color = Library.WallColor
-        end
-    end
+    end   
 
     local Box = self.ESP.Box
     local Name = self.ESP.Name
@@ -517,8 +508,7 @@ end
 game:GetService("RunService").RenderStepped:Connect(function()
     for i,v in (pairs or ipairs)(Library.Objects) do
         if v.up then
-            local s,e = pcall(v.up, v)
-            if not s then print(e) end
+            pcall(v.up, v)
         end
     end
 end)
