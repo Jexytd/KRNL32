@@ -1,4 +1,9 @@
 repeat wait() until game:IsLoaded()
+if ENGINE_l and lIlIlIlI then
+    getgenv().ENGINE_l:Remove()
+    getgenv().lIlIlIlI = nil
+    getgenv().ENGINE_l = nil
+end
 
 -- Loader Gui
 function Loader()
