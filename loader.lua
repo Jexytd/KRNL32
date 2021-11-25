@@ -424,7 +424,7 @@ xpcall(function()
             Library:setColor(true)
             Library:setLog('Executing KRNL32 Universal...')
             local attempt = 1
-            local maxattempt = 1
+            local maxattempt = 2
             local oldclock = os.clock()
             local newclock
             repeat wait()
