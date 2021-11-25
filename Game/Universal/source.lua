@@ -101,7 +101,7 @@ s2s:NewSlider("Aim Smooth", "Set aimbot smooth", Aimbot.Smooth*2,1, function(t)
     Aimbot:setSmooth(t)
 end)
 
-s2s:Colorpicker("FOV Color", "Set fov color",Aimbot.FOVColor, function(t)
+s2s:NewColorPicker("FOV Color", "Set fov color",Aimbot.FOVColor, function(t)
     Aimbot:setFovColor(t)
 end)
 
