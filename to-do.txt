@@ -1,7 +1,4 @@
-[Universal]:
-    [ESP]:
-    - Names
-    - Tracers
-    - Distance
-
-[File updated at 11/22/2021]
+[Game]:
+    - Blox Fruit
+    - A Universal Time (5130598377)
+[File updated at 11/25/2021]
