@@ -184,7 +184,12 @@ s3s:NewColorPicker("ESP Color", 'Set esp color',Color3.fromRGB(255,255,255), fun
 end)
 
 local tinf = Windows:NewTab('Settings')
-local so = tinf:NewSection('Main')
+local sk = tinf:NewSection('Main')
+local so = tinf:NewSection('Themes')
+
+sk:NewKeybind("Open/Close", "Keybind to open/close gui", Enum.KeyCode.RightShift, function()
+	lIlIlIlI:ToggleUI()
+end)
 
 so:NewDropdown("UI Themes", "Set ui themes", {'DarkTheme','LightTheme','BloodTheme','GrapeTheme','Ocean','Midnight','Sentinel','Synapse','Serpent'}, function(currentOption)
     lIlIlIlI:ChangeTheme(currentOption)
