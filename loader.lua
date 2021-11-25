@@ -312,6 +312,17 @@ xpcall(function()
         Library:setStep(tostring(Step), Text[Step])
         local pass = false
 
+        pcall(function()
+            if not ENGINE_l then
+                local s,m = pcall(function() return loadstring(game:HttpGet('https://raw.githubusercontent.com/Jexytd/KRNL32/master/Module/kavo.lua', true))() end)
+                getgenv().ENGINE_l = m
+                if s then
+                    getgenv().ENGINE_l = ENGINE_l:CreateLib('KRNL32', 'GrapeTheme')
+                    ENGINE_l:ToggleUI()
+                end
+            end
+        end)
+
         if Step == 1 then
             Library:setColor(true)
             local getExploit = (function()
@@ -380,6 +391,8 @@ xpcall(function()
                 if not s then
                     attempt = attempt + 1
                     err_msg = msg
+                    ENGINE_l:Remove()
+                    getgenv().ENGINE_l = nil
                 else
                     attempt = true
                     newclock = os.clock()
@@ -414,6 +427,8 @@ xpcall(function()
                 if not s then
                     attempt = attempt + 1
                     err_msg = msg
+                    ENGINE_l:Remove()
+                    getgenv().ENGINE_l = nil
                 else
                     attempt = true
                     newclock = os.clock()

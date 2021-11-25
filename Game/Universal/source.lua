@@ -6,20 +6,18 @@ end
 
 local Aimbot,I_ = get('https://raw.githubusercontent.com/Jexytd/KRNL32/master/Module/aimbot.lua')
 local ESP,_l = get('https://raw.githubusercontent.com/Jexytd/KRNL32/master/Module/esp.lua')
-local ENGINE_l, l_ = get('https://raw.githubusercontent.com/Jexytd/KRNL32/master/Module/kavo.lua')
-if not Aimbot or not ESP or not ENGINE_l then 
-    ENGINE_l:Notification('Oops something went wrong!', 'Script failed to continue! theres a problem on main function, dm KERNEL32#7398')
-    return sendErr((not Aimbot and 'Universal Aimbot') or (not ESP and 'Universal ESP') or (not ENGINE_l and 'Universal Library'), tostring((I_ or _l or l_))) 
+if not Aimbot or not ESP or type(ENGINE_l) ~= 'table' then 
+    return sendErr((not Aimbot and 'Aimbot') or (not ESP and 'ESP') or (type(ENGINE_l) ~= 'table' and 'Library'), tostring((I_ or _l or ENGINE_l))) 
 end
 
 local Players = game:GetService('Players')
 local Client = Players.LocalPlayer
 
-local theme = 'DarkTheme'
-local Windows = ENGINE_l:CreateLib('KRNL32', theme)
+local theme = 'GrapeTheme'
+local Windows = ENGINE_l
 
 local t1 = Windows:NewTab('Home')
-local s1 = t1:NewSection('Home')
+local s1 = t1:NewSection('Status')
 
 s1:NewLabel('Welcome, ' .. Client.Name)
 local timmy = s1:NewLabel('Current Time')
