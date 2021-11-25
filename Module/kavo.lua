@@ -156,7 +156,7 @@ function Kavo:Remove()
 end
 
 function Kavo:GetThemes()
-    local a = {themeStyles, themeList}
+    local a = {themeStyles, themes}
     return a
 end
 
