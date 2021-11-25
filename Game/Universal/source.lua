@@ -13,9 +13,7 @@ end
 local Players = game:GetService('Players')
 local Client = Players.LocalPlayer
 
-local theme = 'GrapeTheme'
 local Windows = ENGINE_l
-
 local t1 = Windows:NewTab('Home')
 local s1 = t1:NewSection('Status')
 
