@@ -26,7 +26,7 @@ local timmy = s1:NewLabel('Current Time')
 local timmy2 = s1:NewLabel('Playing Time')
 local timmy3 = s1:NewLabel('Server Time')
 local timmy4 = s1:NewLabel('FPS')
-game:GetService('RunService').RenderStepped:Connect(function()
+game:GetService('RunService').Hearthbeat:Connect(function()
     do
         local date = os.date("*t")
         local hour = (date.hour) % 24
@@ -155,38 +155,38 @@ end)
 s3s:NewSlider("Thickness", 'Set thickness of esp line', ESP.Thickness*2,1, function(t)
     ESP:sThick(t)
 end)
-s3o:NewColorPicker("Wall Color",'Set wall color', Color3.fromRGB(255,255,255), function(t)
+
+-- rbw = {false,1}
+-- s3s:NewToggle('Rainbow Color', 'Set esp color to rainbow', function(t)
+--     rbw[1] = t
+--     while rbw[1] do
+--         local time = tostring(rbw[2]) .. '0'
+--         time = tonumber(time)
+--         for _=0,1,0.01 do 
+--             if not rbw[1] then break end
+--             ESP:sColor(Color3.fromHSV(_,1,1)) 
+--             wait(0.01 * time)
+--         end
+--         wait(0.01 * time)
+--     end
+--     ESP:sColor(old_c)
+-- end)
+-- s3s:NewSlider("Rainbow Time", "Slower color rainbow", 10,1, function(t)
+--     rbw[2] = t
+-- end)
+s3s:NewColorPicker("Wall Color",'Set wall color', Color3.fromRGB(255,255,255), function(t)
     ESP:sWColor(t)
 end)
-s3o:NewColorPicker("HP Color",'Set healthbar color', Color3.fromRGB(255,255,255),"EHPColor", function(t)
+s3s:NewColorPicker("HP Color",'Set healthbar color', Color3.fromRGB(255,255,255),"EHPColor", function(t)
     ESP:sHColor(t)
-end)
-
-rbw = {false,1}
-s3s:NewToggle('Rainbow Color', 'Set esp color to rainbow', function(t)
-    rbw[1] = t
-    while rbw[1] do
-        local time = tostring(rbw[2]) .. '0'
-        time = tonumber(time)
-        for _=0,1,0.01 do 
-            if not rbw[1] then break end
-            ESP:sColor(Color3.fromHSV(_,1,1)) 
-            wait(0.01 * time)
-        end
-        wait(0.01 * time)
-    end
-    ESP:sColor(old_c)
-end)
-s3s:NewSlider("Rainbow Time", "Slower color rainbow", function(t)
-    rbw[2] = t
 end)
 s3s:NewColorPicker("ESP Color", 'Set esp color',Color3.fromRGB(255,255,255), function(t)
     ESP:sColor(t)
     old_c = t
 end)
 
-local tinf = Windows:NewTab('Aimbot')
-local so = tinf:NewSection('Aimbot')
+local tinf = Windows:NewTab('Settings')
+local so = tinf:NewSection('Main')
 
 so:NewDropdown("UI Themes", "Set ui themes", {'DarkTheme','LightTheme','BloodTheme','GrapeTheme','Ocean','Midnight','Sentinel','Synapse','Serpent'}, function(currentOption)
     ENGINE_l:ChangeTheme(currentOption)
