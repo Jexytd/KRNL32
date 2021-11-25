@@ -93,11 +93,11 @@ s2:NewToggle("Team Check","allow aimbot to target teammate", function(t)
     Aimbot:teamCheck(t)
 end)
 
-s2s:NewSlider("Aim FOV", "Set aimbot fov", Aimbot.FOV*2,1 function(t)
+s2s:NewSlider("Aim FOV", "Set aimbot fov", Aimbot.FOV*2,1, function(t)
     Aimbot:setFov(t)
 end)
 
-s2s:NewSlider("Aim Smooth", "Set aimbot smooth", Aimbot.Smooth*2,1 function(t)
+s2s:NewSlider("Aim Smooth", "Set aimbot smooth", Aimbot.Smooth*2,1, function(t)
     Aimbot:setSmooth(t)
 end)
 
@@ -152,7 +152,7 @@ s3o:NewToggle('Team Color', 'Set color to teams color', function(t)
     ESP:teamcolor(t)
 end)
 
-s3s:NewSlider("Thickness", 'Set thickness of esp line', ESP.Thickness*2,1 function(t)
+s3s:NewSlider("Thickness", 'Set thickness of esp line', ESP.Thickness*2,1, function(t)
     ESP:sThick(t)
 end)
 s3o:NewColorPicker("Wall Color",'Set wall color', Color3.fromRGB(255,255,255), function(t)
