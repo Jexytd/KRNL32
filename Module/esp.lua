@@ -152,7 +152,7 @@ function boxBase:up()
     if self.Player and not Library.Teams and Library:IsTeam(self.Player) then
         n = false
     end
-    if self.Player and Library.Visible and not Library:IsVisible(self.Player) then
+    if self.Player and Library.Visible and Library:IsVisible(self.Player) then
         n = false
     end
     if not Library.Enabled then
@@ -179,7 +179,7 @@ function boxBase:up()
     end
 
     if self.Player and Library.WallCheck then
-        if Library:IsVisible(self.Player) then
+        if not Library:IsVisible(self.Player) then
             Color = Library.WallColor
         end
     end
