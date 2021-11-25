@@ -1,4 +1,11 @@
 [Game]:
     - Blox Fruit
     - A Universal Time (5130598377)
+[A Universal Time]:
+    - Item Farm
+    - Auto Daily Quest
+    - Item ESP [Name,Distance,Line]
+    - Walkspeed & Jumppower ?
+[Blox Fruit]:
+    - will be working after aut maybe?
 [File updated at 11/25/2021]
