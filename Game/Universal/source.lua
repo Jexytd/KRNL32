@@ -24,7 +24,7 @@ local timmy = s1:NewLabel('Current Time')
 local timmy2 = s1:NewLabel('Playing Time')
 local timmy3 = s1:NewLabel('Server Time')
 local timmy4 = s1:NewLabel('FPS')
-game:GetService('RunService').Hearthbeat:Connect(function()
+game:GetService('RunService').Heartbeat:Connect(function()
     do
         local date = os.date("*t")
         local hour = (date.hour) % 24
