@@ -1,6 +1,6 @@
 repeat wait() until game:IsLoaded()
 if ENGINE_l and lIlIlIlI then
-    getgenv().ENGINE_l:Remove()
+    getgenv().lIlIlIlI:Remove()
     getgenv().lIlIlIlI = nil
     getgenv().ENGINE_l = nil
 end
@@ -406,7 +406,7 @@ xpcall(function()
             if attempt ~= true then
                 Library:setLog('Failed to executing script!')
                 sendErr(Step, err_msg .. '\nScript url: ' .. githubFormat .. '\nPlaceid: ' .. tostring(game.PlaceId))
-                getgenv().ENGINE_l:Remove()
+                getgenv().lIlIlIlI:Remove()
                 getgenv().lIlIlIlI = nil
                 getgenv().ENGINE_l = nil
                 no_error = false
@@ -424,7 +424,7 @@ xpcall(function()
             Library:setColor(true)
             Library:setLog('Executing KRNL32 Universal...')
             local attempt = 1
-            local maxattempt = 5
+            local maxattempt = 1
             local oldclock = os.clock()
             local newclock
             repeat wait()
@@ -438,13 +438,12 @@ xpcall(function()
                     newclock = os.clock()
                     break
                 end
-                
-            until attempt == maxattempt
+            until attempt == maxattempt or attempt == true
             if attempt ~= true then 
                 no_error = false 
                 Library:setLog('Failed executing script!')
                 sendErr(Step, err_msg)
-                getgenv().ENGINE_l:Remove()
+                getgenv().lIlIlIlI:Remove()
                 getgenv().lIlIlIlI = nil
                 getgenv().ENGINE_l = nil
                 no_error = false

@@ -151,6 +151,7 @@ end
 function Kavo:Remove()
     if game.CoreGui:FindFirstChild(LibName) then
         game.CoreGui[LibName]:Destroy()
+        Kavo = nil
     end
 end
 
