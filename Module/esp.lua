@@ -111,17 +111,20 @@ function Library:IsTeam(pl)
 end
 
 function Library:IsVisible(p)
-    pcall(function()
-        local a = p.Character or (p.ClassName == 'Model' and p)
-        local b = a.ClassName == 'Model' and (a.PrimaryPart or a:FindFirstChild('HumanoidRootPart') or a:FindFirstChildWhichIsA('BasePart'))
-        local newRay = Ray.new(Camera.CFrame.p, b.Position - Camera.CFrame.p)
-        local Hit = workspace:FindPartOnRayWithIgnoreList(newRay, {Client.Character, CurrentCamera})
-        if Hit and Hit:IsDescendantOf(a) then
-            return false
-        else
-            return true
-        end
-    end)
+    local a
+    repeat wait()
+        pcall(function()
+            a = p.Character or (p.ClassName == 'Model' and p)
+        end)
+    until a
+    local b = a.ClassName == 'Model' and (a.PrimaryPart or a:FindFirstChild('HumanoidRootPart') or a:FindFirstChildWhichIsA('BasePart'))
+    local newRay = Ray.new(Camera.CFrame.p, b.Position - Camera.CFrame.p)
+    local Hit = workspace:FindPartOnRayWithIgnoreList(newRay, {Client.Character, CurrentCamera})
+    if Hit and Hit:IsDescendantOf(a) then
+        return false
+    else
+        return true
+    end
 end
 
 boxBase = {}
@@ -179,7 +182,7 @@ function boxBase:up()
     end
 
     if self.Player and Library.WallCheck then
-        if not Library:IsVisible(self.Player) then
+        if Library:IsVisible(self.Player) then
             Color = Library.WallColor
         end
     end
