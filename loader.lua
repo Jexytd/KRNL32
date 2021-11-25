@@ -368,7 +368,7 @@ xpcall(function()
                 Library:setLog('Game not supported!')
                 Library:setColor(false)
                 err_msg = 'Game not supported'
-                sendErr(Step, err_msg .. '\nPlaceId: ' .. (tostring(game.PlaceId) or 'Unable to get placeid') .. '\nPlace Name: ' .. (game:GetService('MarketplaceService'):GetProductInfo(game.PlaceId).Name or 'Unable to get placename'))
+                --sendErr(Step, err_msg .. '\nPlaceId: ' .. (tostring(game.PlaceId) or 'Unable to get placeid') .. '\nPlace Name: ' .. (game:GetService('MarketplaceService'):GetProductInfo(game.PlaceId).Name or 'Unable to get placename'))
                 Step = 4
             end
             if no_error and found then
@@ -451,6 +451,7 @@ xpcall(function()
             end
             if no_error then
                 Library:setLog('Script executed! ' .. ('takes %0.1fs'):format(newclock - oldclock))
+                Library:setColor(true)
                 Library:setColor(true)
                 wait(.4)
                 pass = true
