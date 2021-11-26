@@ -61,6 +61,8 @@ xpcall(function()
                             local proximity = (function()
                                 for _,v in pairs(target:GetChildren()) do
                                     if v:IsA('ProximityPrompt') or v.ClassName == 'ProximityPrompt' then
+                                        v.MaxActivationDistance = 99999
+                                        v.Exclusivity = Enum.ProximityPromptExclusivity.AlwaysShow
                                         return v
                                     end
                                 end
