@@ -324,7 +324,58 @@ xpcall(function()
                 if not lIlIlIlI then
                     getgenv().lIlIlIlI = ENGINE_l
                 end
+                lIlIlIlI:ToggleUI()
                 getgenv().ENGINE_l = ENGINE_l:CreateLib('KRNL32', 'GrapeTheme')
+                local t1 = ENGINE_l:NewTab('Home')
+                local s1 = t1:NewSection('Status')
+
+                s1:NewLabel('Welcome, ' .. Client.Name)
+                local timmy = s1:NewLabel('Current Time')
+                local timmy2 = s1:NewLabel('Playing Time')
+                local timmy3 = s1:NewLabel('Server Time')
+                local timmy4 = s1:NewLabel('FPS')
+                game:GetService('RunService').Heartbeat:Connect(function()
+                    do
+                        local date = os.date("*t")
+                        local hour = (date.hour) % 24
+                        local ampm = hour < 12 and "AM" or "PM"
+                        local ts = string.format("Current Time: %02i:%02i %s", ((hour - 1) % 12) + 1, date.min, ampm)
+                        if timmy then
+                            timmy:UpdateLabel(ts)
+                        end
+                    end
+
+                    do
+                        local t = workspace.DistributedGameTime or time()
+                        local seconds = math.floor(t) % 60
+                        local mins = math.floor(t/60)
+                        local hours = math.floor(mins/60)
+                        local ts = ('Playing Time: %02i:%02i:%02i'):format(hours,mins,seconds)
+                        if timmy2 then
+                            timmy2:UpdateLabel(ts)
+                        end
+                    end
+
+                    do
+                        local t = workspace:GetServerTimeNow()
+                        local seconds = math.floor(t) % 60
+                        local mins = (math.floor(t) % 3600) / 60
+                        local hours = (math.floor(t) % 86400) / 3600
+                        local ts = ('Server Time: %02i:%02i:%02i'):format(hours,mins,seconds)
+                        if timmy3 then
+                            timmy3:UpdateLabel(ts)
+                        end
+                    end
+
+                    do
+                        local fps = workspace:GetRealPhysicsFPS()
+                        local ts = ('FPS: %02i'):format(fps)
+                        if timmy4 then
+                            timmy4:UpdateLabel(ts)
+                        end
+                    end
+                    game:GetService('RunService').RenderStepped:Wait()
+                end)
             end
         end
 
@@ -449,6 +500,7 @@ xpcall(function()
                 no_error = false
             end
             if no_error then
+                lIlIlIlI:ToggleUI()
                 Library:setLog('Script executed! ' .. ('takes %0.1fs'):format(newclock - oldclock))
                 Library:setColor(true)
                 Library:setColor(true)
