@@ -1,7 +1,7 @@
 assert(sendErr, 'Failed to load features!')
 local function get(http,cache)
     local s,result = pcall(function() return loadstring(game:HttpGet(http, (cache or true)))() end)
-    return (s and result) or not s
+    return (s and result) or s
 end
 
 local Aimbot,I_ = get('https://raw.githubusercontent.com/Jexytd/KRNL32/master/Module/aimbot.lua')
