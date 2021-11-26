@@ -422,7 +422,7 @@ xpcall(function()
                 Library:setColor(false)
                 err_msg = 'Game not supported'
                 --sendErr(Step, err_msg .. '\nPlaceId: ' .. (tostring(game.PlaceId) or 'Unable to get placeid') .. '\nPlace Name: ' .. (game:GetService('MarketplaceService'):GetProductInfo(game.PlaceId).Name or 'Unable to get placename'))
-                Step = 4
+                Step = 69
             end
             if no_error and found then
                 local PlaceName = game:GetService('MarketplaceService'):GetProductInfo(game.PlaceId).Name
@@ -505,7 +505,7 @@ xpcall(function()
                 Library:setLog('Script executed! ' .. ('takes %0.1fs'):format(newclock - oldclock))
                 Library:setColor(true)
                 Library:setColor(true)
-                Step = 4
+                Step = 3
                 wait(.2)
                 pass = true
             end
@@ -518,7 +518,7 @@ xpcall(function()
             getgenv().ENGINE_l = nil
             error(err_msg) 
         end
-    until Step == 5 or Step == 69
+    until Step == 5
     wait(2)
     CloseGui(Background)
 end, function(msg)
