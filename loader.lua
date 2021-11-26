@@ -324,8 +324,8 @@ xpcall(function()
                 if not lIlIlIlI then
                     getgenv().lIlIlIlI = ENGINE_l
                 end
-                lIlIlIlI:ToggleUI()
                 getgenv().ENGINE_l = ENGINE_l:CreateLib('KRNL32', 'GrapeTheme')
+                lIlIlIlI:ToggleUI()
                 local t1 = ENGINE_l:NewTab('Home')
                 local s1 = t1:NewSection('Status')
 
