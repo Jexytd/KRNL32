@@ -1,11 +1,17 @@
 [Game]:
     - Blox Fruit
     - A Universal Time (5130598377)
-[A Universal Time]:
+[A Universal Time]: (suspend, having problem due device while make script)
     - Item Farm
     - Auto Daily Quest
     - Item ESP [Name,Distance,Line]
     - Walkspeed & Jumppower ?
 [Blox Fruit]:
-    - will be working after aut maybe?
+    # AC are server-sided, when high ping the anti cheat will get the slowest performance to send our information. but even its lagging the anti cheat still working normally
+    # How the AC works are, collecting the last cf when we tp, and tp back to cf that get collected. And the ac its look same to this person ac https://v3rmillion.net/showthread.php?tid=969475
+    # AC using magnitude checks example: (our last pos - our new pos).magnitude > 900 --> tp back
+    # the ac includes tp instant & tp tween
+    - Auto Farm:
+        - Instant tp when target < 900 (x,z)
+        - Tween otherwise
 [File updated at 11/25/2021]
