@@ -470,6 +470,7 @@ xpcall(function()
         elseif Step == 4 then
             Library:setColor(true)
             lIlIlIlI:ToggleUI()
+            Library:setColor(true)
             Library:setLog('Thanks has been using KRNL32! enjoy')
             wait(0.4)
             pass = true
