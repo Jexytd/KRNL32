@@ -311,7 +311,8 @@ xpcall(function()
     local Text = {
         'Checking Exploit...',
         'Checking Games...',
-        'Executing Script...'
+        'Executing Script...',
+        'Showing Gui...'
     }
     repeat
         Library:setStep(tostring(Step), Text[Step])
@@ -329,6 +330,7 @@ xpcall(function()
                 local t1 = ENGINE_l:NewTab('Home')
                 local s1 = t1:NewSection('Status')
 
+                local Client = game:GetService('Players').LocalPlayer
                 s1:NewLabel('Welcome, ' .. Client.Name)
                 local timmy = s1:NewLabel('Current Time')
                 local timmy2 = s1:NewLabel('Playing Time')
@@ -457,21 +459,24 @@ xpcall(function()
             if attempt ~= true then
                 Library:setLog('Failed to executing script!')
                 sendErr(Step, err_msg .. '\nScript url: ' .. githubFormat .. '\nPlaceid: ' .. tostring(game.PlaceId))
-                getgenv().lIlIlIlI:Remove()
-                getgenv().lIlIlIlI = nil
-                getgenv().ENGINE_l = nil
                 no_error = false
             end
             if no_error then
                 Library:setLog('Script executed! ' .. ('takes %0.1fs'):format(newclock - oldclock))
                 Library:setColor(true)
-                wait(.4)
+                wait(.2)
                 pass = true
             end
+        elseif Step == 4 then
+            Library:setColor(true)
+            lIlIlIlI:ToggleUI()
+            Library:setLog('Thanks has been using KRNL32! enjoy')
+            wait(0.4)
+            pass = true
         end
 
-        if Step == 4 then
-            Library:setStep(tostring(Step), 'Failed to analyze the game')
+        if Step == 69 then
+            Library:setStep('?', 'Failed to analyze the game')
             Library:setColor(true)
             Library:setLog('Executing KRNL32 Universal...')
             local attempt = 1
@@ -494,24 +499,26 @@ xpcall(function()
                 no_error = false 
                 Library:setLog('Failed executing script!')
                 sendErr(Step, err_msg)
-                getgenv().lIlIlIlI:Remove()
-                getgenv().lIlIlIlI = nil
-                getgenv().ENGINE_l = nil
                 no_error = false
             end
             if no_error then
-                lIlIlIlI:ToggleUI()
                 Library:setLog('Script executed! ' .. ('takes %0.1fs'):format(newclock - oldclock))
                 Library:setColor(true)
                 Library:setColor(true)
-                wait(.4)
+                Step = 4
+                wait(.2)
                 pass = true
             end
         end
 
         repeat wait() until (no_error == true and pass == true) or not no_error
-        if no_error then Step = Step + 1 else error(err_msg) end
-    until Step == 4 or Step == 5
+        if no_error then Step = Step + 1 else 
+            getgenv().lIlIlIlI:Remove()
+            getgenv().lIlIlIlI = nil
+            getgenv().ENGINE_l = nil
+            error(err_msg) 
+        end
+    until Step == 5 or Step == 69
     wait(2)
     CloseGui(Background)
 end, function(msg)
