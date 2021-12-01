@@ -110,8 +110,6 @@ xpcall(function()
             if Quest.Visible ~= true then
                 grabQuest()
             end
-
-            print'attack'
         end
 
         s1:NewToggle('Auto Level Farm', 'Automatic farming mob with possible quest level', function(t)
@@ -120,29 +118,22 @@ xpcall(function()
             s = game:GetService('RunService').RenderStepped:Connect(function()
                 if LFarm == true then
                     pcall(function()
-                        local char = Client.Character
-                        local part = char.PrimaryPart or char:FindFirstChild('HumanoidRootPart')
-                        for _,v in pairs(char:GetDescendants()) do
-                            if v:IsA('BasePart') and v.CanCollide == true then
-                                v.CanCollide = false
-                            end
-                        end
-                        char:FindFirstChildOfClass('Humanoid'):ChangeState(10)
-                        part.Velocity = Vector3.new()
+                        Client.Character:FindFirstChildOfClass('Humanoid'):ChangeState(11)
+                        Client.Character.PrimaryPart.Velocity = Vector3.new()
                     end)
                 end
                 if LFarm == false then
                     s:Disconnect()
                 end
             end)
-        end)
-        while LFarm do
-            local s,m = pcall(LevelFarm)
-            if not s then
-                print('[#]:',m)
+            while LFarm do
+                local s,m = pcall(LevelFarm)
+                if not s then
+                    print('[#]:',m)
+                end
+                game:GetService('RunService').RenderStepped:wait()
             end
-            game:GetService('RunService').RenderStepped:wait()
-        end
+        end)
     end
 end, function(e)
     sendErr('Blox Fruit', e)
