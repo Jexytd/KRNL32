@@ -75,43 +75,43 @@ xpcall(function()
     do
         local s1 = t2:NewSection('Farms')
 
-        local function Quests()
-            local module = require(game:GetService('ReplicatedStorage'):FindFirstChild('Quests'))
-            local tbl = {}
-            for quest,t in next, module do
-                local quest_index = 1
-                for _,t2 in next, t do
-                    if rawget(t2, 'LevelReq') <= lvl then
-                        table.insert(tbl, {rawget(t2, 'LevelReq'), quest, quest_index})
+        local function grabQuest()
+            local Data = Client:FindFirstChild('Data') or Client:WaitForChild('Data')
+            local Level = Data.Level.Value
+
+            local Remote = game:GetService('ReplicatedStorage').Remotes.CommF_
+            local _,Quest = pcall(function() return Client.PlayerGui.Main:FindFirstChild('Quest') end)
+            if not _ then return end
+            if Quest.Visible == true then Remote:InvokeServer('AbandonQuest') end
+            local Args = {'StartQuest', '', 1}
+            local Get = (function()
+                local module = require(game:GetService('ReplicatedStorage'):FindFirstChild('Quests'))
+                local tbl = {}
+                for quest,t in next, module do
+                    local quest_index = 1
+                    for _,t2 in next, t do
+                        if rawget(t2, 'LevelReq') <= lvl then
+                            table.insert(tbl, {rawget(t2, 'LevelReq'), quest, quest_index})
+                        end
+                        quest_index = quest_index + 1
                     end
-                    quest_index = quest_index + 1
                 end
+                table.sort(tbl, function(a,b) return a[1] < b[1] end)
+                return tbl[#tbl]
+            end)()
+            if Get then
+                Args[2] = Get[2]
+                Args[3] = Get[3]
+                pcall(function() Remote:InvokeServer(unpack(Args)) end)
             end
-            table.sort(tbl, function(a,b) return a[1] < b[1] end)
-            return tbl[#tbl]
         end
-
         function LevelFarm()
-            local function grabQuest()
-                local Data = Client:FindFirstChild('Data') or Client:WaitForChild('Data')
-                local Level = Data.Level.Value
-
-                local Remote = game:GetService('ReplicatedStorage').Remotes.CommF_
-                local _,Quest = pcall(function() return client.PlayerGui.Main:FindFirstChild('Quest') end)
-                if Quest.Visible == true then Remote:InvokeServer('AbandonQuest') end
-                local Args = {'StartQuest', '', 1}
-                local Get = Quests()
-                if Get then
-                    Args[2] = Get[2]
-                    Args[3] = Get[3]
-                    local s = pcall(function() Remote:InvokeServer(unpack(Args)) end)
-                    if s then
-                        return true
-                    end
-                end
-                return false
+            local _,Quest = pcall(function() return Client.PlayerGui.Main:FindFirstChild('Quest') end)
+            if Quest.Visible ~= true then
+                grabQuest()
             end
-            local GetQuest = grabQuest()
+
+            print'attack'
         end
 
         s1:NewToggle('Auto Level Farm', 'Automatic farming mob with possible quest level', function(t)
