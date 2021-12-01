@@ -1,6 +1,7 @@
 [Game]:
     - Blox Fruit
     - A Universal Time (5130598377)
+    - Hanma (6362390145)
 [A Universal Time]: (suspend, having problem due device while make script)
     - Item Farm
     - Auto Daily Quest

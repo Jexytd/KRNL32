@@ -525,8 +525,11 @@ xpcall(function()
 end, function(msg)
     msg = msg:gsub(msg:match(':%d+:'), '')
     msg = msg:gsub("^%s+", ""):gsub("%s+$", "")
-    msg = msg .. ' [stop at step ' .. err_msg[2] .. ']'
-    sendErr('Oh no!', msg)
+    msg = msg .. '\n\n[stop at step ' .. err_msg[2] .. ']'
+    sendErr('Loader Error Handler', msg)
+    getgenv().lIlIlIlI:Remove()
+    getgenv().lIlIlIlI = nil
+    getgenv().ENGINE_l = nil
 end)
 
 if not no_error then Library:setColor(false); wait(2); CloseGui(Background) end
