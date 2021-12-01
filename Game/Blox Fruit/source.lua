@@ -90,7 +90,7 @@ xpcall(function()
                 for quest,t in next, module do
                     local quest_index = 1
                     for _,t2 in next, t do
-                        if rawget(t2, 'LevelReq') <= lvl then
+                        if rawget(t2, 'LevelReq') <= Level then
                             table.insert(tbl, {rawget(t2, 'LevelReq'), quest, quest_index})
                         end
                         quest_index = quest_index + 1
