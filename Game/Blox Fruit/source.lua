@@ -110,31 +110,33 @@ xpcall(function()
                 Args[2] = Get[2]
                 Args[3] = Get[3]
                 pcall(function() Remote:InvokeServer(unpack(Args)) end)
-                return Get[1]
             end
+            return Get[1]
         end
         function LevelFarm()
             local _,Quest = pcall(function() return Client.PlayerGui.Main:FindFirstChild('Quest') end)
-            local x
-            if Quest.Visible ~= true then
-                x = grabQuest()
+            if not getgenv().x then 
+                getgenv().x = grabQuest() 
             end
-
-            if Quest.Visible and x then
+            if Quest.Visible then
                 local Text = Quest.Container.QuestTitle.Title.Text:lower():gsub('defeat %d+', ''):gsub('^%s+', ''):gsub('%s+$', ''):split(' ')
                 local Enemies = Text[1]
-                local Stats = Text[2]:sub(2, #Text[2]-1):split('/')
+                -- local Stats = Text[2]:sub(2, #Text[2]-1):split('/')
+                if getgenv().x:lower() ~= Enemies then 
+                    getgenv().x = nil
+                    game:GetService('ReplicatedStorage').Remotes.CommF_:InvokeServer('AbandonQuest')
+                    return
+                end
                 --/ Theres a better way to check enemies, like 
-                if Enemies:match(x) then
-                    local Current,Max = tonumber(Stats[1]), tonumber(Stats[2])
+                if Enemies:match(x:lower()) then
                     local Target = (function()
                         local pass = true
                         local distance = math.huge
                         local o = nil
                         for _,v in pairs(workspace.Enemies:GetChildren()) do
-                            if v:IsA('Model') and v.Name:lower():match(x) and (v.PrimaryPart or v:FindFirstChild('HumanoidRootPart')) and v:FindFirstChild('Humanoid') and v.Humanoid.Health > 0 then
+                            local c = v.Name:gsub('[Lv. %d+]', ''):gsub('[[]]', ''):lower()
+                            if v:IsA('Model') and x:lower():match(c) and v:FindFirstChild('HumanoidRootPart') and v:FindFirstChild('Humanoid') and v.Humanoid.Health > 0 then
                                 local Part = v.PrimaryPart or v:FindFirstChild('HumanoidRootPart')
-                                local isPrim = (v.PrimaryPart and true) or false
                                 local newdist = Client:DistanceFromCharacter(Part.Position)
                                 if newdist < distance then
                                     pass = false
@@ -146,9 +148,9 @@ xpcall(function()
                         end
                         if pass then
                             for _,v in pairs(game:GetService('ReplicatedStorage'):GetChildren()) do
-                                if v:IsA('Model') and v.Name:lower():match(x) and (v.PrimaryPart or v:FindFirstChild('HumanoidRootPart')) and v:FindFirstChild('Humanoid') and v.Humanoid.Health > 0 then
+                                local c = v.Name:gsub('[Lv. %d+]', ''):gsub('[[]]', ''):lower()
+                                if v:IsA('Model') and x:lower():match(c) and v:FindFirstChild('HumanoidRootPart') and v:FindFirstChild('Humanoid') and v.Humanoid.Health > 0 then
                                     local Part = v.PrimaryPart or v:FindFirstChild('HumanoidRootPart')
-                                    local isPrim = (v.PrimaryPart and true) or false
                                     local newdist = Client:DistanceFromCharacter(Part.Position)
                                     if newdist < distance then
                                         pass = false
@@ -162,22 +164,30 @@ xpcall(function()
                         return o
                     end)()
                     if Target then
-                        local Ratio = Client:DistanceFromCharacter(first.Position)
-                        if Ratio > 500 then tp(Target:FindFirstChild('HumanoidRootPart').CFrame) end
-                        Ratio = Client:DistanceFromCharacter(first.Position) -- update the ratio
-                        if Ratio <= 500 then
-                            Target:FindFirstChild('HumanoidRootPart').Size = Vector3.new(30,30,30)
-                            repeat
+                        repeat
+                            local Part = Target:FindFirstChild('HumanoidRootPart')
+                            local Ratio = Client:DistanceFromCharacter(Part.Position)
+                            if Ratio > 500 then tp(Part.CFrame) end
+                            if Ratio <= 500 then
+                                Part.Size = Vector3.new(50,60,50)
+                                Part.Transparency = 0.8
                                 pcall(function()
-                                    Client.Character.HumanoidRootPart.CFrame = Target:FindFirstChild('HumanoidRootPart').CFrame * CFrame.new(0, 10, 0)
+                                    Client.Character.HumanoidRootPart.CFrame = Part.CFrame * CFrame.new(0, 30, 0)
                                 end)
                                 wait(os.clock()/os.time())
                                 pcall(function()
-                                    print('click')
+                                    local vu = game:GetService('VirtualUser')
+                                    vu:Button1Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+                                    wait((os.clock()/os.time())/60)
+                                    vu:Button1Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
                                 end)
-                            until Current == Max or not LFarm or not Quest.Visible or not Target
-                        else
-                            tp(first.CFrame)
+                            else
+                                tp(Part.CFrame)
+                            end
+                            wait(os.clock()/os.time())
+                        until not Target or not LFarm or Target:FindFirstChildOfClass('Humanoid').Health <= 0
+                        if not Quest.Visible then
+                            getgenv().x = nil
                         end
                     end
                 end
@@ -190,7 +200,7 @@ xpcall(function()
             s = game:GetService('RunService').RenderStepped:Connect(function()
                 if LFarm == true then
                     pcall(function()
-                        Client.Character:FindFirstChildOfClass('Humanoid'):ChangeState(11)
+                        Client.Character:FindFirstChildOfClass('Humanoid'):ChangeState(10)
                         Client.Character.PrimaryPart.Velocity = Vector3.new()
                     end)
                 end
@@ -198,6 +208,7 @@ xpcall(function()
                     s:Disconnect()
                 end
             end)
+            if getgenv().x then getgenv().x = nil end
             while LFarm do
                 local s,m = pcall(LevelFarm)
                 if not s then
