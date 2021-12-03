@@ -105,7 +105,7 @@ function tp(cf)
         end
 
         wait(0.5)
-    until Client:DistanceFromCharacter(Vector3.new(cf.X,0,cf.Z)) <= 500 or not RootPart or isequal
+    until Client:DistanceFromCharacter(Vector3.new(cf.X,RootPart.Position.Y,cf.Z)) <= 500 or not RootPart or isequal
 
     local cf2 = CFrame.new((cf.p.X or cf.X), (cf.p.Y or cf.Y), (cf.p.Z or cf.Z))
     RootPart.CFrame = cf2 * CFrame.new(0, 30, 0)
