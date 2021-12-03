@@ -71,12 +71,6 @@ function tp(cf)
     local Ratio = math.huge
     local TVector = CFrame.new((math.floor(cf.X) + 1), cf.Y, (math.floor(cf.Z) + 1))
 
-    local Base = Instance.new('Part')
-    Base.Parent = workspace
-    Base.Size = Vector3.new(5, 1, 5)
-    Base.CFrame = CFrame.new()
-    Base.Anchored = true
-
     local isequal = false
     repeat
         RootPart = Character.PrimaryPart or Character:FindFirstChild('HumanoidRootPart') or Character:FindFirstChildWhichIsA('BasePart')
@@ -105,17 +99,13 @@ function tp(cf)
 
         if not isequal then
             pcall(function()
-                RootPart.CFrame = CFrame.new(NVector.X, NVector.Y, NVector.Z)
-                Base.CFrame = RootPart.CFrame - Vector3.new(0,5,0)
+                RootPart.CFrame = CFrame.new(NVector.X, NVector.Y, NVector.Z) + Vector3.new(0, 100, 0)
+                --Base.CFrame = RootPart.CFrame - Vector3.new(0,5,0)
             end)
         end
 
         wait(0.5)
-
-        local XL,ZL = (cf.p.X or cf.X), (cf.p.Z or cf.Z)
-        local Ratvector = Vector3.new(XL,0,ZL)
-        Ratio = Client:DistanceFromCharacter(Ratvector)
-    until Ratio <= 500 or not RootPart or isequal
+    until Client:DistanceFromCharacter(Vector3.new(cf.X,0,cf.Z)) <= 500 or not RootPart or isequal
 
     local cf2 = CFrame.new((cf.p.X or cf.X), (cf.p.Y or cf.Y), (cf.p.Z or cf.Z))
     RootPart.CFrame = cf2 * CFrame.new(0, 30, 0)
