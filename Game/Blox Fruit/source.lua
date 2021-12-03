@@ -114,10 +114,19 @@ xpcall(function()
             return Get[1]
         end
         function LevelFarm()
-            local _,Quest = pcall(function() return Client.PlayerGui.Main:FindFirstChild('Quest') end)
             if not getgenv().x then 
-                getgenv().x = grabQuest() 
+                getgenv().x = grabQuest()
+                if not getgenv().x2 then
+                    getgenv().x2 = getgenv().x[2]
+                end
             end
+            if getgenv().x[2] ~= getgenv().x2 then
+                getgenv().x = nil
+                getgenv().x2 = nil
+                return
+            end
+
+            local _,Quest = pcall(function() return Client.PlayerGui.Main:FindFirstChild('Quest') end)
             if Quest.Visible then
                 local Text = Quest.Container.QuestTitle.Title.Text:lower():gsub('defeat %d+', ''):gsub('^%s+', ''):gsub('%s+$', ''):split(' ')
                 local Enemies = Text[1]
@@ -208,7 +217,7 @@ xpcall(function()
                     s:Disconnect()
                 end
             end)
-            if getgenv().x then getgenv().x = nil end
+            if getgenv().x and getgenv().x[2] ~= getgenv().x2 then getgenv().x = nil; getgenv().x2 = nil; end
             while LFarm do
                 local s,m = pcall(LevelFarm)
                 if not s then
