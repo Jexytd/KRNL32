@@ -62,18 +62,17 @@ xpcall(function()
         function LevelFarm()
             if not getgenv().x then 
                 getgenv().x = grabQuest()
-                if not getgenv().x2 then
-                    getgenv().x2 = getgenv().x[2]
-                end
+                getgenv().x2 = x
             end
-            if getgenv().x[2] ~= getgenv().x2 then
+
+            if getgenv().x ~= getgenv().x2 then
                 getgenv().x = nil
                 getgenv().x2 = nil
                 return
             end
 
             local _,Quest = pcall(function() return Client.PlayerGui.Main:FindFirstChild('Quest') end)
-            if Quest.Visible then
+            if Quest.Visible and getgenv().x then
                 local Text = Quest.Container.QuestTitle.Title.Text:lower():gsub('defeat %d+', ''):gsub('^%s+', ''):gsub('%s+$', ''):split(' ')
                 local Enemies = Text[1]
                 -- local Stats = Text[2]:sub(2, #Text[2]-1):split('/')
@@ -143,6 +142,7 @@ xpcall(function()
                         until not Target or not LFarm or Target:FindFirstChildOfClass('Humanoid').Health <= 0
                         if not Quest.Visible then
                             getgenv().x = nil
+                            getgenv().x2 = nil
                         end
                     end
                 end
