@@ -28,16 +28,16 @@ xpcall(function()
                 local quest_index = 1
                 for _,t2 in next, t do
                     if Level and rawget(t2, 'LevelReq') <= Level then
-                        table.insert(tbl, {rawget(t2, 'Name'), quest, quest_index})
+                        table.insert(tbl, {rawget(t2, 'Name'), quest, quest_index, rawget(t2, 'LevelReq')})
                     end
                     if not Level then
-                        table.insert(tbl, {rawget(t2, 'Name'), quest, quest_index})
+                        table.insert(tbl, {rawget(t2, 'Name'), quest, quest_index, rawget(t2, 'LevelReq')})
                     end
                     quest_index = quest_index + 1
                 end
             end
             if Level then
-                table.sort(tbl, function(a,b) return a[1] < b[1] end)
+                table.sort(tbl, function(a,b) return a[4] < b[4] end)
             end
             return tbl[#tbl]
         end
