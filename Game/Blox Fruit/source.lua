@@ -75,6 +75,27 @@ xpcall(function()
     do
         local s1 = t2:NewSection('Farms')
 
+        local function quests(Level)
+            local module = require(game:GetService('ReplicatedStorage'):FindFirstChild('Quests'))
+            local tbl = {}
+            for quest,t in next, module do
+                local quest_index = 1
+                for _,t2 in next, t do
+                    if Level and rawget(t2, 'LevelReq') <= Level then
+                        table.insert(tbl, {rawget(t2, 'Name'), quest, quest_index})
+                    end
+                    if not Level then
+                        table.insert(tbl, {rawget(t2, 'Name'), quest, quest_index})
+                    end
+                    quest_index = quest_index + 1
+                end
+            end
+            if Level then
+                table.sort(tbl, function(a,b) return a[1] < b[1] end)
+            end
+            return tbl[#tbl]
+        end
+
         local function grabQuest()
             local Data = Client:FindFirstChild('Data') or Client:WaitForChild('Data')
             local Level = Data.Level.Value
@@ -84,31 +105,82 @@ xpcall(function()
             if not _ then return end
             if Quest.Visible == true then Remote:InvokeServer('AbandonQuest') end
             local Args = {'StartQuest', '', 1}
-            local Get = (function()
-                local module = require(game:GetService('ReplicatedStorage'):FindFirstChild('Quests'))
-                local tbl = {}
-                for quest,t in next, module do
-                    local quest_index = 1
-                    for _,t2 in next, t do
-                        if rawget(t2, 'LevelReq') <= Level then
-                            table.insert(tbl, {rawget(t2, 'LevelReq'), quest, quest_index})
-                        end
-                        quest_index = quest_index + 1
-                    end
-                end
-                table.sort(tbl, function(a,b) return a[1] < b[1] end)
-                return tbl[#tbl]
-            end)()
+            local Get = quests(Level)
             if Get then
                 Args[2] = Get[2]
                 Args[3] = Get[3]
                 pcall(function() Remote:InvokeServer(unpack(Args)) end)
+                return Get[1]
             end
         end
         function LevelFarm()
             local _,Quest = pcall(function() return Client.PlayerGui.Main:FindFirstChild('Quest') end)
+            local x
             if Quest.Visible ~= true then
-                grabQuest()
+                x = grabQuest()
+            end
+
+            if Quest.Visible and x then
+                local Text = Quest.Container.QuestTitle.Title.Text:lower():gsub('defeat %d+', ''):gsub('^%s+', ''):gsub('%s+$', ''):split(' ')
+                local Enemies = Text[1]
+                local Stats = Text[2]:sub(2, #Text[2]-1):split('/')
+                --/ Theres a better way to check enemies, like 
+                if Enemies:match(x) then
+                    local Current,Max = tonumber(Stats[1]), tonumber(Stats[2])
+                    local Target = (function()
+                        local pass = true
+                        local distance = math.huge
+                        local o = nil
+                        for _,v in pairs(workspace.Enemies:GetChildren()) do
+                            if v:IsA('Model') and v.Name:lower():match(x) and (v.PrimaryPart or v:FindFirstChild('HumanoidRootPart')) and v:FindFirstChild('Humanoid') and v.Humanoid.Health > 0 then
+                                local Part = v.PrimaryPart or v:FindFirstChild('HumanoidRootPart')
+                                local isPrim = (v.PrimaryPart and true) or false
+                                local newdist = Client:DistanceFromCharacter(Part.Position)
+                                if newdist < distance then
+                                    pass = false
+                                    distance = newdist
+                                    o = v
+                                    break
+                                end
+                            end
+                        end
+                        if pass then
+                            for _,v in pairs(game:GetService('ReplicatedStorage'):GetChildren()) do
+                                if v:IsA('Model') and v.Name:lower():match(x) and (v.PrimaryPart or v:FindFirstChild('HumanoidRootPart')) and v:FindFirstChild('Humanoid') and v.Humanoid.Health > 0 then
+                                    local Part = v.PrimaryPart or v:FindFirstChild('HumanoidRootPart')
+                                    local isPrim = (v.PrimaryPart and true) or false
+                                    local newdist = Client:DistanceFromCharacter(Part.Position)
+                                    if newdist < distance then
+                                        pass = false
+                                        distance = newdist
+                                        o = v
+                                        break
+                                    end
+                                end
+                            end
+                        end
+                        return o
+                    end)()
+                    if Target then
+                        local Ratio = Client:DistanceFromCharacter(first.Position)
+                        if Ratio > 500 then tp(Target:FindFirstChild('HumanoidRootPart').CFrame) end
+                        Ratio = Client:DistanceFromCharacter(first.Position) -- update the ratio
+                        if Ratio <= 500 then
+                            Target:FindFirstChild('HumanoidRootPart').Size = Vector3.new(30,30,30)
+                            repeat
+                                pcall(function()
+                                    Client.Character.HumanoidRootPart.CFrame = Target:FindFirstChild('HumanoidRootPart').CFrame * CFrame.new(0, 10, 0)
+                                end)
+                                wait(os.clock()/os.time())
+                                pcall(function()
+                                    print('click')
+                                end)
+                            until Current == Max or not LFarm or not Quest.Visible or not Target
+                        else
+                            tp(first.CFrame)
+                        end
+                    end
+                end
             end
         end
 
