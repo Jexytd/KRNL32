@@ -8,66 +8,10 @@ local Client = Players.LocalPlayer
 
 local Windows = ENGINE_l
 
+-- Unminified code here https://github.com/Jexytd/KRNL32/blob/master/Module/tp.lua
 do
     function sumsof(a,b)if type(a)~='number'then return end;if type(b)~='number'then return end;local c={}if a<0 and b<0 then local d=b<a and'sub'or a<b and'add'or a==b and'equal'table.insert(c,d)if d=='sub'then local e=a-b;local f=a-e;table.insert(c,e)elseif d=='add'then local e=b-a;local f=a+e;table.insert(c,e)elseif d=='equal'then table.insert(c,0)end elseif 0<=a and 0<=b then local d=b<a and'sub'or a<b and'add'or a==b and'equal'table.insert(c,d)if d=='sub'then local e=a-b;local f=a-e;table.insert(c,e)elseif d=='add'then local e=b-a;local f=a+e;table.insert(c,e)elseif d=='equal'then table.insert(c,0)end end;if a<0 and 0<=b then local d=a<b and'add'or a==b and'equal'table.insert(c,d)if d=='add'then local e=-a*2;local g=e;local f=a+e;local h=b-f;g=g+h;local i=a+g or f+h;table.insert(c,g)elseif d=='equal'then table.insert(c,0)end elseif 0<=a and b<0 then local d=b<a and'sub'or a==b and'equal'table.insert(c,d)if d=='sub'then local e=a*2;local g=e;local f=a-e;local h=f-b;g=g+h;local i=a-g or f-h;table.insert(c,g)elseif d=='equal'then table.insert(c,0)end end;return c end
-    
-    function tp(cf)
-        local Client = game:GetService('Players').LocalPlayer
-        local Character = Client.Character
-    
-        local RootPart = Character.PrimaryPart or Character:FindFirstChild('HumanoidRootPart') or Character:FindFirstChildWhichIsA('BasePart')
-        local Ratio = math.huge
-        local TVector = CFrame.new((math.floor(cf.X) + 1), cf.Y, (math.floor(cf.Z) + 1))
-    
-        local Base = Instance.new('Part')
-        Base.Parent = workspace
-        Base.Size = Vector3.new(5, 1, 5)
-        Base.CFrame = CFrame.new()
-        Base.Anchored = true
-    
-        local isequal = false
-        repeat
-            RootPart = Character.PrimaryPart or Character:FindFirstChild('HumanoidRootPart') or Character:FindFirstChildWhichIsA('BasePart')
-            local CVector = RootPart.Position
-            local methodX, sumX = unpack(sumsof(CVector.X,TVector.X))
-            local methodZ, sumZ = unpack(sumsof(CVector.Z,TVector.Z))
-    
-            local minmax1 = math.clamp(sumX, -200, 200)
-            local minmax2 = math.clamp(sumZ, -200, 200)
-            local NVector = Vector3.new((math.floor(CVector.X) + 1), TVector.Y, (math.floor(CVector.Z) + 1))
-            if methodX == 'sub' then
-                NVector = NVector - Vector3.new(minmax1,0,0)
-            elseif methodX == 'add' then
-                NVector = NVector + Vector3.new(minmax1,0,0)
-            end
-            if methodZ == 'sub' then
-                NVector = NVector - Vector3.new(0,0,minmax2)
-            elseif methodZ == 'add' then
-                NVector = NVector + Vector3.new(0,0,minmax2)
-            end
-    
-            if methodX == 'equal' and methodZ == 'equal' then
-                isequal = true
-            end
-    
-            if not isequal then
-                pcall(function()
-                    RootPart.CFrame = CFrame.new(NVector.X, NVector.Y, NVector.Z) + Vector3.new(0, 500, 0)
-                    Base.CFrame = RootPart.CFrame - Vector3.new(0,5,0)
-                end)
-            end
-    
-            wait(0.5)
-    
-            local XL,ZL = (cf.p.X or cf.X), (cf.p.Z or cf.Z)
-            local Ratvector = Vector3.new(XL,0,ZL)
-            Ratio = Client:DistanceFromCharacter(Ratvector)
-        until Ratio <= 500 or not RootPart or isequal
-    
-        local cf2 = CFrame.new((cf.p.X or cf.X), (cf.p.Y or cf.Y), (cf.p.Z or cf.Z))
-        RootPart.CFrame = cf2 * CFrame.new(0, 30, 0)
-        Base:Destroy()
-    end
+    function tp(a)local b=game:GetService('Players').LocalPlayer;local c=b.Character;local d=c.PrimaryPart or c:FindFirstChild('HumanoidRootPart')or c:FindFirstChildWhichIsA('BasePart')local e=math.huge;local f=CFrame.new(math.floor(a.X)+1,a.Y,math.floor(a.Z)+1)local g=Instance.new('Part')g.Parent=workspace;g.Size=Vector3.new(5,1,5)g.CFrame=CFrame.new()g.Anchored=true;local h=false;repeat d=c.PrimaryPart or c:FindFirstChild('HumanoidRootPart')or c:FindFirstChildWhichIsA('BasePart')local i=d.Position;local j,k=unpack(sumsof(i.X,f.X))local l,m=unpack(sumsof(i.Z,f.Z))local n=math.clamp(k,-200,200)local o=math.clamp(m,-200,200)local p=Vector3.new(math.floor(i.X)+1,f.Y,math.floor(i.Z)+1)if j=='sub'then p=p-Vector3.new(n,0,0)elseif j=='add'then p=p+Vector3.new(n,0,0)end;if l=='sub'then p=p-Vector3.new(0,0,o)elseif l=='add'then p=p+Vector3.new(0,0,o)end;if j=='equal'and l=='equal'then h=true end;if not h then pcall(function()d.CFrame=CFrame.new(p.X,p.Y,p.Z)+Vector3.new(0,500,0)g.CFrame=d.CFrame-Vector3.new(0,5,0)end)end;wait(0.5)local q,r=a.p.X or a.X,a.p.Z or a.Z;local s=Vector3.new(q,0,r)e=b:DistanceFromCharacter(s)until e<=500 or not d or h;local t=CFrame.new(a.p.X or a.X,a.p.Y or a.Y,a.p.Z or a.Z)d.CFrame=t*CFrame.new(0,30,0)g:Destroy()end
 end
 
 xpcall(function()
