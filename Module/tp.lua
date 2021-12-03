@@ -66,55 +66,60 @@ end
 function tp(cf)
     local Client = game:GetService('Players').LocalPlayer
     local Character = Client.Character
-    local TVector = cf.p or cf
-    local Ratio = Client:DistanceFromCharacter(TVector)
 
     local RootPart = Character.PrimaryPart or Character:FindFirstChild('HumanoidRootPart') or Character:FindFirstChildWhichIsA('BasePart')
-    local CVector = RootPart.Position
-
-    local CX,CZ = CVector.X, CVector.Z
-    local X,Y,Z = TVector.X, TVector.Y, TVector.Z
-    local methodX, sumX = unpack(sumsof(CX,X))
-    local methodZ, sumZ = unpack(sumsof(CZ,Z))
+    local Ratio = math.huge
+    local TVector = CFrame.new((math.floor(cf.X) + 1), cf.Y, (math.floor(cf.Z) + 1))
 
     local Base = Instance.new('Part')
     Base.Parent = workspace
-    Base.Size = Vector3.new(10, 1, 10)
-    Base.CFrame = RootPart.CFrame
+    Base.Size = Vector3.new(5, 1, 5)
+    Base.CFrame = CFrame.new()
     Base.Anchored = true
 
-    local Index = 0
+    local isequal = false
     repeat
+        RootPart = Character.PrimaryPart or Character:FindFirstChild('HumanoidRootPart') or Character:FindFirstChildWhichIsA('BasePart')
+        local CVector = RootPart.Position
+        local methodX, sumX = unpack(sumsof(CVector.X,TVector.X))
+        local methodZ, sumZ = unpack(sumsof(CVector.Z,TVector.Z))
+        -- sumsof: CVector.X jumlah yang diperlukan untuk ke TVector.X
+
         local minmax1 = math.clamp(sumX, -200, 200)
         local minmax2 = math.clamp(sumZ, -200, 200)
-        local NVector = Vector3.new(minmax1, Y/4, minmax2)
-
+        local NVector = Vector3.new((math.floor(CVector.X) + 1), TVector.Y, (math.floor(CVector.Z) + 1))
         if methodX == 'sub' then
             NVector = NVector - Vector3.new(minmax1,0,0)
+        elseif methodX == 'add' then
+            NVector = NVector + Vector3.new(minmax1,0,0)
         end
         if methodZ == 'sub' then
-            NVector = NVector - Vector3.new(0,0,minmax2*1.7)
+            NVector = NVector - Vector3.new(0,0,minmax2)
+        elseif methodZ == 'add' then
+            NVector = NVector + Vector3.new(0,0,minmax2)
         end
 
-        pcall(function()
-            RootPart.CFrame = RootPart.CFrame + NVector
-            Base.CFrame = RootPart.CFrame - Vector3.new(0, 5, 0)
-        end)
+        if methodX == 'equal' and methodZ == 'equal' then
+            isequal = true
+        end
+
+        if not isequal then
+            pcall(function()
+                RootPart.CFrame = CFrame.new(NVector.X, NVector.Y, NVector.Z)
+                Base.CFrame = RootPart.CFrame - Vector3.new(0,5,0)
+            end)
+        end
 
         wait(0.5)
-        if Index == 1 then
-            sumX = sumX - minmax1
-            sumZ = sumZ - minmax2
-            Index = 0
-        end
-        Index = Index + 1
-        Ratio = Client:DistanceFromCharacter((cf.p or cf))
-    until Ratio <= 500 or not RootPart or (sumX == 0 and sumZ == 0)
-    Base:Destroy()
-    RootPart.CFrame = cf
-  
-    print'Done'
+
+        local XL,ZL = (cf.p.X or cf.X), (cf.p.Z or cf.Z)
+        local Ratvector = Vector3.new(XL,0,ZL)
+        Ratio = Client:DistanceFromCharacter(Ratvector)
+    until Ratio <= 500 or not RootPart or isequal
+
+    local cf2 = CFrame.new((cf.p.X or cf.X), (cf.p.Y or cf.Y), (cf.p.Z or cf.Z))
+    RootPart.CFrame = cf2 * CFrame.new(0, 30, 0)
 end
 
-print(tp)
-tp(CFrame.new(1027, 19, 1367))
+local cf = game:GetService("ReplicatedStorage")["Trainee [Lv. 5]"].PrimaryPart.CFrame
+tp(cf)
