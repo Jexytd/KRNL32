@@ -14,10 +14,12 @@ do
     function tp(a)local b=game:GetService('Players').LocalPlayer;local c=b.Character;local d=c.PrimaryPart or c:FindFirstChild('HumanoidRootPart')or c:FindFirstChildWhichIsA('BasePart')local e=math.huge;local f=CFrame.new(math.floor(a.X)+1,a.Y,math.floor(a.Z)+1)local g=false;repeat d=c.PrimaryPart or c:FindFirstChild('HumanoidRootPart')or c:FindFirstChildWhichIsA('BasePart')local h=d.Position;local i,j=unpack(sumsof(h.X,f.X))local k,l=unpack(sumsof(h.Z,f.Z))local m=math.clamp(j,-200,200)local n=math.clamp(l,-200,200)local o=Vector3.new(math.floor(h.X)+1,f.Y,math.floor(h.Z)+1)if i=='sub'then o=o-Vector3.new(m,0,0)elseif i=='add'then o=o+Vector3.new(m,0,0)end;if k=='sub'then o=o-Vector3.new(0,0,n)elseif k=='add'then o=o+Vector3.new(0,0,n)end;if i=='equal'and k=='equal'then g=true end;if not g then pcall(function()d.CFrame=CFrame.new(o.X,o.Y,o.Z)+Vector3.new(0,100,0)end)end;wait(0.5)until b:DistanceFromCharacter(Vector3.new(a.X,0,a.Z))<=500 or not d or g;local p=CFrame.new(a.p.X or a.X,a.p.Y or a.Y,a.p.Z or a.Z)d.CFrame=p*CFrame.new(0,30,0)end
 
     setreadonly(table, false)
-    function table.find(t, val)
+    --/ Change table.find '==' to string.match()
+    function table.find(t, val, startindex)
+        local startindex = startindex or 0
         local key = nil
         for i,v in pairs(t) do
-            if v:match(val) then
+            if startindex <= i and v:match(val) then
                 key = i
             end
         end
@@ -29,6 +31,7 @@ end
 xpcall(function()
     LFarm = false
     LFarm_Boss = false
+    LFarm_table = {true, false}
 
     local t2 = Windows:NewTab('Main')
     do
@@ -84,37 +87,35 @@ xpcall(function()
             local Args = {'StartQuest', '', 1}
             local Get = quests(Level)
             if Get then
-                local Last = Get[#Get]
-                if LFarm_Boss and Last[5] then
-                    Args[2] = Last[2]
-                    Args[3] = Last[3]
-                elseif not LFarm_Boss and not Last[5] then
-                    -- Args[2] = Get[#Get-1][2]
-                    -- Args[3] = Get[#Get-1][3]
-                    local index = 0
+                if not LFarm_Boss then
                     for i = #Get,1,-1 do
                         if Get[i][5] ~= true then
                             Args[2] = Get[i][2]
                             Args[3] = Get[i][3]
                             break
                         end
-                        index = index + 1
+                    end
+                elseif LFarm_Boss then
+                    for i = #Get,1,-1 do
+                        if Get[i][4] < Level and LFarm_table[1] and not LFarm_table[2] then
+                            Args[2] = Get[i][2]
+                            Args[3] = Get[i][3]
+                            break
+                        end
+                        if LFarm_table[2] and Get[i][5] == true then
+                            Args[2] = Get[i][2]
+                            Args[3] = Get[i][3]
+                            break
+                        end
                     end
                 end
                 pcall(function() Remote:InvokeServer(unpack(Args)) end)
             end
-            return Get[1]
+            return Get
         end
         function LevelFarm()
             if not getgenv().x then 
                 getgenv().x = grabQuest()
-                getgenv().x2 = x
-            end
-
-            if getgenv().x ~= getgenv().x2 then
-                getgenv().x = nil
-                getgenv().x2 = nil
-                return
             end
 
             local _,Quest = pcall(function() return Client.PlayerGui.Main:FindFirstChild('Quest') end)
@@ -136,20 +137,21 @@ xpcall(function()
                     return s
                 end)()
                 -- local Stats = Text[2]:sub(2, #Text[2]-1):split('/')
-                if getgenv().x:lower() ~= Enemies then 
+                if getgenv().x[1]:lower() ~= Enemies then 
                     getgenv().x = nil
                     game:GetService('ReplicatedStorage').Remotes.CommF_:InvokeServer('AbandonQuest')
                     return
                 end
                 --/ Theres a better way to check enemies 
-                if Enemies:match(x:lower()) then
+                if Enemies:match(x[1]:lower()) then
+
                     local Target = (function()
                         local pass = true
                         local distance = math.huge
                         local o = nil
                         for _,v in pairs(workspace.Enemies:GetChildren()) do
                             local c = v.Name:gsub('[Lv. %d+]', ''):gsub('[[]]', ''):lower()
-                            if v:IsA('Model') and (x:lower():match(c) or c:match(x:lower())) and v:FindFirstChild('HumanoidRootPart') and v:FindFirstChild('Humanoid') and v.Humanoid.Health > 0 then
+                            if v:IsA('Model') and (x[1]:lower():match(c) or c:match(x[1]:lower())) and v:FindFirstChild('HumanoidRootPart') and v:FindFirstChild('Humanoid') and v.Humanoid.Health > 0 then
                                 local Part = v.PrimaryPart or v:FindFirstChild('HumanoidRootPart')
                                 local newdist = Client:DistanceFromCharacter(Part.Position)
                                 if newdist < distance then
@@ -163,7 +165,7 @@ xpcall(function()
                         if pass then
                             for _,v in pairs(game:GetService('ReplicatedStorage'):GetChildren()) do
                                 local c = v.Name:gsub('[Lv. %d+]', ''):gsub('[[]]', ''):lower()
-                                if v:IsA('Model') and (x:lower():match(c) or c:match(x:lower())) and v:FindFirstChild('HumanoidRootPart') and v:FindFirstChild('Humanoid') and v.Humanoid.Health > 0 then
+                                if v:IsA('Model') and (x[1]:lower():match(c) or c:match(x[1]:lower())) and v:FindFirstChild('HumanoidRootPart') and v:FindFirstChild('Humanoid') and v.Humanoid.Health > 0 then
                                     local Part = v.PrimaryPart or v:FindFirstChild('HumanoidRootPart')
                                     local newdist = Client:DistanceFromCharacter(Part.Position)
                                     if newdist < distance then
@@ -223,7 +225,7 @@ xpcall(function()
                     s:Disconnect()
                 end
             end)
-            if getgenv().x and getgenv().x[2] ~= getgenv().x2 then getgenv().x = nil; getgenv().x2 = nil; end
+            if getgenv().x then getgenv().x = nil end
             while LFarm do
                 local s,m = pcall(LevelFarm)
                 if not s then
@@ -235,6 +237,7 @@ xpcall(function()
 
         s1:NewToggle('Include Boss', 'Farming will including boss quest, when off ignore boss quest', function(t)
             LFarm_Boss = t
+            LFarm_table[2] = LFarm_Boss
         end)
     end
 end, function(e)
