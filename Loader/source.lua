@@ -4,7 +4,7 @@ setreadonly(math,false)function math.clamp_(a,b,c)local d={}d[1]=a<=b and b or c
 function CloseGui(a)local b=false;if a then for c,d in pairs(a:GetDescendants())do if d.ClassName~='UICorner'and d.Visible==true then d.Visible=false end end;a:TweenSize(UDim2.new(0,0,0,0),Enum.EasingDirection.InOut,Enum.EasingStyle.Quad,1,false,function()b=true end)repeat wait()until b==true;if a:IsA('ScreenGui')then a:Destroy()end;if a:IsA('Frame')then a.Parent:Destroy()end;getgenv().Jambi=nil end end
 
 if getgenv().Jambi ~= nil then CloseGui(getgenv().Jambi); end
-local Library = Loader()
+local Library = loadstring(game:HttpGet('https://raw.githubusercontent.com/Jexytd/KRNL32/master/Loader/ui.lua', true))()
 local SG,Background = Library[1],Library[2]
 if getgenv().Jambi == nil then getgenv().Jambi = Background end
 getgenv()._KRNL32_ = {math.clamp_(math.random(-256, 256), -256, 256)}
@@ -18,12 +18,7 @@ local err_msg = ''
 local script = {}
 xpcall(function()
     local Step = 1
-    local Text = {
-        'Checking Exploit...',
-        'Checking Games...',
-        'Executing Script...',
-        'Showing Gui...'
-    }
+    local Text = {'Checking Exploit...','Checking Games...','Executing Script...','Showing Gui...'}
     repeat
         Library:setStep(tostring(Step), Text[Step])
         local pass = false
