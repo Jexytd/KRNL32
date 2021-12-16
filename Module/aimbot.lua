@@ -133,7 +133,7 @@ function getClosestFOV(char_folder, targetPart, fov)
         local target = nil
         for _,v in pairs(children) do
             if v:IsA('Model') and Players:GetPlayerFromCharacter(v) and v ~= Client.Character and v:FindFirstChild('Humanoid') and v.Humanoid.Health > 0 then
-                local targetpart = v:FindFirstChild(targetPart) or v.PrimaryPart
+                local targetpart = (targetPart == 'MultiHitbox' and v:FindFirstChildWhichIsA('BasePart')) or v:FindFirstChild(targetPart)
                 if Library.TeamCheck and getTeams[v.Name] ~= true then
                     local _, OnScreen = worldToView(targetpart)
                     if OnScreen then
@@ -185,10 +185,18 @@ function aimAt(o,wallcheck)
                 end
                 local Hit,_ = workspace:FindPartOnRayWithIgnoreList(newRay, ignore)
                 if not Hit then
-                    mousemoverel((targetPos.X - mousePos.X)/Library.Smooth, (targetPos.Y - mousePos.Y)/Library.Smooth - 2)
+                    if Library.Smooth ~= 0 then
+                        mousemoverel((targetPos.X - mousePos.X)/Library.Smooth, (targetPos.Y - mousePos.Y)/Library.Smooth - 2)
+                    else
+                        mousemoverel((targetPos.X - mousePos.X), (targetPos.Y - mousePos.Y))
+                    end
                 end
             else
-                mousemoverel((targetPos.X - mousePos.X)/Library.Smooth, (targetPos.Y - mousePos.Y)/Library.Smooth - 2)
+                if Library.Smooth ~= 0 then
+                    mousemoverel((targetPos.X - mousePos.X)/Library.Smooth, (targetPos.Y - mousePos.Y)/Library.Smooth - 2)
+                else
+                    mousemoverel((targetPos.X - mousePos.X), (targetPos.Y - mousePos.Y))
+                end
             end
         end
     end
