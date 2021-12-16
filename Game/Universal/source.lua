@@ -34,7 +34,7 @@ s2:NewToggle("Team Check","allow aimbot to target teammate", function(t)
 end)
 
 s2s:NewDropdown('Aim Target', 'Set esp type', {'Head', 'HumanoidRootPart', 'MultiHitbox'}, function(t)
-    _l:sType(t)
+    I_:setTarget(t)
 end)
 
 s2s:NewSlider("Aim FOV", "Set aimbot fov", I_.FOV*2,0, function(t)
