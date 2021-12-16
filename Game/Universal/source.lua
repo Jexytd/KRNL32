@@ -53,7 +53,7 @@ local t3 = Windows:NewTab('ESP')
 local s3 = t3:NewSection('ESP')
 local s3o = t3:NewSection('Options')
 local s3s = t3:NewSection('Settings')
-local old_c = ESP.Color
+local old_c = _l.Color
 
 s3:NewToggle('Enabled', 'Enable esp', function(t)
     _l:toggle(t)
@@ -96,7 +96,7 @@ s3o:NewToggle('Team Color', 'Set color to teams color', function(t)
     _l:teamcolor(t)
 end)
 
-s3s:NewSlider("Thickness", 'Set thickness of esp line', ESP.Thickness*2,1, function(t)
+s3s:NewSlider("Thickness", 'Set thickness of esp line', _l.Thickness*2,1, function(t)
     _l:sThick(t)
 end)
 
