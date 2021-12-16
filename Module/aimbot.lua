@@ -133,27 +133,54 @@ function getClosestFOV(char_folder, targetPart, fov)
         local target = nil
         for _,v in pairs(children) do
             if v:IsA('Model') and Players:GetPlayerFromCharacter(v) and v ~= Client.Character and v:FindFirstChild('Humanoid') and v.Humanoid.Health > 0 then
-                local targetpart = (targetPart:lower() == 'multihitbox' and v:FindFirstChildWhichIsA('BasePart')) or (targetPart:lower() ~= 'multihitbox' and v:FindFirstChild(targetPart))
-                if Library.TeamCheck and getTeams[v.Name] ~= true then
-                    local _, OnScreen = worldToView(targetpart)
-                    if OnScreen then
-                        local targetPos = worldToView(targetpart)
-                        local fovPos = (Library.FromMouse and worldToView(Mouse.Hit.p)) or Library.Object['Circle'].Position
-                        local dist = (Vector2.new(fovPos.X, fovPos.Y) - Vector2.new(targetPos.X, targetPos.Y)).magnitude
-                        if dist < closestDist then
-                            closestDist = dist
-                            target = v
+                if targetPart:lower() == 'multihitbox' then
+                    local targetpart = v:FindFirstChildWhichIsA('BasePart') or v:FindFirstChildWhichIsA('MeshPart')
+                    if Library.TeamCheck and getTeams[v.Name] ~= true then
+                        local _, OnScreen = worldToView(targetpart)
+                        if OnScreen then
+                            local targetPos = worldToView(targetpart)
+                            local fovPos = (Library.FromMouse and worldToView(Mouse.Hit.p)) or Library.Object['Circle'].Position
+                            local dist = (Vector2.new(fovPos.X, fovPos.Y) - Vector2.new(targetPos.X, targetPos.Y)).magnitude
+                            if dist < closestDist then
+                                closestDist = dist
+                                target = v
+                            end
+                        end
+                    else
+                        local _, OnScreen = worldToView(targetpart)
+                        if OnScreen then
+                            local targetPos = worldToView(targetpart)
+                            local fovPos = (Library.FromMouse and worldToView(Mouse.Hit.p)) or Library.Object['Circle'].Position
+                            local dist = (Vector2.new(fovPos.X, fovPos.Y) - Vector2.new(targetPos.X, targetPos.Y)).magnitude
+                            if dist < closestDist then
+                                closestDist = dist
+                                target = v
+                            end
                         end
                     end
                 else
-                    local _, OnScreen = worldToView(targetpart)
-                    if OnScreen then
-                        local targetPos = worldToView(targetpart)
-                        local fovPos = (Library.FromMouse and worldToView(Mouse.Hit.p)) or Library.Object['Circle'].Position
-                        local dist = (Vector2.new(fovPos.X, fovPos.Y) - Vector2.new(targetPos.X, targetPos.Y)).magnitude
-                        if dist < closestDist then
-                            closestDist = dist
-                            target = v
+                    local targetpart = v:FindFirstChild(targetPart)
+                    if Library.TeamCheck and getTeams[v.Name] ~= true then
+                        local _, OnScreen = worldToView(targetpart)
+                        if OnScreen then
+                            local targetPos = worldToView(targetpart)
+                            local fovPos = (Library.FromMouse and worldToView(Mouse.Hit.p)) or Library.Object['Circle'].Position
+                            local dist = (Vector2.new(fovPos.X, fovPos.Y) - Vector2.new(targetPos.X, targetPos.Y)).magnitude
+                            if dist < closestDist then
+                                closestDist = dist
+                                target = v
+                            end
+                        end
+                    else
+                        local _, OnScreen = worldToView(targetpart)
+                        if OnScreen then
+                            local targetPos = worldToView(targetpart)
+                            local fovPos = (Library.FromMouse and worldToView(Mouse.Hit.p)) or Library.Object['Circle'].Position
+                            local dist = (Vector2.new(fovPos.X, fovPos.Y) - Vector2.new(targetPos.X, targetPos.Y)).magnitude
+                            if dist < closestDist then
+                                closestDist = dist
+                                target = v
+                            end
                         end
                     end
                 end
