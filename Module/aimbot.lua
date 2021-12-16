@@ -133,7 +133,7 @@ function getClosestFOV(char_folder, targetPart, fov)
         local target = nil
         for _,v in pairs(children) do
             if v:IsA('Model') and Players:GetPlayerFromCharacter(v) and v ~= Client.Character and v:FindFirstChild('Humanoid') and v.Humanoid.Health > 0 then
-                local targetpart = (targetPart == 'MultiHitbox' and v:FindFirstChildWhichIsA('BasePart')) or v:FindFirstChild(targetPart)
+                local targetpart = (targetPart:lower() == 'multihitbox' and v:FindFirstChildWhichIsA('BasePart')) or (targetPart:lower() ~= 'multihitbox' and v:FindFirstChild(targetPart))
                 if Library.TeamCheck and getTeams[v.Name] ~= true then
                     local _, OnScreen = worldToView(targetpart)
                     if OnScreen then
