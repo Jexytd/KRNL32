@@ -102,30 +102,25 @@ end)
 s3s:NewSlider("Text Size", 'Set text size of esp (name, distance)', _l.TextSize*2,1, function(t)
     _l:setTSize(t)
 end)
-
--- rbw = {false,1}
--- s3s:NewToggle('Rainbow Color', 'Set esp color to rainbow', function(t)
---     rbw[1] = t
---     while rbw[1] do
---         local time = tostring(rbw[2]) .. '0'
---         time = tonumber(time)
---         for _=0,1,0.01 do 
---             if not rbw[1] then break end
---             ESP:sColor(Color3.fromHSV(_,1,1)) 
---             wait(0.01 * time)
---         end
---         wait(0.01 * time)
---     end
---     ESP:sColor(old_c)
--- end)
--- s3s:NewSlider("Rainbow Time", "Slower color rainbow", 10,1, function(t)
---     rbw[2] = t
--- end)
 s3s:NewColorPicker("Wall Color",'Set wall color', Color3.fromRGB(255,255,255), function(t)
     _l:sWColor(t)
 end)
 s3s:NewColorPicker("HP Color",'Set healthbar color', Color3.fromRGB(255,255,255),"EHPColor", function(t)
     _l:sHColor(t)
+end)
+RAINBOW = false;
+s3s:NewToggle('Rainbow Color', 'Set esp color to rainbow', function(t)
+    RAINBOW = t
+    local sv;
+    sv = game:GetService('RunService').Heartbeat:Connect(function()
+        if RAINBOW == true then
+            _l:sColor(Color3.fromHSV(tick() * 24 % 255 / 255,1,1))
+        end
+        if RAINBOW == false then
+            _l:sColor(old_c)
+            sv:Disconnect()
+        end
+    end)
 end)
 s3s:NewColorPicker("ESP Color", 'Set esp color',Color3.fromRGB(255,255,255), function(t)
     _l:sColor(t)
