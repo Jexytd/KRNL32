@@ -1,20 +1,14 @@
-assert(sendErr, 'Failed to load features!')
-local function get(http,cache)
-    local s,result = pcall(function() return loadstring(game:HttpGet(http, (cache or true)))() end)
-    return (s and result) or s
-end
-
-local Aimbot,I_ = get('https://raw.githubusercontent.com/Jexytd/KRNL32/master/Module/aimbot.lua')
-local ESP,_l = get('https://raw.githubusercontent.com/Jexytd/KRNL32/master/Module/esp.lua')
+assert(_KRNL32_, 'Failed to load features!')
+local Aimbot,I_ = pcall(function() return loadstring(game:HttpGet('https://raw.githubusercontent.com/Jexytd/KRNL32/master/Module/aimbot.lua', true))() end)
+local ESP,_l = pcall(function() return loadstring(game:HttpGet('https://raw.githubusercontent.com/Jexytd/KRNL32/master/Module/esp.lua', true))() end)
 if not Aimbot or not ESP or type(ENGINE_l) ~= 'table' then 
-    return sendErr((not Aimbot and 'Aimbot') or (not ESP and 'ESP') or (type(ENGINE_l) ~= 'table' and 'Library'), tostring((I_ or _l or ENGINE_l))) 
+    return _KRNL32_[_KRNL32_[1][2]]((not Aimbot and 'Aimbot') or (not ESP and 'ESP') or (type(ENGINE_l) ~= 'table' and 'Library'), tostring((I_ or _l or ENGINE_l))) 
 end
 
 local Players = game:GetService('Players')
 local Client = Players.LocalPlayer
 
 local Windows = ENGINE_l
-
 local t2 = Windows:NewTab('Aimbot')
 local s2 = t2:NewSection('Aimbot')
 local s2s = t2:NewSection('Settings')

@@ -201,7 +201,6 @@ xpcall(function()
                 end
             until attempt == maxattempt or attempt == true
             if attempt ~= true then 
-                no_error = false 
                 Library:setLog('Failed executing script!')
                 _KRNL32_[_KRNL32_[1][math.huge]](Step, err_msg)
                 no_error = false

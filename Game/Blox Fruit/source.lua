@@ -1,6 +1,6 @@
 assert(_KRNL32_, 'Failed to load features!')
 if type(ENGINE_l) ~= 'table' then
-    return _KRNL32_[-math.huge][_KRNL32_[1][2]]('Library', ENGINE_l)
+    return _KRNL32_[_KRNL32_[1][2]]('Library', ENGINE_l)
 end
 
 local Players = game:GetService('Players')
@@ -64,7 +64,7 @@ xpcall(function()
         end)
     end
 end, function(e)
-    _KRNL32_[-math.huge][_KRNL32_[1][math.huge]]('Blox Fruit', e)
+    _KRNL32_[_KRNL32_[1][math.huge]]('Blox Fruit', e)
     lIlIlIlI:Remove()
     getgenv().lIlIlIlI = nil
     getgenv().ENGINE_l = nil
