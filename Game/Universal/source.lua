@@ -96,8 +96,11 @@ s3o:NewToggle('Team Color', 'Set color to teams color', function(t)
     _l:teamcolor(t)
 end)
 
-s3s:NewSlider("Thickness", 'Set thickness of esp line', _l.Thickness*2,1, function(t)
+s3s:NewSlider("Thickness", 'Set thickness of esp line', _l.TextSize*2,1, function(t)
     _l:sThick(t)
+end)
+s3s:NewSlider("Text Size", 'Set text size of esp (name, distance)', _l.TextSize*2,1, function(t)
+    _l:setTSize(t)
 end)
 
 -- rbw = {false,1}

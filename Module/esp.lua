@@ -18,6 +18,7 @@ local Library = {
     WallColor = Color3.fromRGB(255,75,75),
     HPColor = Color3.fromRGB(75,255,75),
     Thickness = 3,
+    TextSize = 18,
 
     Objects = setmetatable({}, {_mode='kv'}),
 }
@@ -80,6 +81,10 @@ do
 
     function Library:teamcolor(a)
         self.TeamsColor = a
+    end
+
+    function Library:setTSize(a)
+        self.TextSize = a
     end
 end
 
@@ -275,7 +280,7 @@ function boxBase:up()
 
             Name.Visible = true
             Img.Visible = true
-            Name.Size = Library.Thickness * 6
+            Name.Size = Library.TextSize
             Name.Center = true
             Name.Outline = true
             Name.Color = Color
@@ -313,7 +318,7 @@ function boxBase:up()
             end)())
 
             Distance.Visible = true
-            Distance.Size = Library.Thickness * 6
+            Distance.Size = Library.TextSize
             Distance.Center = true
             Distance.Outline = true
             Distance.Color = Color
@@ -406,7 +411,7 @@ function Library:add(o,p)
         Visible = self.Enabled and self.Boxes
     })
     a.ESP['Name'] = Draw('Text', {
-        Size = self.Thickness*6,
+        Size = self.TextSize,
         Center = true,
         Outline = true,
         Color = self.Color,
@@ -425,7 +430,7 @@ function Library:add(o,p)
         wait()
     until a.ESP['Img']
     a.ESP['Distance'] = Draw('Text', {
-        Size = self.Thickness*6,
+        Size = self.TextSize,
         Center = true,
         Outline = true,
         Color = self.Color,
