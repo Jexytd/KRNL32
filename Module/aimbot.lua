@@ -243,7 +243,7 @@ game:GetService('RunService').Heartbeat:Connect(function()
     up(Library.ShowFov)
     if Library.Enabled then
         if getClosestFOV() then
-            aimAt(getClosestFOV()[Library.Target], Library.WallCheck)
+            aimAt(getClosestFOV(nil, Library.Target), Library.WallCheck)
         end
     end
     game:GetService('RunService').RenderStepped:Wait()
