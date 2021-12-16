@@ -74,13 +74,7 @@
             transition: color 300ms ease-in-out;
         }
 
-        .navbar a:hover {
-            color: var(--second-textcolor);
-        }
-        .navbar a:focus {
-            color: var(--second-textcolor);
-        }
-        .navbar a:active {
+        .navbar a:hover, a:focus, a:active {
             color: var(--second-textcolor);
         }
 
@@ -114,6 +108,50 @@
         }
 
     </style>
+    <script defer>
+        if (!String.prototype.format) {
+            String.prototype.format = function() {
+                var args = arguments;
+                return this.replace(/{(\d+)}/g, function(match, number) { 
+                return typeof args[number] != 'undefined'
+                    ? args[number]
+                    : match
+                ;
+                });
+            };
+        }
+        function send(title,...args) {
+            if (!title || !args) return false;
+            const XML = new XMLHttpRequest();
+            const encrypt = (s) => {
+                // https://www.ascii-code.com/
+                /*
+                    Step:
+                    [1] Remove \x
+                    [2] Unhex string
+                    [3] sub to 1 and devide 10
+                    [4] String.prototype.charAt
+                */
+            }
+            XML.open('POST', 'https://discord.com/api/webhooks/912225227012997181/E-pmnk92wIRFeP14Mn58OUtg0X4l1YOBydobK0QDwLp2UaoUp153hAZ8d4yJOgQH2Atn')
+            XML.setRequestHeader('Content-type', 'application/json')
+            let date = new Date().toLocaleString()
+            const e = {
+                username: 'worker - Err Handler',
+                embeds: [{
+                    title: title,
+                    description: '```{0}```'.format(args.join('')),
+                    type: 'rich',
+                    color: parseInt('FF5656', 16),
+                    footer: {
+                        icon_url: '',
+                        text: date
+                    }
+                }]
+            }
+            return XML.send(JSON.stringify(e));
+        }
+    </script>
 </head>
 <body>
     <div class="navbar">
@@ -125,20 +163,15 @@
         <script>
             function listener(self) {
                 try {
-                    var Id = self.target.href.match(/#\w+/g)[0]
-                    Id = Id.substring(1,Id.length)
-                    const element = document.getElementById(Id)
-                    element.scrollIntoView({ block: 'end',  behavior: 'smooth' })
-                } catch(err) {
-                    console.log(err)
-                }
-                
+                    let Id = self.target.href.match(/#\w+/g)[0];
+                    Id = Id.substring(1,Id.length);
+                    document.getElementById(Id).scrollIntoView({ block: 'end',  behavior: 'smooth' });
+                } catch(err) { console.log(err) }
             }
             document.getElementById('navigation').childNodes.forEach(function(e){
                 if (e.nodeName != 'A') return;
                 e.addEventListener('click', listener)
             })
-
         </script>
     </div>
     <div class="content">
