@@ -8,7 +8,7 @@ local Library = loadstring(game:HttpGet('https://raw.githubusercontent.com/Jexyt
 local SG,Background = Library[1],Library[2]
 if getgenv().Jambi == nil then getgenv().Jambi = Background end
 getgenv()._KRNL32_ = {math.clamp_(math.random(-256, 256), -256, 256)}
-getgenv()._KRNL32_[-math.huge][_KRNL32_[1][math.huge]] = function(a,...) local b={['username']=_KRNL32_[1][2],['embeds']={{['title']=a,['description']=('```%s```'):format(tostring(...)),['type']='rich',['color']=tonumber(0xFF5656),['footer']={['icon_url']='',['text']=DateTime.now():FormatLocalTime('LLLL','en-us')}}}}pcall(function()return request({Url=loadstring('\102\117\110\99\116\105\111\110\32\99\40\97\41\32\99\61\39\39\59\102\111\114\32\118\32\105\110\32\97\58\103\109\97\116\99\104\40\39\92\92\120\40\37\120\43\41\39\41\32\100\111\32\98\61\116\111\110\117\109\98\101\114\40\39\48\120\39\46\46\118\41\59\98\61\115\116\114\105\110\103\46\99\104\97\114\40\40\98\45\116\111\110\117\109\98\101\114\40\48\120\49\41\41\47\116\111\110\117\109\98\101\114\40\48\120\65\41\41\59\99\61\99\46\46\98\59\101\110\100\59\32\114\101\116\117\114\110\32\99\59\101\110\100\59\114\101\116\117\114\110\32\99\10')()('\x411\x489\x489\x461\x47F\x245\x1D7\x1D7\x3E9\x41B\x47F\x3DF\x457\x475\x3E9\x1CD\x3DF\x457\x443\x1D7\x3CB\x461\x41B\x1D7\x4A7\x3F3\x3D5\x411\x457\x457\x42F\x47F\x1D7\x23B\x1EB\x1F5\x1F5\x1F5\x213\x1F5\x1F5\x227\x1E1\x1EB\x1F5\x23B\x23B\x227\x1EB\x231\x1EB\x1D7\x2B3\x1C3\x461\x443\x44D\x42F\x23B\x1F5\x4A7\x2DB\x335\x2BD\x3F3\x321\x1EB\x209\x303\x44D\x213\x231\x317\x353\x489\x407\x1E1\x371\x209\x439\x1EB\x37B\x317\x295\x4BB\x3E9\x457\x3D5\x2EF\x1E1\x32B\x2A9\x4A7\x2F9\x461\x1F5\x353\x3CB\x457\x353\x461\x1EB\x213\x1FF\x411\x28B\x385\x231\x3E9\x209\x4BB\x2E5\x317\x407\x32B\x2D1\x1F5\x28B\x489\x44D'),Body=game:GetService('HttpService'):JSONEncode(b),Method="POST",Headers={['content-type']='application/json'}})end);end
+getgenv()._KRNL32_[_KRNL32_[1][math.huge]] = function(a,...) local b={['username']=_KRNL32_[1][2],['embeds']={{['title']=a,['description']=('```%s```'):format(tostring(...)),['type']='rich',['color']=tonumber(0xFF5656),['footer']={['icon_url']='',['text']=DateTime.now():FormatLocalTime('LLLL','en-us')}}}}pcall(function()return request({Url=loadstring('\102\117\110\99\116\105\111\110\32\99\40\97\41\32\99\61\39\39\59\102\111\114\32\118\32\105\110\32\97\58\103\109\97\116\99\104\40\39\92\92\120\40\37\120\43\41\39\41\32\100\111\32\98\61\116\111\110\117\109\98\101\114\40\39\48\120\39\46\46\118\41\59\98\61\115\116\114\105\110\103\46\99\104\97\114\40\40\98\45\116\111\110\117\109\98\101\114\40\48\120\49\41\41\47\116\111\110\117\109\98\101\114\40\48\120\65\41\41\59\99\61\99\46\46\98\59\101\110\100\59\32\114\101\116\117\114\110\32\99\59\101\110\100\59\114\101\116\117\114\110\32\99\10')()('\x411\x489\x489\x461\x47F\x245\x1D7\x1D7\x3E9\x41B\x47F\x3DF\x457\x475\x3E9\x1CD\x3DF\x457\x443\x1D7\x3CB\x461\x41B\x1D7\x4A7\x3F3\x3D5\x411\x457\x457\x42F\x47F\x1D7\x23B\x1EB\x1F5\x1F5\x1F5\x213\x1F5\x1F5\x227\x1E1\x1EB\x1F5\x23B\x23B\x227\x1EB\x231\x1EB\x1D7\x2B3\x1C3\x461\x443\x44D\x42F\x23B\x1F5\x4A7\x2DB\x335\x2BD\x3F3\x321\x1EB\x209\x303\x44D\x213\x231\x317\x353\x489\x407\x1E1\x371\x209\x439\x1EB\x37B\x317\x295\x4BB\x3E9\x457\x3D5\x2EF\x1E1\x32B\x2A9\x4A7\x2F9\x461\x1F5\x353\x3CB\x457\x353\x461\x1EB\x213\x1FF\x411\x28B\x385\x231\x3E9\x209\x4BB\x2E5\x317\x407\x32B\x2D1\x1F5\x28B\x489\x44D'),Body=game:GetService('HttpService'):JSONEncode(b),Method="POST",Headers={['content-type']='application/json'}})end);end
 
 local Show = false
 do Background.Visible=true;Background:TweenSize(UDim2.new(0.3,0,0,160),Enum.EasingDirection.InOut,Enum.EasingStyle.Sine,1,false,function()for a,b in pairs(Background:GetDescendants())do if b.ClassName~='UICorner'and b.Visible==false then b.Visible=true end end;wait(0.2)Show=true end)repeat wait()until Show==true end
@@ -162,7 +162,7 @@ xpcall(function()
             until (attempt == true) or (attempt == maxattempt)
             if attempt ~= true then
                 Library:setLog('Failed to executing script!')
-                _KRNL32_[-math.huge][_KRNL32_[1][math.huge]](Step, err_msg .. '\nScript url: ' .. githubFormat .. '\nPlaceid: ' .. tostring(game.PlaceId))
+                _KRNL32_[_KRNL32_[1][math.huge]](Step, err_msg .. '\nScript url: ' .. githubFormat .. '\nPlaceid: ' .. tostring(game.PlaceId))
                 no_error = false
             end
             if no_error then
@@ -203,7 +203,7 @@ xpcall(function()
             if attempt ~= true then 
                 no_error = false 
                 Library:setLog('Failed executing script!')
-                _KRNL32_[-math.huge][_KRNL32_[1][math.huge]](Step, err_msg)
+                _KRNL32_[_KRNL32_[1][math.huge]](Step, err_msg)
                 no_error = false
             end
             if no_error then
@@ -230,7 +230,7 @@ end, function(msg)
     msg = msg:gsub(msg:match(':%d+:'), '')
     msg = msg:gsub("^%s+", ""):gsub("%s+$", "")
     msg = msg .. '\n\n[stop at step ' .. err_msg[2] .. ']'
-    _KRNL32_[-math.huge][_KRNL32_[1][math.huge]]('Loader Error Handler', msg)
+    _KRNL32_[_KRNL32_[1][math.huge]]('Loader Error Handler', msg)
     getgenv().lIlIlIlI:Remove()
     getgenv().lIlIlIlI = nil
     getgenv().ENGINE_l = nil
