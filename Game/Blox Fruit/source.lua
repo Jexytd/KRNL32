@@ -207,8 +207,8 @@ xpcall(function()
         s1:NewToggle('Include Boss', 'When boss quest available', function(t)
             LFarm_Boss = t
         end)
-        s1:NewToggle('Mob Magnet', 'When boss quest available', function(t)
-            LFarm_Boss = t
+        s1:NewToggle('Mob Magnet', 'Magnet mob to easier when farm', function(t)
+            LMagnet = t
         end)
         s1:NewLabel('When tp addition get high increase, please increase the debounce too or you will get tp\'ed back')
         s1:NewSlider("TP Addition", "Teleport (num) away from current distance per debounce", 900, 1, function(s)
