@@ -91,7 +91,7 @@ function sumsof(v,v2)
     return r
 end
 
-function tp(cf, add,startheight,endheight, time)
+function tp(cf,add,handler,startheight,endheight, time)
     local Client = game:GetService('Players').LocalPlayer
     local Character = Client.Character
 
@@ -101,7 +101,7 @@ function tp(cf, add,startheight,endheight, time)
 
     local startheight = startheight or 100
     local endheight = endheight or 30
-    local time = time or 0.51
+    local time = time or 0.6
     local add = add or 200
 
     local isequal = false
@@ -134,9 +134,8 @@ function tp(cf, add,startheight,endheight, time)
                 RootPart.CFrame = CFrame.new(NVector.X, NVector.Y, NVector.Z) + Vector3.new(0, startheight, 0)
             end)
         end
-
         wait(time)
-    until Client:DistanceFromCharacter(Vector3.new(cf.X,RootPart.Position.Y,cf.Z)) <= 250 or not RootPart or isequal
+    until not handler or Client:DistanceFromCharacter(Vector3.new(cf.X,RootPart.Position.Y,cf.Z)) <= 400 or not RootPart or Client.Character:FindFirstChildOfClass('Humanoid').Health <= 0 or isequal
 
     local cf2 = CFrame.new((cf.p.X or cf.X), (cf.p.Y or cf.Y), (cf.p.Z or cf.Z))
     RootPart.CFrame = cf2 * CFrame.new(0, endheight, 0)

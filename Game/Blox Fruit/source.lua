@@ -16,7 +16,7 @@ xpcall(function()
     CQuest = ''
     CQ2 = ''
     TPAddition = 200
-    TPDebounce = 0.51
+    TPDebounce = 0.6
     TPHeight = 100
 
     local Lcheck;
