@@ -138,7 +138,7 @@ xpcall(function()
                     local primary = Target:FindFirstChild('HumanoidRootPart')
                     local height = 30
                     local ratio = Client:DistanceFromCharacter(primary.Position)
-                    if ratio > 500 then tp(primary.CFrame, TPAddition, TPHeight, height, TPDebounce) end
+                    if ratio > 500 then tp(primary.CFrame, TPAddition, LFarm, TPHeight, height, TPDebounce) end
                     if ratio <= 500 then
                         primary.Size = Vector3.new(50,60,50)
                         pcall(function() 
@@ -156,7 +156,7 @@ xpcall(function()
                 until not LFarm or not Target or not Target.Parent or Target:FindFirstChildOfClass('Humanoid').Health <= 0
                 pcall(function()
                     if not Client.PlayerGui.Main.Quest.Visible then
-                        C2 = ''
+                        CQ2 = ''
                     end
                 end)
             end
