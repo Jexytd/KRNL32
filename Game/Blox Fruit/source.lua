@@ -17,7 +17,7 @@ xpcall(function()
     CQuest = ''
     CQ2 = ''
     TPAddition = 200
-    TPDebounce = 0.6
+    TPDebounce = 0.65
     TPHeight = 100
 
     local Lcheck;
@@ -53,6 +53,10 @@ xpcall(function()
             end
 
             table.sort(QTdata, function(t1,t2) return t1[1] < t2[1] end)
+
+            --[[
+                Boss quest aren't works
+            ]]
 
             local Target = {}
             local Iteration = 0
@@ -95,7 +99,7 @@ xpcall(function()
                 local instance
         
                 for _,mob in pairs(workspace.Enemies:GetChildren()) do
-                    local newname = mob.Name:gsub('[Lv. %d+]', ''):gsub('[[]]', '')
+                    local newname = mob.Name:split(' [')[1]
                     if mob:IsA('Model') and newname == name and mob:FindFirstChild('HumanoidRootPart') and mob:FindFirstChild('Humanoid') and mob.Humanoid.Health > 0 then
                         local ndist = Client:DistanceFromCharacter(mob.HumanoidRootPart.Position)
                         if ndist < odist then
@@ -109,7 +113,7 @@ xpcall(function()
         
                 if not found then
                     for _,mob in pairs(game:GetService('ReplicatedStorage'):GetChildren()) do
-                        local newname = mob.Name:gsub('[Lv. %d+]', ''):gsub('[[]]', '')
+                        local newname = mob.Name:split(' [')[1]
                         if mob:IsA('Model') and newname == name and mob:FindFirstChild('HumanoidRootPart') and mob:FindFirstChild('Humanoid') and mob.Humanoid.Health > 0 then
                             local ndist = Client:DistanceFromCharacter(mob.HumanoidRootPart.Position)
                             if ndist < odist then
@@ -137,6 +141,7 @@ xpcall(function()
             end)
 
             local Target = get(Target[1])
+            print(Target)
             local TP = loadstring(game:HttpGet('https://raw.githubusercontent.com/Jexytd/KRNL32/master/Module/tp.lua', true))()
             if Target then
                 repeat
@@ -145,30 +150,25 @@ xpcall(function()
                     local ratio = Client:DistanceFromCharacter(primary.Position)
                     if ratio > 500 then tp(primary.CFrame, TPAddition, LFarm, TPHeight, height, TPDebounce) end
                     if ratio <= 500 then
-                        primary.Size = Vector3.new(50,60,50)
+                        primary.Size = Vector3.new(50,0,50)
+                        primary.Transparency = 0.7
                         pcall(function() 
-                            Client.Character.HumanoidRootPart.CFrame = primary.CFrame * CFrame.new(0,height,0)
+                            Client.Character.HumanoidRootPart.CFrame = primary.CFrame + Vector3.new(0,height,0)
                             local function grab()
                                 if LMagnet then
                                     for _,mob in pairs(workspace.Enemies:GetChildren()) do
                                         if mob:IsA('Model') and mob ~= Target and mob.Name == Target.Name and mob:FindFirstChild('HumanoidRootPart') and mob:FindFirstChild('Humanoid') and mob.Humanoid.Health > 0 then
-                                            local line = Drawing.new('Line')
-                                            line.Thickness = 2
-                                            line.Visible = false
-                                            local v1 = workspace.CurrentCamera:WorldToViewportPoint(Client.Character.HumanoidRootPart.Position)
-                                            line.To = Vector2.new(v1.X, v1.Y)
-                                            local v2,vis = workspace.CurrentCamera:WorldToViewportPoint(mob.HumanoidRootPart.Position)
-                                            line.From = Vector2.new(v2.X, v2.Y)
                                             local vect = Vector3.new(mob.HumanoidRootPart.Position.X, 0, mob.HumanoidRootPart.Position.Z)
                                             local ratio = Client:DistanceFromCharacter(vect)
-                                            if ratio <= 30 then
-                                                if vis then
-                                                    line.Visible = true
+                                            if ratio <= 210 then
+                                                for _,v in pairs(mob:GetDescendants()) do
+                                                    if v:IsA('BasePart') or v:IsA('MeshPart') and v.CanCollide == true then
+                                                        v.CanCollide = false
+                                                    end
                                                 end
-                                                mob.HumanoidRootPart.Size = Vector3.new(50,60,50)
-                                                mob.HumanoidRootPart.CFrame = primary.CFrame
+                                                mob.HumanoidRootPart.CFrame = Client.Character.HumanoidRootPart.CFrame - Vector3.new(0,height,0)
+                                                mob.HumanoidRootPart.Size = Vector3.new(50,0,50)
                                             end
-                                            line:Remove()
                                         end
                                     end
                                 end
