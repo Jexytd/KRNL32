@@ -18,9 +18,13 @@ function table.find(t, val, startindex)
     return key
 end
 if type(setreadonly) == 'function' then
-    setreadonly(table, false)
+    setreadonly(table, true)
+    setreadonly(math, false)
 end
 if not table.find(math, 'clamp') then function math.clamp(value,min,max) return (max <= value and max) or (value <= min and min) or (min <= value and value <= max and value); end; end
+if type(setreadonly) == 'function' then
+    setreadonly(math, true)
+end
 
 function sumsof(v,v2)
     if type(v) ~= 'number' then return end
