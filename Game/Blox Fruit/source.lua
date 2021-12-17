@@ -11,6 +11,7 @@ local Windows = ENGINE_l
 
 xpcall(function()
     LFarm = false
+    LMagnet = false
     LFarm_Boss = false
     LBoss_Debounce = false
     CQuest = ''
@@ -147,6 +148,32 @@ xpcall(function()
                         primary.Size = Vector3.new(50,60,50)
                         pcall(function() 
                             Client.Character.HumanoidRootPart.CFrame = primary.CFrame * CFrame.new(0,height,0)
+                            local function grab()
+                                if LMagnet then
+                                    for _,mob in pairs(workspace.Enemies:GetChildren()) do
+                                        if mob:IsA('Model') and mob ~= Target and mob.Name == Target.Name and mob:FindFirstChild('HumanoidRootPart') and mob:FindFirstChild('Humanoid') and mob.Humanoid.Health > 0 then
+                                            local line = Drawing.new('Line')
+                                            line.Thickness = 2
+                                            line.Visible = false
+                                            local v1 = workspace.CurrentCamera:WorldToViewportPoint(Client.Character.HumanoidRootPart.Position)
+                                            line.To = Vector2.new(v1.X, v1.Y)
+                                            local v2,vis = workspace.CurrentCamera:WorldToViewportPoint(mob.HumanoidRootPart.Position)
+                                            line.From = Vector2.new(v2.X, v2.Y)
+                                            local vect = Vector3.new(mob.HumanoidRootPart.Position.X, 0, mob.HumanoidRootPart.Position.Z)
+                                            local ratio = Client:DistanceFromCharacter(vect)
+                                            if ratio <= 30 then
+                                                if vis then
+                                                    line.Visible = true
+                                                end
+                                                mob.HumanoidRootPart.Size = Vector3.new(50,60,50)
+                                                mob.HumanoidRootPart.CFrame = primary.CFrame
+                                            end
+                                            line:Remove()
+                                        end
+                                    end
+                                end
+                            end
+                            coroutine.wrap(grab)()
                         end)
                         wait(os.clock()/os.time())
                         pcall(function()
@@ -178,6 +205,9 @@ xpcall(function()
         end)
 
         s1:NewToggle('Include Boss', 'When boss quest available', function(t)
+            LFarm_Boss = t
+        end)
+        s1:NewToggle('Mob Magnet', 'When boss quest available', function(t)
             LFarm_Boss = t
         end)
         s1:NewLabel('When tp addition get high increase, please increase the debounce too or you will get tp\'ed back')
