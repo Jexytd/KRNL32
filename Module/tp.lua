@@ -91,7 +91,7 @@ function sumsof(v,v2)
     return r
 end
 
-function tp(cf, startheight,endheight, time)
+function tp(cf, add,startheight,endheight, time)
     local Client = game:GetService('Players').LocalPlayer
     local Character = Client.Character
 
@@ -101,7 +101,8 @@ function tp(cf, startheight,endheight, time)
 
     local startheight = startheight or 100
     local endheight = endheight or 30
-    local time = time or 0.5
+    local time = time or 0.51
+    local add = add or 200
 
     local isequal = false
     repeat
@@ -110,8 +111,8 @@ function tp(cf, startheight,endheight, time)
         local methodX, sumX = unpack(sumsof(CVector.X,TVector.X))
         local methodZ, sumZ = unpack(sumsof(CVector.Z,TVector.Z))
 
-        local minmax1 = math.clamp(sumX, -200, 200)
-        local minmax2 = math.clamp(sumZ, -200, 200)
+        local minmax1 = math.clamp(sumX, -add, add)
+        local minmax2 = math.clamp(sumZ, -add, add)
         local NVector = Vector3.new((math.floor(CVector.X) + 1), TVector.Y, (math.floor(CVector.Z) + 1))
         if methodX == 'sub' then
             NVector = NVector - Vector3.new(minmax1,0,0)
