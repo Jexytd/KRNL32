@@ -99,13 +99,13 @@ function tp(cf,add,handler,startheight,endheight, time)
     local Ratio = math.huge
     local TVector = CFrame.new((math.floor(cf.X) + 1), cf.Y, (math.floor(cf.Z) + 1))
 
-    local startheight = startheight or 100
-    local endheight = endheight or 30
-    local time = time or 0.6
-    local add = add or 200
-
     local isequal = false
     repeat
+        local startheight = startheight or 100
+        local endheight = endheight or 30
+        local time = time or 0.6
+        local add = add or 200
+
         RootPart = Character.PrimaryPart or Character:FindFirstChild('HumanoidRootPart') or Character:FindFirstChildWhichIsA('BasePart')
         local CVector = RootPart.Position
         local methodX, sumX = unpack(sumsof(CVector.X,TVector.X))
