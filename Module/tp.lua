@@ -1,3 +1,27 @@
+if type(setreadonly) == 'function' then
+    setreadonly(table, false)
+else
+    warn('[#]: Please set setreadonly(<table> t, <bool> val) function!')
+end
+function table.find(t, val, startindex)
+    local startindex = startindex or 0
+    local key = nil
+    for i,v in pairs(t) do
+        if (type(i) == 'number' and startindex <= i) and (v:match(val) or v == val) then
+            key = i
+            break
+        elseif (type(i) == 'string' and i:match(val)) then
+            key = i
+            break
+        end
+    end
+    return key
+end
+if type(setreadonly) == 'function' then
+    setreadonly(table, false)
+end
+if not table.find(math, 'clamp') then function math.clamp(value,min,max) return (max <= value and max) or (value <= min and min) or (min <= value and value <= max and value); end; end
+
 function sumsof(v,v2)
     if type(v) ~= 'number' then return end
     if type(v2) ~= 'number' then return end
@@ -63,7 +87,7 @@ function sumsof(v,v2)
     return r
 end
 
-function tp(cf)
+function tp(cf, startheight,endheight, time)
     local Client = game:GetService('Players').LocalPlayer
     local Character = Client.Character
 
@@ -71,13 +95,16 @@ function tp(cf)
     local Ratio = math.huge
     local TVector = CFrame.new((math.floor(cf.X) + 1), cf.Y, (math.floor(cf.Z) + 1))
 
+    local startheight = startheight or 100
+    local endheight = endheight or 30
+    local time = time or 0.5
+
     local isequal = false
     repeat
         RootPart = Character.PrimaryPart or Character:FindFirstChild('HumanoidRootPart') or Character:FindFirstChildWhichIsA('BasePart')
         local CVector = RootPart.Position
         local methodX, sumX = unpack(sumsof(CVector.X,TVector.X))
         local methodZ, sumZ = unpack(sumsof(CVector.Z,TVector.Z))
-        -- sumsof: CVector.X jumlah yang diperlukan untuk ke TVector.X
 
         local minmax1 = math.clamp(sumX, -200, 200)
         local minmax2 = math.clamp(sumZ, -200, 200)
@@ -99,17 +126,15 @@ function tp(cf)
 
         if not isequal then
             pcall(function()
-                RootPart.CFrame = CFrame.new(NVector.X, NVector.Y, NVector.Z) + Vector3.new(0, 100, 0)
-                --Base.CFrame = RootPart.CFrame - Vector3.new(0,5,0)
+                RootPart.CFrame = CFrame.new(NVector.X, NVector.Y, NVector.Z) + Vector3.new(0, startheight, 0)
             end)
         end
 
-        wait(0.5)
-    until Client:DistanceFromCharacter(Vector3.new(cf.X,RootPart.Position.Y,cf.Z)) <= 500 or not RootPart or isequal
+        wait(time)
+    until Client:DistanceFromCharacter(Vector3.new(cf.X,RootPart.Position.Y,cf.Z)) <= 250 or not RootPart or isequal
 
     local cf2 = CFrame.new((cf.p.X or cf.X), (cf.p.Y or cf.Y), (cf.p.Z or cf.Z))
-    RootPart.CFrame = cf2 * CFrame.new(0, 30, 0)
+    RootPart.CFrame = cf2 * CFrame.new(0, endheight, 0)
 end
 
-local cf = game:GetService("ReplicatedStorage")["Trainee [Lv. 5]"].PrimaryPart.CFrame
-tp(cf)
+return tp
