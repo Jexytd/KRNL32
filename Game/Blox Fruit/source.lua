@@ -51,7 +51,7 @@ xpcall(function()
                 end
             end
 
-            table.sort(QTdata, function(t1,t2) t1[1] < t2[1] end)
+            table.sort(QTdata, function(t1,t2) return t1[1] < t2[1] end)
 
             local Target = {}
             local Iteration = 0
