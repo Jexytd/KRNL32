@@ -129,6 +129,10 @@ xpcall(function()
                     CQ2 = CQuest
                     ReplicatedStorage.Remotes.CommF_:InvokeServer('StartQuest', QTdata[Iteration][2], QTdata[Iteration][3])
                 end
+                if CQ2 ~= CQuest then
+                    CQ2 = CQuest
+                    ReplicatedStorage.Remotes.CommF_:InvokeServer('StartQuest', QTdata[Iteration][2], QTdata[Iteration][3])
+                end
             end)
 
             local Target = get(Target[1])
