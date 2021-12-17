@@ -1427,23 +1427,35 @@ function Kavo:CreateLib(kavName, themeList)
                             TextTransparency = 0
                         }):Play()
                         Value = (((tonumber(maxvalue) - tonumber(minvalue)) / 149) * sliderDrag.AbsoluteSize.X) + tonumber(minvalue) or 0
+                        local nVal = tonumber(('%0.2f'):format(Value))
+                        if nVal % 1 == 0 then
+                            nVal = math.floor(nVal)
+                        end
                         pcall(function()
-                            callback(Value)
+                            callback(nVal)
                         end)
                         sliderDrag:TweenSize(UDim2.new(0, math.clamp(mouse.X - sliderDrag.AbsolutePosition.X, 0, 149), 0, 6), "InOut", "Linear", 0.05, true)
                         moveconnection = mouse.Move:Connect(function()
                             val.Text = Value
                             Value = (((tonumber(maxvalue) - tonumber(minvalue)) / 149) * sliderDrag.AbsoluteSize.X) + tonumber(minvalue)
+                            local nVal = tonumber(('%0.2f'):format(Value))
+                            if nVal % 1 == 0 then
+                                nVal = math.floor(nVal)
+                            end
                             pcall(function()
-                                callback(Value)
+                                callback(nVal)
                             end)
                             sliderDrag:TweenSize(UDim2.new(0, math.clamp(mouse.X - sliderDrag.AbsolutePosition.X, 0, 149), 0, 6), "InOut", "Linear", 0.05, true)
                         end)
                         releaseconnection = uis.InputEnded:Connect(function(Mouse)
                             if Mouse.UserInputType == Enum.UserInputType.MouseButton1 then
                                 Value = (((tonumber(maxvalue) - tonumber(minvalue)) / 149) * sliderDrag.AbsoluteSize.X) + tonumber(minvalue)
+                                local nVal = tonumber(('%0.2f'):format(Value))
+                                if nVal % 1 == 0 then
+                                    nVal = math.floor(nVal)
+                                end
                                 pcall(function()
-                                    callback(Value)
+                                    callback(nVal)
                                 end)
                                 val.Text = Value
                                 game.TweenService:Create(val, TweenInfo.new(0.1, Enum.EasingStyle.Linear, Enum.EasingDirection.In), {
