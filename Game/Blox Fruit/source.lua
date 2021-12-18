@@ -12,6 +12,7 @@ local Windows = ENGINE_l
 xpcall(function()
     LFarm = false
     LMagnet = false
+    AttkSpeed = false
     LFarm_Boss = false
     LBoss_Debounce = false
     CQuest = ''
@@ -141,7 +142,6 @@ xpcall(function()
             end)
 
             local Target = get(Target[1])
-            print(Target)
             local TP = loadstring(game:HttpGet('https://raw.githubusercontent.com/Jexytd/KRNL32/master/Module/tp.lua', true))()
             if Target then
                 repeat
@@ -156,6 +156,7 @@ xpcall(function()
                             Client.Character.HumanoidRootPart.CFrame = primary.CFrame + Vector3.new(0,height,0)
                             local function grab()
                                 if LMagnet then
+                                    setsimulationradius(math.huge, math.huge)
                                     for _,mob in pairs(workspace.Enemies:GetChildren()) do
                                         if mob:IsA('Model') and mob ~= Target and mob.Name == Target.Name and mob:FindFirstChild('HumanoidRootPart') and mob:FindFirstChild('Humanoid') and mob.Humanoid.Health > 0 then
                                             local vect = Vector3.new(mob.HumanoidRootPart.Position.X, 0, mob.HumanoidRootPart.Position.Z)
@@ -166,8 +167,16 @@ xpcall(function()
                                                         v.CanCollide = false
                                                     end
                                                 end
-                                                mob.HumanoidRootPart.CFrame = Client.Character.HumanoidRootPart.CFrame - Vector3.new(0,height,0)
-                                                mob.HumanoidRootPart.Size = Vector3.new(50,0,50)
+                                                if mob.Humanoid.Health < mob.Humanoid.MaxHealth then
+                                                    local vect = Vector3.new(mob.HumanoidRootPart.Position.X, 0, mob.HumanoidRootPart.Position.Z)
+                                                    if Client:DistanceFromCharacter(vect) > 7 then
+                                                        mob.HumanoidRootPart.CFrame = Client.Character.HumanoidRootPart.CFrame - Vector3.new(0,height,0)
+                                                        mob.HumanoidRootPart.Size = Vector3.new(50,0,50)
+                                                    end
+                                                else
+                                                    mob.HumanoidRootPart.CFrame = Client.Character.HumanoidRootPart.CFrame - Vector3.new(0,height,0)
+                                                    mob.HumanoidRootPart.Size = Vector3.new(50,0,50)
+                                                end
                                             end
                                         end
                                     end
@@ -196,7 +205,7 @@ xpcall(function()
         s1:NewToggle('Auto Level Farm', 'Automatic farming mob with possible quest level', function(t)
             LFarm = t
             local s
-            s = game:GetService('RunService').RenderStepped:Connect(function() if LFarm == true then pcall(function() Client.Character:FindFirstChildOfClass('Humanoid'):ChangeState(10); Client.Character.PrimaryPart.Velocity=Vector3.new(); end) end; if LFarm == false then s:Disconnect() end; end)
+            s = game:GetService('RunService').RenderStepped:Connect(function() if LFarm == true then pcall(function() Client.Character:FindFirstChildOfClass('Humanoid'):ChangeState(11); end) end; if LFarm == false then s:Disconnect() end; end)
             while LFarm do
                 local s,m = pcall(LevelFarm)
                 if not s then return error(m); end
@@ -209,6 +218,18 @@ xpcall(function()
         end)
         s1:NewToggle('Mob Magnet', 'Magnet mob to easier when farm', function(t)
             LMagnet = t
+        end)
+        s1:NewToggle('Fast Attack', 'Increase your attack speed to insane', function(t)
+            AttkSpeed = t
+            local sv;
+            sv = game:GetService('RunService').RenderStepped:Connect(function()
+                if AttkSpeed == true then
+                    setsimulationradius(9e99,9e98)
+                end
+                if AttkSpeed == false then
+                    sv:Disconnect()
+                end
+            end)
         end)
         s1:NewLabel('When tp addition get high increase, please increase the debounce too or you will get tp\'ed back')
         s1:NewSlider("TP Addition", "Teleport (num) away from current distance per debounce", 900, 1, function(s)
