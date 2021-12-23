@@ -205,7 +205,7 @@ xpcall(function()
         s1:NewToggle('Auto Level Farm', 'Automatic farming mob with possible quest level', function(t)
             LFarm = t
             local s
-            s = game:GetService('RunService').RenderStepped:Connect(function() if LFarm == true then pcall(function() Client.Character:FindFirstChildOfClass('Humanoid'):ChangeState(11); end) end; if LFarm == false then s:Disconnect() end; end)
+            s = game:GetService('RunService').RenderStepped:Connect(function() if LFarm == true then pcall(function() Client.Character:FindFirstChildOfClass('Humanoid'):ChangeState(10); Client.Character.PrimaryPart.Velocity = Vector3.new() end) end; if LFarm == false then s:Disconnect() end; end)
             while LFarm do
                 local s,m = pcall(LevelFarm)
                 if not s then return error(m); end
