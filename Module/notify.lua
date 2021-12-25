@@ -1,30 +1,6 @@
 --# this soon will be reworking (dont know what time)
-return (function(properties,animation)
+return (function(properties)
     if type(properties) ~= 'table' then return print('Argument [1] is table expected!, got ' .. type(properties)) end
-    local option = (function()
-        local temp = {}
-        local state = false
-        local index = 1
-        for k,v in pairs(properties) do
-            if type(k) == 'number' then
-                if k <= 3 then
-                    temp[index] = v
-                end
-            elseif type(k) == 'string' then
-                temp[index] = v
-            end
-            index = index + 1
-        end
-        -- rewrite
-        for _,v in pairs(temp) do
-            if type(v) == 'number' then
-                temp['time'] = v
-            end
-        end
-        if #temp <= 3 then state = temp end
-        return state
-    end)()
-    if not option then return print('Failed to unpack ' .. tostring(properties) .. ', got ' .. tostring(option)) end
 
     local Notifier = Instance.new('ScreenGui')
     local Background = Instance.new('Frame')
@@ -32,16 +8,8 @@ return (function(properties,animation)
     local TextNotifier = Instance.new('TextLabel')
     local UICorner = Instance.new("UICorner")
 
-    local title,teks = (function()
-        local result = {}
-        for _,v in pairs(option) do
-            if type(v) == 'string' then
-                table.insert(result, v)
-            end
-        end
-        return unpack(result)
-    end)()
-    local t = option['time']
+    local title,teks = properties['title'],properties['text']
+    local t = properties['time']
 
     local function Gen()
         return game:GetService('HttpService'):GenerateGUID(false)
@@ -57,7 +25,7 @@ return (function(properties,animation)
     Background.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
     Background.BorderSizePixel = 0
     Background.AnchorPoint = Vector2.new(0.5, 0.5)
-    Background.Position = UDim2.new(0.5,0, 2,0)
+    Background.Position = UDim2.new(0.5,0, -1,0)
     Background.Size = UDim2.new(0, 304,0, 62)
     Background.ZIndex = 9999999
 
@@ -85,17 +53,17 @@ return (function(properties,animation)
     TextNotifier.Text = (teks or 'Made in KRNL')
     TextNotifier.ZIndex = 9999999
     Background:TweenPosition(
-    	UDim2.new(0.5, 0,0.9, 0),           -- Final position the tween should reach
-    	Enum.EasingDirection.In, -- Direction of the easing
-    	Enum.EasingStyle.Sine,   -- Kind of easing to apply
-    	1                       -- Duration of the tween in seconds
+    	UDim2.new(0.5, 0, 0, 0),           
+    	Enum.EasingDirection.In, 
+    	Enum.EasingStyle.Sine,   
+    	1                       
     )
     wait(t or 2)
     Background:TweenPosition(
-    	UDim2.new(0.5, 0,2, 0),           -- Final position the tween should reach
-    	Enum.EasingDirection.In, -- Direction of the easing
-    	Enum.EasingStyle.Sine,   -- Kind of easing to apply
-    	1                       -- Duration of the tween in seconds
+    	UDim2.new(0.5, 0, -1, 0),           
+    	Enum.EasingDirection.In, 
+    	Enum.EasingStyle.Sine,   
+    	1                       
     )
     wait(2)
     Notifier:Destroy()
