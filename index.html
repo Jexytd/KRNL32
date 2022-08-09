@@ -1,183 +1,23 @@
-<head>
-    <title>KRNL32</title>
-    <link rel='icon' href="https://cdn.discordapp.com/attachments/844790586237255701/907452905253130330/imageedit_1_7308727527.png" type="image/png">
-    <meta charset="UTF-8">
-    <meta name="description" content="KRNL32 Script Hub">
-    <meta name="keywords" content="Roblox Script">
-    <meta name="author" content="KERNEL32">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Righteous&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=Public+Sans&display=swap');
-
-        :root {
-            --second-textcolor: rgb(170, 85, 255);
-            --second-bgcolor: rgb(35,35,35);
-            --third-bgcolor: rgb(69, 69, 230);
-        }
-        * {
-            margin: 0;
-            padding: 0;
-        }
-        body {
-            background-color: rgb(20, 20, 20);
-            color: whitesmoke;
-            overflow: hidden;
-        }
-        ::-webkit-scrollbar {
-            width: 10px;
-        }
-
-        /* Track */
-        ::-webkit-scrollbar-track {
-            background: rgba(69, 69, 230, 0.3); 
-        }
-        
-        /* Handle */
-        ::-webkit-scrollbar-thumb {
-            background: rgba(99,99,230,0.6); 
-            border-radius: 20px;
-        }
-
-        /* Handle on hover */
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(69,69,230,0.6); 
-        }
-
-        .navbar {
-            display: flex;
-            position: absolute;
-            justify-content: space-between;
-
-            font-family: 'Righteous', Arial;
-            font-size: 0.8rem;
-
-            margin: 1vh;
-            box-shadow: 2px 5px 10px rgb(49,49,230);
-
-            background-color: var(--third-bgcolor);
-            padding: 1vh;
-            width: 98%;
-            max-height: 2vh;
-            z-index: 1;
-            border-radius: 7px;
-        }
-
-        .navbar * {
-            text-decoration: none;
-            text-size-adjust: none;
-            color: whitesmoke;
-            margin-left: 1vh;
-        }
-
-        .navbar a {
-            transition: color 300ms ease-in-out;
-        }
-
-        .navbar a:hover, a:focus, a:active {
-            color: var(--second-textcolor);
-        }
-
-        .content {
-            z-index: 0;
-            position: absolute;
-            display: flex;
-            align-items: center;
-            flex-direction: column;
-            width: 99%;
-
-            font-family: 'Public Sans', Arial;
-            font-size: 0.7rem;
-
-            height: 100%;
-            max-height: 91vh;
-
-            background-color: var(--second-bgcolor);
-            overflow: auto;
-            margin: 1vh;
-
-            transform: translateY(7%);
-        }
-
-        .content #center {
-            margin: 0.8vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-        }
-
-    </style>
-    <script defer>
-        if (!String.prototype.format) {
-            String.prototype.format = function() {
-                var args = arguments;
-                return this.replace(/{(\d+)}/g, function(match, number) { 
-                return typeof args[number] != 'undefined'
-                    ? args[number]
-                    : match
-                ;
-                });
-            };
-        }
-        function send(title,...args) {
-            if (!title || !args) return false;
-            const XML = new XMLHttpRequest();
-            const encrypt = (s) => {
-                // https://www.ascii-code.com/
-                /*
-                    Step:
-                    [1] Remove \x
-                    [2] Unhex string
-                    [3] sub to 1 and devide 10
-                    [4] String.prototype.charAt
-                */
+<html>
+    <head>
+        <title>KRNL32</title>
+        <link rel="stylesheet" href="style.css">
+        <script defer>
+            /*
+                Content center, move left & right with sliding / mouse action / button '<' ? '>'
+                navigation bar have show/hide
+            */
+            function clamp(val,min,max) {
+                return (min <= val && val <= max && val) || (val <= min && min) || (max <= val && max)
             }
-            XML.open('POST', 'https://discord.com/api/webhooks/912225227012997181/E-pmnk92wIRFeP14Mn58OUtg0X4l1YOBydobK0QDwLp2UaoUp153hAZ8d4yJOgQH2Atn')
-            XML.setRequestHeader('Content-type', 'application/json')
-            let date = new Date().toLocaleString()
-            const e = {
-                username: 'worker - Err Handler',
-                embeds: [{
-                    title: title,
-                    description: '```{0}```'.format(args.join('')),
-                    type: 'rich',
-                    color: parseInt('FF5656', 16),
-                    footer: {
-                        icon_url: '',
-                        text: date
-                    }
-                }]
-            }
-            return XML.send(JSON.stringify(e));
-        }
-    </script>
-</head>
-<body>
-    <div class="navbar">
-        <a href="./">KRNL32</a>
-        <div id='navigation'>
+        </script>
+    </head>
+    <body>
+        <div class="navigation-bar">
+            <a href="#home">Home</a>
             <a href="#about">About</a>
             <a href="#download">Download</a>
+            <a href="#contact">Contact</a>
         </div>
-        <script>
-            function listener(self) {
-                try {
-                    let Id = self.target.href.match(/#\w+/g)[0];
-                    Id = Id.substring(1,Id.length);
-                    document.getElementById(Id).scrollIntoView({ block: 'end',  behavior: 'smooth' });
-                } catch(err) { console.log(err) }
-            }
-            document.getElementById('navigation').childNodes.forEach(function(e){
-                if (e.nodeName != 'A') return;
-                e.addEventListener('click', listener)
-            })
-        </script>
-    </div>
-    <div class="content">
-        <div id="center">
-            <h1>Welcome to <span style="color: var(--second-textcolor);">KRNL32</span></h1>
-            <p>Website now under development</p>
-        </div>
-    </div>
-</body>
+    </body>
+</html>

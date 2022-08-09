@@ -1,0 +1,40 @@
+* {
+    padding: 0;
+    margin: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    top: 0;
+}
+
+:root {
+    --text-color: rgb(255,255,255)
+}
+
+body {
+    background-color: black;
+    color: var(--text-color);
+}
+
+.navigation-bar {
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 90%;
+    max-height: 4%;
+    background-color: rgb(174, 0, 255);
+    transform: translateX(5%);
+    top: 93%;
+    border-radius: 10px;
+}
+
+.navigation-bar * {
+    margin-left: 1vh;
+    margin-right: 1vh;
+}
+
+.navigation-bar a {
+    text-decoration: none;
+    color: var(--text-color);
+}

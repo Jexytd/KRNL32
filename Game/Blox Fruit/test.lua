@@ -1,6 +1,8 @@
 local lib = loadstring(game:HttpGet('https://raw.githubusercontent.com/bloodball/-back-ups-for-libs/main/wizard', true))()
 local window = lib:NewWindow('test')
 local section1 = window:NewSection('Main')
+local window2 = lib:NewWindow('misc')
+local section2 = window2:NewSection('Main')
 
 FARMING = false
 FBOSS = false
@@ -9,8 +11,111 @@ CQUEST = ''
 C2 = ''
 local checkBoss;
 
+MAUTO = false
+GEPPO1 = false
+GEPPO2 = false
+DODGE1 = false
+DODGE2 = false
+Config = {
+    [1] = {
+        ['LengthData'] = 104,
+        ['Name'] = 'Dodge',
+        [1] = {83,20},
+        [2] = {85,3},
+        [3] = {84,30},
+        [4] = {32,0.01}
+    },
+    [2] = {
+        ['LengthData'] = 73,
+        ['Name'] = 'Geppo',
+        [1] = {31,0.001},
+        [2] = {49,0.001}
+    },
+}
+OldConstantValue = {}
+OldFunctions = false
+
 local Players = game:GetService('Players')
 local Client = Players.LocalPlayer
+
+function CollectData(character)
+    print('[!]: Starting collecting data...')
+    getgenv().Gamefunctions = {}
+    getgenv().Updatedfunctions = {}
+    for _,v in pairs(getgc()) do
+        if type(v) == 'function' and getfenv(v).script.Parent == character then
+            local c = getconstants(v)
+            if table.find(c, '_G') and #c > 0 then
+                table.insert(Gamefunctions, v)
+            end
+        end
+    end
+    
+    for _,Data in pairs(Config) do
+        for _,func in pairs(Gamefunctions) do
+            local constant = getconstants(func)
+            if #constant == Data['LengthData'] then
+                Updatedfunctions[Data['Name']] = func
+                break
+            end
+        end
+    end
+
+    local function getLength(t)
+        local i = 0
+        for _,v in pairs(t) do
+            i = i + 1
+        end
+        return i
+    end
+    print('[!]: Data collected!')
+    print('[Gamefunctions]:',Gamefunctions,'\n|-| Length:',getLength(Gamefunctions))
+    print('[Updatedfunctions]:',Updatedfunctions,'\n|-| Length:',getLength(Updatedfunctions))
+end
+
+CollectData(Client.Character)
+
+local function getConstantValue()
+    if not Gamefunctions or #Gamefunctions <= 0 then return warn('This should not be printed!') end
+    for _,Data in pairs(Config) do
+        for _,func in pairs(Gamefunctions) do
+            local constant = getconstants(func)
+            if #constant == Data['LengthData'] then
+                OldConstantValue[Data['Name']] = {}
+                for i,v in pairs(Data) do
+                    if type(i) == 'number' then
+                        local value = getconstant(func, v[1])
+                        OldConstantValue[Data['Name']][i] = value
+                    end
+                end
+                break
+            end
+        end
+    end
+end
+
+coroutine.wrap(getConstantValue)()
+Client.CharacterAdded:Connect(function()
+    OldFunctions = true
+end)
+local Humanoid = Client.Character:FindFirstChildOfClass('Humanoid') or Client.Character:WaitForChild('Humanoid')
+if Humanoid then
+    Humanoid.Died:Connect(function()
+        OldFunctions = true
+    end)
+end
+
+function getData(t,key,key2)
+    for k,v in pairs(t) do
+        if k == key and type(v) == 'table' then
+            for k2,v2 in pairs(v) do
+                if k2 == key2 then
+                    return v2
+                end
+            end
+        end
+    end
+end
 
 function farm()
     local level = Client:FindFirstChild('Data') and Client.Data:FindFirstChild('Level').Value
@@ -183,4 +288,154 @@ end)
 
 section1:CreateToggle('bosses', function(t)
     FBOSS = t
+end)
+
+local ev;
+section2:CreateToggle('Auto Update', function(t)
+    MAUTO = t
+    spawn(function()
+        while MAUTO do
+            if OldFunctions then
+                repeat wait() until Client.CharacterAdded or Client.Character
+                CollectData(Client.Character)
+                OldFunctions = false
+            end
+            wait()
+        end
+    end)
+    if MAUTO then
+        local function CharAdded(char)
+            repeat 
+                wait(0.1)
+            until Client.Character
+            CollectData(Client.Character)
+        end
+        ev = Client.CharacterAdded:Connect(CharAdded)
+    end
+    if not MAUTO then
+        ev:Disconnect()
+    end
+end)
+section2:CreateToggle('Geppo No Cooldown', function(t)
+    GEPPO1 = t
+    local index = 1
+    while GEPPO1 do
+        local f = getgenv().Updatedfunctions['Geppo']
+        local i,v = getData(Config,2,index)[1],getData(Config,2,index)[2]
+        local c = getconstant(f,i)
+        if f and c ~= v then
+            setconstant(f,i,v)
+        end
+        game:GetService('RunService').RenderStepped:wait()
+    end
+    local f = getgenv().Updatedfunctions['Geppo']
+    local i,v = getData(Config,2,index)[1],getData(OldConstantValue,'Geppo',index)
+    if f then
+        setconstant(f,i,v)
+    end
+end)
+
+section2:CreateToggle('Inf Geppo Jump', function(t)
+    GEPPO2 = t
+    local index = 2
+    while GEPPO2 do
+        local f = getgenv().Updatedfunctions['Geppo']
+        local i,v = getData(Config,2,index)[1],getData(Config,2,index)[2]
+        local c = getconstant(f,i)
+        if f and c ~= v then
+            setconstant(f,i,v)
+        end
+        game:GetService('RunService').RenderStepped:wait()
+    end
+    local f = getgenv().Updatedfunctions['Geppo']
+    local i,v = getData(Config,2,index)[1],getData(OldConstantValue,'Geppo',index)
+    if f then
+        setconstant(f,i,v)
+    end
+end)
+
+section2:CreateToggle('Dodge Velocity', function(t)
+    DODGE1 = t
+    local index = 1
+    while DODGE1 do
+        local f = getgenv().Updatedfunctions['Dodge']
+        local i,v = getData(Config,1,index)[1],getData(Config,1,index)[2]
+        local c = getconstant(f,i)
+        if f and c ~= v then
+            setconstant(f,i,v)
+        end
+        game:GetService('RunService').RenderStepped:wait()
+    end
+    local f = getgenv().Updatedfunctions['Dodge']
+    local i,v = getData(Config,1,index)[1],getData(OldConstantValue,'Dodge',index)
+    if f then
+        setconstant(f,i,v)
+    end
+end)
+
+section2:CreateToggle('Dodge Speed', function(t)
+    DODGE2 = t
+    local index = 2
+    while DODGE2 do
+        local f = getgenv().Updatedfunctions['Dodge']
+        local i,v = getData(Config,1,index)[1],getData(Config,1,index)[2]
+        local c = getconstant(f,i)
+        if f and c ~= v then
+            setconstant(f,i,v)
+        end
+        game:GetService('RunService').RenderStepped:wait()
+    end
+    local f = getgenv().Updatedfunctions['Dodge']
+    local i,v = getData(Config,1,index)[1],getData(OldConstantValue,'Dodge',index)
+    if f then
+        setconstant(f,i,v)
+    end
+end)
+
+section2:CreateToggle('Dodge Instant', function(t)
+    DODGE2 = t
+    local index = 3
+    while DODGE2 do
+        local f = getgenv().Updatedfunctions['Dodge']
+        local i,v = getData(Config,1,index)[1],getData(Config,1,index)[2]
+        local c = getconstant(f,i)
+        if f and c ~= v then
+            setconstant(f,i,v)
+        end
+        game:GetService('RunService').RenderStepped:wait()
+    end
+    local f = getgenv().Updatedfunctions['Dodge']
+    local i,v = getData(Config,1,index)[1],getData(OldConstantValue,'Dodge',index)
+    if f then
+        setconstant(f,i,v)
+    end
+end)
+
+section2:CreateToggle('Dodge No Cooldown', function(t)
+    DODGE2 = t
+    local index = 4
+    while DODGE2 do
+        local f = getgenv().Updatedfunctions['Dodge']
+        local i,v = getData(Config,1,index)[1],getData(Config,1,index)[2]
+        local c = getconstant(f,i)
+        if f and c ~= v then
+            setconstant(f,i,v)
+        end
+        game:GetService('RunService').RenderStepped:wait()
+    end
+    local f = getgenv().Updatedfunctions['Dodge']
+    local i,v = getData(Config,1,index)[1],getData(OldConstantValue,'Dodge',index)
+    if f then
+        setconstant(f,i,v)
+    end
+end)
+
+section2:CreateSlider("Dodge Velocity", 1, 20, Config[1][1][2], false, function(v)
+    Config[1][1][2] = v
+end)
+section2:CreateSlider("Dodge Speed", 0.01, 3, Config[1][2][2], true, function(v)
+    Config[1][2][2] = v
+end)
+section2:CreateSlider("Dodge Instant", 1, 30, Config[1][3][2], false, function(v)
+    Config[1][3][2] = v
 end)
