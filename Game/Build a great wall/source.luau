@@ -61,7 +61,7 @@ local CFG = {
 
     hsAuto = false, hsReturnBefore = 30, hsTeleportYOffset = 3, hsStayMin = 60,
 
-    boostFilterOn = false, boostFilterMin = 2,
+    boostFilterOn = false, boostFilterMin = 1.5,
 
     autoUpgradeOn = false, autoUpgradeIds = {},
     autoUpgradeRespectWalls = true, autoUpgradeInterval = 0.6,
@@ -2062,16 +2062,50 @@ UI(TABS.Training, "CreateToggle", {
     Name = "Only travel above threshold", CurrentValue = CFG.boostFilterOn, Flag = "BoostFilter",
     Callback = function(v) CFG.boostFilterOn = v end,
 })
-UI(TABS.Training, "CreateDropdown", {
-    Name = "Minimum multiplier",
-    Options = { "2x", "10x", "25x", "50x", "75x", "100x" },
-    CurrentOption = { CFG.boostFilterMin .. "x" }, Flag = "BoostFilterMin",
-    Callback = function(opt)
-        if type(opt) ~= "table" or not opt[1] then return end
-        local n = tonumber(tostring(opt[1]):match("^(%d+)"))
-        if n then CFG.boostFilterMin = n end
-    end,
-})
+
+do
+    local seen, opts = {}, {}
+    local tiers = (WallTiersModule and WallTiersModule.List) or {}
+    for _, t in ipairs(tiers) do
+        local g = t.Reward and t.Reward.Gym
+        if type(g) == "number" and not seen[g] then
+            seen[g] = true
+            opts[#opts + 1] = g
+        end
+    end
+    table.sort(opts)
+    -- Fallback if WallTiersModule didn't load
+    if #opts == 0 then
+        opts = { 1.25, 1.5, 1.75, 2, 2.5, 3, 4, 5 }
+    end
+
+    local labels = {}
+    for i, v in ipairs(opts) do
+        -- WallTiers.mult is the game's own formatter (strips trailing zeros)
+        local pretty = WallTiersModule and WallTiersModule.mult
+            and WallTiersModule.mult(v) or tostring(v)
+        labels[i] = pretty .. "x"
+    end
+
+    -- Match current CFG value to a label
+    local current = tostring(CFG.boostFilterMin) .. "x"
+    local currentMatch = labels[1]
+    for _, l in ipairs(labels) do
+        if l == current then currentMatch = l; break end
+    end
+
+    UI(TABS.Training, "CreateDropdown", {
+        Name = "Minimum wall-tier multiplier",
+        Tooltip = "Only travel to the boost zone when the completion boost is at least this strong.",
+        Options = labels,
+        CurrentOption = { currentMatch }, Flag = "BoostFilterMin",
+        Callback = function(opt)
+            if type(opt) ~= "table" or not opt[1] then return end
+            local n = tonumber(tostring(opt[1]):match("^([%d%.]+)"))
+            if n then CFG.boostFilterMin = n end
+        end,
+    })
+end
 
 -- ---- Stats tab ----
 UI(TABS.Stats, "CreateSection", "Live Progress")
@@ -2319,7 +2353,9 @@ local function tick()
                     tostring(hsState.multiplier), formatClock(hsState.secondsLeft))
                 if CFG.boostFilterOn then
                     local ok = hsState.multiplier >= CFG.boostFilterMin
-                    status = status .. ("\nFilter: %s (need %dx)"):format(ok and "passing" or "below", CFG.boostFilterMin)
+                    status = status .. ("\nFilter: %s (need %sx)"):format(
+                        ok and "passing" or "below",
+                        tostring(CFG.boostFilterMin))
                 end
             else
                 status = "Closed — finish the wall to open it"
