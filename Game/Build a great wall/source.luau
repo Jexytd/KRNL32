@@ -297,7 +297,19 @@ local SM  = { phase = "idle", target = nil, settleUntil = 0 }
 
 local TIMERS = { dt = os.clock(), info = 0, afk = 0 }
 
-local UPG = { lastAt = 0, reason = nil, triedAt = {}, shrine = { lastVisit = 0, savedCFrame = nil, inZone = false } }
+local UPG = {
+    lastAt = 0, reason = nil, triedAt = {},
+    shrine = {
+        lastVisit = 0,
+        savedCFrame = nil,
+        inZone = false,
+        -- new:
+        active = false,      -- currently on a shrine trip?
+        enteredAt = 0,       -- when we entered
+        maxStay = 2.0,       -- auto-leave after this many seconds
+        cooldown = 4.0,      -- min seconds between shrine trips
+    }
+}
 
 local AUTO = { settleTime = 0.12, lastAdapt = 0, PERIOD = 2.0, MIN = 0.06, MAX = 0.5, STEP = 0.03 }
 
@@ -1401,18 +1413,71 @@ local function inShrineZone()
     return math.abs(root.Position.Y - zone.Position.Y) < 8
 end
 local function tickShrineAutoEnter()
-    if not CFG.autoUpgradeOn or not CFG.autoUpgradeAutoShrine then return end
-    if UPG.reason ~= "far"
-        and UPG.reason ~= nil
-        and os.clock() - UPG.shrine.lastVisit < 5
-    then
+    local now = os.clock()
+    local S = UPG.shrine
+
+    -- Only run if auto-upgrade + auto-shrine are on
+    if not CFG.autoUpgradeOn or not CFG.autoUpgradeAutoShrine then
+        -- If we were mid-trip and got disabled, return
+        if S.active and S.savedCFrame then
+            local root = getRoot()
+            if root then root.CFrame = S.savedCFrame end
+            S.active = false
+            S.savedCFrame = nil
+        end
         return
     end
-    if inShrineZone() then UPG.shrine.inZone = true; return end
-    local zone = getShrineZone()
+
     local root = getRoot()
-    if not zone or not root then return end
-    UPG.shrine.lastVisit = os.clock()
+    if not root then return end
+
+    -- ---- On a trip ----
+    if S.active then
+        -- Buy succeeded → go back immediately
+        local bought = (UPG.reason == "ok")
+        -- Or stayed too long → give up and go back
+        local timedOut = (now - S.enteredAt) >= S.maxStay
+        -- Or shrine got removed
+        if not getShrineZone() then bought = false; timedOut = true end
+
+        if bought or timedOut then
+            if S.savedCFrame then root.CFrame = S.savedCFrame end
+            root.AssemblyLinearVelocity = Vector3.zero
+            root.AssemblyAngularVelocity = Vector3.zero
+            S.active = false
+            S.savedCFrame = nil
+            S.lastVisit = now
+        end
+        return
+    end
+
+    -- ---- Not on a trip: decide whether to start one ----
+    -- Only bother if we actually need to buy something
+    if UPG.reason ~= "far" then return end
+
+    -- Cooldown so we don't thrash in and out
+    if now - S.lastVisit < S.cooldown then return end
+
+    -- Don't do a shrine trip if the builder is actively placing blocks.
+    -- Give the wall a head start; coins accumulate while we build.
+    -- (Only skip when the builder is running AND we're near a valid target.)
+    if CFG.running and not S.inZone then
+        -- Allow if there are no ghosts near the player (nothing to build anyway)
+        -- Otherwise wait until the builder pauses.
+        if SM.phase ~= "idle" then
+            return
+        end
+    end
+
+    local zone = getShrineZone()
+    if not zone then return end
+
+    -- Save our spot, then warp to the shrine
+    S.savedCFrame = root.CFrame
+    S.enteredAt = now
+    S.active = true
+    S.inZone = true
+
     local target = zone.Position + Vector3.new(0, 3, 0)
     root.CFrame = CFrame.new(target, target + root.CFrame.LookVector)
     root.AssemblyLinearVelocity = Vector3.zero
@@ -2307,6 +2372,12 @@ local function tick()
 
     tryAutoUpgrade()
     tickShrineAutoEnter()
+
+    if UPG.shrine.active and UPG.reason == "far" then
+        UPG.reason = nil
+        UPG.lastAt = 0
+        tryAutoUpgrade()
+    end
 
     if CFG.antiAfk and (now - TIMERS.afk) > 60 then
         TIMERS.afk = now
