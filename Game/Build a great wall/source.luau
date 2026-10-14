@@ -1232,24 +1232,29 @@ local function refillBlocks()
     local quarry = workspace:FindFirstChild("Quarry")
     local anchor = quarry and quarry:FindFirstChild("TitleAnchor")
     if not anchor then return end
-    refilling = true
+        refilling = true
     local saved = root.CFrame
     local hadFlight = MOVE.vel ~= nil
-    if hadFlight then disableFlight() end
-    local dest = groundUnder(anchor.Position) + Vector3.new(0, CFG.refillGroundY, 0)
-    root.CFrame = CFrame.new(dest, dest + root.CFrame.LookVector)
-    forceHumanoidWake()
-    task.wait(0.35)
-    Fill:FireServer(1, true)
-    task.wait(0.1)
-    local start = os.clock()
-    repeat
-        task.wait(CFG.refillInterval)
-        Fill:FireServer(1, false)
-        local cur, max = readCarry()
-        if cur >= max and max > 0 then break end
-        if os.clock() - start > 20 then break end
-    until false
+    local ok, err = pcall(function()
+        if hadFlight then disableFlight() end
+        local dest = groundUnder(anchor.Position) + Vector3.new(0, CFG.refillGroundY, 0)
+        root.CFrame = CFrame.new(dest, dest + root.CFrame.LookVector)
+        forceHumanoidWake()
+        task.wait(0.35)
+        Fill:FireServer(1, true)
+        task.wait(0.1)
+        local start = os.clock()
+        while true do
+            task.wait(CFG.refillInterval)
+            Fill:FireServer(1, false)
+            local cur, max = readCarry()
+            if cur >= max and max > 0 then break end
+            if os.clock() - start > 20 then break end
+        end
+    end)
+    if not ok then
+        log("refill failed: " .. tostring(err))
+    end
     root.CFrame = saved
     forceHumanoidWake()
     if hadFlight then enableFlight() end
@@ -1296,7 +1301,10 @@ local function fireInRange()
             local dy = g.Position.Y - origin.Y
             local dz = g.Position.Z - origin.Z
             local d2 = dx*dx + dy*dy + dz*dz
-            if d2 > effR2 then i = i + 1
+            if GL.fired[g] or GL.inflight[g] then
+                table.remove(GL.parts, i); table.remove(GL.s, i);
+                table.remove(GL.l, i); table.remove(GL.i, i);
+            elseif d2 > effR2 then i = i + 1
             else
                 hasInRange = true
                 if not spendToken() then i = i + 1
@@ -1325,6 +1333,46 @@ local function fireInRange()
             end
         end
     end
+
+    -- If moveMode is "off" and there's nothing in reach,
+    -- force a single teleport to the nearest ghost so we can fire.
+    if CFG.moveMode == "off" then
+        local anyInReach = false
+        local effR2 = CFG.fireRadius * CFG.fireRadius
+        local origin = root.Position
+        for _, g in ipairs(GL.parts) do
+            if g and g.Parent and not GL.fired[g] and not GL.inflight[g] then
+                local dx, dy, dz = g.Position.X - origin.X,
+                                   g.Position.Y - origin.Y,
+                                   g.Position.Z - origin.Z
+                if dx*dx + dy*dy + dz*dz <= effR2 then
+                    anyInReach = true; break
+                end
+            end
+        end
+        if not anyInReach then
+            local nearest, bestD = nil, math.huge
+            for _, g in ipairs(GL.parts) do
+                if g and g.Parent and not GL.fired[g] and not GL.inflight[g] then
+                    local d = (g.Position - origin).Magnitude
+                    if d < bestD then bestD = d; nearest = g end
+                end
+            end
+            if nearest then
+                local sign = (origin.Z >= nearest.Position.Z) and 1 or -1
+                local target = Vector3.new(
+                    nearest.Position.X,
+                    nearest.Position.Y + BLOCK,
+                    nearest.Position.Z + sign * (BLOCK * 0.5 + 2.5))
+                root.CFrame = CFrame.new(target, target + root.CFrame.LookVector)
+                root.AssemblyLinearVelocity = Vector3.zero
+                root.AssemblyAngularVelocity = Vector3.zero
+                forceHumanoidWake()
+                origin = root.Position
+            end
+        end
+    end
+
     return fired, hasInRange
 end
 
@@ -2384,6 +2432,69 @@ local function tick()
     local now = os.clock()
     local dt = now - TIMERS.dt
     TIMERS.dt = now
+
+        -- ===== Watchdog: recover from silent lockups =====
+    do
+        local WATCH = _G.__AutoPlaceWatch or {
+            lastFireCount = 0,
+            lastProgressAt = os.clock(),
+            STUCK_AFTER = 3.0,
+        }
+        _G.__AutoPlaceWatch = WATCH
+
+        if CFG.running and not refilling
+            and not hsState.inSprings
+            and not phaseBlocksPlacement()
+        then
+            if analytics.fires ~= WATCH.lastFireCount then
+                WATCH.lastFireCount = analytics.fires
+                WATCH.lastProgressAt = now
+            elseif now - WATCH.lastProgressAt > WATCH.STUCK_AFTER then
+                -- Stuck: force every recovery step
+                log("watchdog: no progress for "
+                    .. string.format("%.1f", WATCH.STUCK_AFTER)
+                    .. "s — resetting")
+
+                GL.dirty = true
+                GL.cluster = nil
+                GL.lastPlaced = nil
+                GL.lastSuspend = 0
+                SM.phase = "idle"
+                SM.target = nil
+
+                -- Wake the humanoid so teleports are not frozen
+                forceHumanoidWake()
+
+                -- Nudge: teleport a few studs toward the nearest ghost
+                local root = getRoot()
+                if root and #GL.parts > 0 then
+                    local nearest, bestD = nil, math.huge
+                    for _, g in ipairs(GL.parts) do
+                        if g and g.Parent then
+                            local d = (g.Position - root.Position).Magnitude
+                            if d < bestD then bestD = d; nearest = g end
+                        end
+                    end
+                    if nearest then
+                        local sign = (root.Position.Z >= nearest.Position.Z) and 1 or -1
+                        local target = Vector3.new(
+                            nearest.Position.X,
+                            nearest.Position.Y + BLOCK,
+                            nearest.Position.Z + sign * (BLOCK * 0.5 + 2.5))
+                        root.CFrame = CFrame.new(target, target + root.CFrame.LookVector)
+                        root.AssemblyLinearVelocity = Vector3.zero
+                        root.AssemblyAngularVelocity = Vector3.zero
+                        forceHumanoidWake()
+                    end
+                end
+
+                WATCH.lastProgressAt = now
+            end
+        else
+            WATCH.lastProgressAt = now
+            WATCH.lastFireCount = analytics.fires
+        end
+    end
 
     tickAnalytics()
     updateSectionViz()
