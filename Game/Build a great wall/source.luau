@@ -323,6 +323,29 @@ local function getRoot()
     return char.PrimaryPart or char:FindFirstChild("HumanoidRootPart") or char:FindFirstChildOfClass("BasePart")
 end
 
+local function forceHumanoidWake()
+    local char = LocalPlayer.Character
+    if not char then return end
+    local hum = char:FindFirstChildOfClass("Humanoid")
+    if not hum then return end
+
+    -- Non-zero input for one frame → forces Humanoid out of the frozen state
+    hum:Move(Vector3.new(0, 0, -0.01), false)
+    task.wait(0.03)
+    hum:Move(Vector3.zero, false)
+
+    -- Reset any hard-stuck flags
+    hum.PlatformStand = false
+    hum:ChangeState(Enum.HumanoidStateType.Running)
+
+    -- Also drop any residual velocity so we don't slide
+    local root = getRoot()
+    if root then
+        root.AssemblyLinearVelocity = Vector3.zero
+        root.AssemblyAngularVelocity = Vector3.zero
+    end
+end
+
 local function setNoclip(on)
     local char = LocalPlayer.Character
     if not char then return end
@@ -662,6 +685,7 @@ local function teleportNear(obj, offset)
     root.CFrame = CFrame.new(base + off, base)
     root.AssemblyLinearVelocity = Vector3.zero
     root.AssemblyAngularVelocity = Vector3.zero
+    forceHumanoidWake()
 end
 local function teleportOnto(obj, heightOffset)
     local root = getRoot()
@@ -671,6 +695,7 @@ local function teleportOnto(obj, heightOffset)
     root.CFrame = CFrame.new(top, top + root.CFrame.LookVector)
     root.AssemblyLinearVelocity = Vector3.zero
     root.AssemblyAngularVelocity = Vector3.zero
+    forceHumanoidWake()
 end
 
 local function runTraining()
@@ -1213,6 +1238,7 @@ local function refillBlocks()
     if hadFlight then disableFlight() end
     local dest = groundUnder(anchor.Position) + Vector3.new(0, CFG.refillGroundY, 0)
     root.CFrame = CFrame.new(dest, dest + root.CFrame.LookVector)
+    forceHumanoidWake()
     task.wait(0.35)
     Fill:FireServer(1, true)
     task.wait(0.1)
@@ -1225,6 +1251,7 @@ local function refillBlocks()
         if os.clock() - start > 20 then break end
     until false
     root.CFrame = saved
+    forceHumanoidWake()
     if hadFlight then enableFlight() end
     refilling = false
 end
@@ -1416,14 +1443,17 @@ local function tickShrineAutoEnter()
     local now = os.clock()
     local S = UPG.shrine
 
-    -- Only run if auto-upgrade + auto-shrine are on
+    -- If disabled mid-trip, return
     if not CFG.autoUpgradeOn or not CFG.autoUpgradeAutoShrine then
-        -- If we were mid-trip and got disabled, return
         if S.active and S.savedCFrame then
             local root = getRoot()
-            if root then root.CFrame = S.savedCFrame end
+            if root then
+                root.CFrame = S.savedCFrame
+                forceHumanoidWake()
+            end
             S.active = false
             S.savedCFrame = nil
+            if CFG.running and CFG.useFlight then enableFlight() end
         end
         return
     end
@@ -1431,19 +1461,17 @@ local function tickShrineAutoEnter()
     local root = getRoot()
     if not root then return end
 
-    -- ---- On a trip ----
+    -- ---- Currently on a shrine trip ----
     if S.active then
-        -- Buy succeeded → go back immediately
-        local bought = (UPG.reason == "ok")
-        -- Or stayed too long → give up and go back
+        local bought   = (UPG.reason == "ok")
         local timedOut = (now - S.enteredAt) >= S.maxStay
-        -- Or shrine got removed
         if not getShrineZone() then bought = false; timedOut = true end
 
         if bought or timedOut then
             if S.savedCFrame then root.CFrame = S.savedCFrame end
-            root.AssemblyLinearVelocity = Vector3.zero
-            root.AssemblyAngularVelocity = Vector3.zero
+            forceHumanoidWake()
+            -- Re-enable flight only if the builder is still running
+            if CFG.running and CFG.useFlight then enableFlight() end
             S.active = false
             S.savedCFrame = nil
             S.lastVisit = now
@@ -1452,36 +1480,29 @@ local function tickShrineAutoEnter()
     end
 
     -- ---- Not on a trip: decide whether to start one ----
-    -- Only bother if we actually need to buy something
     if UPG.reason ~= "far" then return end
-
-    -- Cooldown so we don't thrash in and out
     if now - S.lastVisit < S.cooldown then return end
 
-    -- Don't do a shrine trip if the builder is actively placing blocks.
-    -- Give the wall a head start; coins accumulate while we build.
-    -- (Only skip when the builder is running AND we're near a valid target.)
-    if CFG.running and not S.inZone then
-        -- Allow if there are no ghosts near the player (nothing to build anyway)
-        -- Otherwise wait until the builder pauses.
-        if SM.phase ~= "idle" then
-            return
-        end
-    end
+    -- Don't rip the builder away mid-placement
+    if CFG.running and not S.inZone and SM.phase ~= "idle" then return end
 
     local zone = getShrineZone()
     if not zone then return end
 
-    -- Save our spot, then warp to the shrine
+    -- Save position, kill flight, teleport, wake humanoid
     S.savedCFrame = root.CFrame
     S.enteredAt = now
     S.active = true
     S.inZone = true
 
+    if CFG.useFlight then disableFlight() end  -- <-- KEY: stop holding us still
+
     local target = zone.Position + Vector3.new(0, 3, 0)
     root.CFrame = CFrame.new(target, target + root.CFrame.LookVector)
-    root.AssemblyLinearVelocity = Vector3.zero
-    root.AssemblyAngularVelocity = Vector3.zero
+
+    task.wait()                -- let one heartbeat pass
+    root.CFrame = CFrame.new(target, target + root.CFrame.LookVector)  -- reinforce
+    forceHumanoidWake()
 end
 
 local function ensureUpgradeRemote()
